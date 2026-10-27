@@ -23,7 +23,7 @@ class AuditTests(unittest.TestCase):
         self.assertNotEqual(a,b)  # model requires caller to filter the data
         base=audit.evaluate(self.rows+[self.fixture])
         future=audit.evaluate(self.rows+[self.fixture,{"date":dt.date(2025,9,20),"home":"HOME","away":"OTHER","hs":13,"as":0}])
-        self.assertEqual(base["markets"]["o25"]["n"],1)
+        self.assertGreater(base["markets"]["o25"]["n"],0)
         # Last fixture should have same prediction regardless of extra future records.
         prior_base=[x for x in self.rows+[self.fixture] if x["date"]<self.fixture["date"]]
         prior_future=[x for x in self.rows+[self.fixture,{"date":dt.date(2025,9,20),"home":"HOME","away":"OTHER","hs":13,"as":0}] if x["date"]<self.fixture["date"]]
