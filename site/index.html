@@ -19,7 +19,7 @@
 </head>
 <body>
 <div class="shell">
-<header class="top"><div><div class="eyebrow"><span class="radar-dot"></span> EDGE LAB / RESEARCH</div><h1>Radar analiz</h1><p class="subtitle" id="subdate">Rzeczywiste wyniki. Eksperymentalne modele.</p></div><span class="version">0.3.1</span></header>
+<header class="top"><div><div class="eyebrow"><span class="radar-dot"></span> EDGE LAB / RESEARCH</div><h1>Radar analiz</h1><p class="subtitle" id="subdate">Rzeczywiste wyniki. Eksperymentalne modele.</p></div><span class="version">0.4</span></header>
 <div class="alert" role="note"><strong>Weryfikacja historyczna:</strong> w 4537 sprawdzonych meczach główna selekcja radaru nie pokonała prostej metody bazowej. <a href="./weryfikacja.html">Zobacz raport</a>.</div>
 <div class="alert" role="note"><strong>Tryb analityczny</strong> — bez automatycznych zakładów. Statystyka nie gwarantuje zysku. Wysoki kurs to nie dowód przewagi.</div>
 <section class="screen is-active" id="screen-today">
@@ -28,8 +28,9 @@
   <div class="metrics"><div><span>Ligi</span><strong id="metric-leagues">—</strong></div><div><span>Mecze</span><strong id="metric-matches">—</strong></div><div><span>Modele</span><strong id="metric-models">—</strong></div></div>
   <div id="source-error" role="alert" class="error-box hidden"></div>
  </div>
- <div class="between section-head"><div><div class="kicker">SELEKCJA DO PRZEGLĄDU</div><h2>Dzisiejsze hipotezy</h2></div><span class="chip muted" id="count-picks">0 analiz</span></div>
- <p class="hint">Maksymalnie 8 różnych spotkań. Ranking jakości danych, <strong>nie</strong> lista typów z potwierdzoną przewagą.</p>
+ <div class="panel" style="margin-bottom:14px"><div class="kicker">NOWOŚĆ · SYMULACJE</div><h3>Gotowe zestawienia do analizy</h3><p class="caption" style="margin:8px 0">2–4 różne mecze albo 2–3 powiązane zdarzenia jednego spotkania. Prawdopodobieństwa eksperymentalne, kursy sprawdzane ręcznie.</p><a href="./scenariusze.html" class="action" style="display:inline-block;text-decoration:none;margin-top:8px">Otwórz laboratorium scenariuszy</a></div>
+<div class="between section-head"><div><div class="kicker">SELEKCJA DO PRZEGLĄDU</div><h2>Dzisiejsze hipotezy</h2></div><span class="chip muted" id="count-picks">0 analiz</span></div>
+ <p class="hint">Maksymalnie 16 różnych spotkań. Ranking jakości danych, <strong>nie</strong> lista typów z potwierdzoną przewagą.</p>
  <div id="candidates" class="vstack"><div class="panel empty">Wczytywanie źródeł…</div></div>
  <div class="section-head"><div class="kicker">AKTUALNY TERMINARZ</div><h2>Więcej spotkań</h2></div>
  <div id="more-matches" class="vstack"><div class="panel empty">Wczytywanie terminarza…</div></div>
@@ -52,7 +53,7 @@
  <div class="section-head"><div class="kicker">JAK DZIAŁA SYSTEM</div><h2>Metoda i ograniczenia</h2></div>
  <div class="panel space"><h3>Źródła prawdziwych danych</h3><p>GitHub Actions pobiera wyniki i terminarze z <a href="https://github.com/oladeeayo/open-matchday" target="_blank" rel="noopener noreferrer">open-matchday</a>. Strona pobiera pliki z domeny, na której jest opublikowana. Bez kluczy API.</p><p>Historyczne dane mogą być opóźnione. Brak kursów LIVE, xG, składów i pełnej statystyki zawodników. Dane tylko do użytku osobistego i niekomercyjnego.</p></div>
  <div class="panel space"><h3>Kiedy pokazujemy model?</h3><p>Minimum 4 zakończone domowe mecze gospodarzy i 4 zakończone wyjazdowe mecze gości. Stosujemy prosty model goli Poissona z wygładzaniem do średniej ligi, bez kalibracji i wiarygodnego backtestu.</p><p>Wyniki to <strong>hipotezy</strong>, a nie gotowe typy o potwierdzonej przewadze.</p></div>
- <div class="panel space"><h3>Etap 3 — kontrola skuteczności</h3><p>Sprawdzamy historyczne prawdopodobieństwa goli na zakończonych sezonach: chronologicznie, bez wyników z przyszłości, i porównujemy z częstością zdarzeń w lidze. Wynik Brier nie potwierdza jeszcze zysku.</p><p><a href="./weryfikacja.html">Otwórz raport skuteczności modeli →</a></p></div><div class="panel space"><h3>Prywatność</h3><p>Brak logowania, analityki reklamowej, śledzenia i backendu użytkownika. Witryna jest publiczna. Nie umieszczaj na niej żadnych prywatnych informacji ani tokenów.</p></div>
+ <div class="panel space"><h3>Laboratorium zestawień</h3><p><a href="./scenariusze.html">Scenariusze 2–4 meczów i Bet Builder</a>. Tylko symulacje, bez potwierdzonych kursów i przewagi.</p></div><div class="panel space"><h3>Etap 3 — kontrola skuteczności</h3><p>Sprawdzamy historyczne prawdopodobieństwa goli na zakończonych sezonach: chronologicznie, bez wyników z przyszłości, i porównujemy z częstością zdarzeń w lidze. Wynik Brier nie potwierdza jeszcze zysku.</p><p><a href="./weryfikacja.html">Otwórz raport skuteczności modeli →</a></p></div><div class="panel space"><h3>Prywatność</h3><p>Brak logowania, analityki reklamowej, śledzenia i backendu użytkownika. Witryna jest publiczna. Nie umieszczaj na niej żadnych prywatnych informacji ani tokenów.</p></div>
  <div class="panel space"><h3>Ograniczenia finansowe</h3><p>Standardowy polski podatek 12% od stawki oznacza próg rentowności <code>1 / (0,88 × kurs)</code>. Bez kalibracji prawdopodobieństw nie potwierdzamy dodatniego EV.</p></div>
  <p class="caption">Niekomercyjny projekt eksperymentalny. 18+. Zakłady mogą prowadzić do utraty pieniędzy.</p>
 </section>
