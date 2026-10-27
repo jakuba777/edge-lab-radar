@@ -99,4 +99,17 @@ console.log(JSON.stringify(results));
         self.assertIn("connect-src 'self'",html)
         self.assertIn("./assets/coupon-core.js",html)
 
+    def test_all_new_browser_scripts_parse(self):
+        for name in ("coupon-core.js","kupony.js","lamaki.js"):
+            file=ROOT/"site/assets"/name
+            run=subprocess.run(["node","--check",str(file)],capture_output=True,text=True)
+            self.assertEqual(run.returncode,0,f"{name}: {run.stderr}")
+
+    def test_main_navigation_to_coupons(self):
+        home=(ROOT/"site/index.html").read_text(encoding="utf-8")
+        self.assertIn('href="./kupony.html"',home)
+        coupon=(ROOT/"site/kupony.html").read_text(encoding="utf-8")
+        self.assertIn('href="./lamaki.html"',coupon)
+        self.assertIn('href="./modele.html"',coupon)
+
 if __name__=="__main__":unittest.main()
