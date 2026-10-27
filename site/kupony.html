@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="theme-color" content="#091322"/><meta name="referrer" content="no-referrer"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'none'"/>
+<title>Kupony — EDGE LAB AI 0.6</title>
+<meta name="description" content="Analityczny konstruktor wariantów 2–4 meczów i Bet Builder. Symulacje, bez potwierdzonych przewag bukmacherskich."/>
+<link rel="icon" href="./assets/icon.svg" type="image/svg+xml"/>
+<link rel="stylesheet" href="./assets/styles.css"/>
+<link rel="stylesheet" href="./assets/kupony.css"/>
+<script defer src="./assets/coupon-core.js"></script>
+<script defer src="./assets/kupony.js"></script>
+</head>
+<body>
+<main class="shell coupon-shell">
+<header class="coupon-top">
+  <a href="./" class="coupon-return" aria-label="Wróć do radaru">‹ <span>RADAR</span></a>
+  <div class="coupon-brand"><span class="radar-dot"></span> EDGE LAB / RESEARCH</div>
+  <span class="coupon-edition">0.6 BETA</span>
+</header>
+<div class="coupon-hero">
+ <div class="kicker">AGENT SELEKCJI I KONSTRUKCJI</div>
+ <h1>Laboratorium kuponów</h1>
+ <p>Różne pomysły na zestawienia. Każdy z argumentami, ograniczeniami i symulacją łącznego prawdopodobieństwa.</p>
+</div>
+<section class="coupon-warning" role="note"><strong>Ważne:</strong> to nie są zweryfikowane typy ani prawdziwe kursy. Testy historyczne nie potwierdziły przewagi głównego radaru nad prostą bazą. Dzisiaj budujemy i testujemy hipotezy, nie obietnicę zysku. <a href="./modele.html">Zobacz badania</a>.</section>
+<section class="panel coupon-status" aria-live="polite">
+ <div class="between top-gap"><div><div class="kicker">STAN ŹRÓDŁA</div><strong id="coupon-state">Ładowanie danych…</strong><p id="coupon-updated" class="caption">Dane nie są LIVE; źródła aktualizowane przez GitHub Actions.</p></div>
+  <button id="coupon-reload" type="button" class="coupon-refresh" aria-label="Odśwież dane">↻</button></div>
+ <div class="metrics"><div><span>Aktywne ligi</span><strong id="coupon-leagues">—</strong></div><div><span>Terminarz 14 dni</span><strong id="coupon-fixtures">—</strong></div><div><span>Z próbką</span><strong id="coupon-ready">—</strong></div></div>
+ <p id="coupon-failure" class="error-box hidden" role="alert"></p>
+</section>
+<div class="coupon-section-heading"><div><div class="kicker">01 / WYBIERZ PROFIL</div><h2>Jakich scenariuszy szukamy?</h2></div></div>
+<div class="coupon-profiles" role="group" aria-label="Profil selekcji">
+ <button type="button" class="coupon-profile is-selected" data-profile="selective" aria-pressed="true"><strong>Selektywny</strong><small>Szanse wyższe, nadal bez gwarancji</small></button>
+ <button type="button" class="coupon-profile" data-profile="balanced" aria-pressed="false"><strong>Balans</strong><small>Różne rynki i kombinacje</small></button>
+ <button type="button" class="coupon-profile" data-profile="contrarian" aria-pressed="false"><strong>Kontrariański</strong><small>Odchylenia od częstości ligi</small></button>
+ <button type="button" class="coupon-profile" data-profile="builder" aria-pressed="false"><strong>Bet Builder</strong><small>Wspólne zdarzenia jednego meczu</small></button>
+</div>
+<section class="panel coupon-controls">
+ <div class="two-fields">
+  <div><label for="coupon-count">Liczba spotkań</label><select class="field" id="coupon-count"><option value="2" selected>2 mecze</option><option value="3">3 mecze</option><option value="4">4 mecze</option></select></div>
+  <div><label for="coupon-days">Zakres</label><select class="field" id="coupon-days"><option value="7">7 dni</option><option value="14" selected>14 dni</option><option value="30">30 dni</option></select></div>
+ </div>
+ <label for="coupon-league">Liga</label><select class="field" id="coupon-league"><option value="all">Wszystkie dostępne</option></select>
+ <div class="coupon-control-bottom">
+  <p id="coupon-help" class="caption">Model 0.4, sprawdzony historycznie, ale bez potwierdzonej przewagi. Każdy kupon zawiera inne mecze.</p>
+  <button type="button" id="coupon-build" class="action">Przeanalizuj</button>
+ </div>
+</section>
+<div class="coupon-section-heading"><div><div class="kicker">02 / WYNIKI SELEKCJI</div><h2 id="coupon-list-title">Zestawienia do przejrzenia</h2></div><span id="coupon-number" class="chip muted">—</span></div>
+<p class="coupon-explain" id="coupon-explain">Wyniki liczymy z przeszłych meczów. Nie układamy zestawień na siłę przy brakach danych.</p>
+<div id="coupon-cards" class="coupon-cards" aria-live="polite"><div class="panel empty">Wczytywanie źródeł…</div></div>
+<div class="coupon-section-heading"><div><div class="kicker">03 / POSZUKIWANIE NIESTANDARDOWYCH SYGNAŁÓW</div><h2>Łamaki i „czutka”</h2></div></div>
+<div class="coupon-research-links">
+ <a href="./lamaki.html" class="coupon-research-link"><div><strong>HT/FT: łamaki 2/1 i 1/2</strong><small>Sprawdź, w których ligach mamy dane do badań</small></div><span>›</span></a>
+ <a href="./modele.html" class="coupon-research-link"><div><strong>Modele i testy</strong><small>Gdzie modele faktycznie pomogły, a gdzie przegrywają</small></div><span>›</span></a>
+</div>
+<section class="panel coupon-method">
+ <div class="kicker">JAK DZIAŁA SELEKCJA</div>
+ <p><strong>Selektywny:</strong> zdarzenia ze względnie wysokim szacunkiem modelu, co nie oznacza atrakcyjnego kursu.</p>
+ <p><strong>Balans:</strong> kilka różnych rynków i spotkań, z kontrolą powtórzeń.</p>
+ <p><strong>Kontrariański:</strong> model wskazuje zauważalną różnicę względem częstości zdarzenia w lidze. To <em>nie</em> jest jeszcze różnica względem rynku bukmacherskiego.</p>
+ <p><strong>Builder:</strong> scenariusz z tego samego meczu liczony ze wspólnej siatki wyników, a nie przez błędne mnożenie niezależnych szans.</p>
+ <p>Do rozróżnienia korzystnej ceny od złej potrzebujemy wiarygodnych kursów <strong>całego kuponu</strong>, pomiarów kalibracji i dalszego testowania na nowych meczach.</p>
+</section>
+<p class="coupon-footer">Dane z publicznego agregatora mogą zawierać błędy terminarza. Zweryfikuj datę i skład w oficjalnym źródle. 18+. Zakłady mogą prowadzić do strat.</p>
+</main>
+</body></html>
