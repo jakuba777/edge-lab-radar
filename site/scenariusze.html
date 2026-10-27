@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="pl"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="theme-color" content="#091322"/><meta name="referrer" content="no-referrer"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'none'"/>
+<title>Laboratorium scenariuszy — EDGE LAB AI</title><meta name="description" content="Symulacje 2–4 spotkań i współzależnych scenariuszy w jednym meczu. Bez fikcyjnych kursów."/>
+<link rel="icon" href="./assets/icon.svg"/><link rel="stylesheet" href="./assets/styles.css"/><link rel="stylesheet" href="./assets/scenarios.css"/>
+<script src="./assets/scenarios.js" defer></script></head><body><main class="shell">
+<header class="top"><div><div class="eyebrow">EDGE LAB AI / EKSPERYMENT</div><h1>Laboratorium zestawień</h1><p class="subtitle">Rzeczywiste mecze · symulacje, nie gotowe zakłady</p></div><span class="version">0.4</span></header>
+<div class="alert"><strong>Ważne:</strong> dotychczasowa główna selekcja modelu nie pokonała prostej metody bazowej. To narzędzie służy do porównywania hipotez, nie do typowania z udowodnioną przewagą. <a href="./weryfikacja.html">Wyniki testów</a>.</div>
+<section class="panel source-panel" aria-live="polite">
+<div class="between top-gap"><div><div class="kicker">DANE I AKTUALNOŚĆ</div><strong id="scenario-status">Ładowanie danych…</strong><p id="scenario-source" class="caption">Publiczne wyniki i terminarze z własnej domeny HTTPS.</p></div><button id="scenario-refresh" type="button" class="action">↻</button></div>
+<div class="metrics"><div><span>Ligi</span><strong id="scenario-leagues">—</strong></div><div><span>Nadchodzące</span><strong id="scenario-fixtures">—</strong></div><div><span>Z historią</span><strong id="scenario-valid">—</strong></div></div>
+<div id="scenario-error" class="error-box hidden" role="alert"></div>
+</section>
+<section class="section-head"><div class="kicker">KROK 1</div><h2>Parametry symulacji</h2></section>
+<div class="panel space">
+<div class="two-fields"><div><label for="scenario-days">Termin</label><select class="field" id="scenario-days"><option value="7">7 dni</option><option value="14" selected>14 dni</option><option value="30">30 dni</option></select></div><div><label for="scenario-league">Liga</label><select class="field" id="scenario-league"><option value="all">Wszystkie dostępne</option></select></div></div>
+<label for="scenario-type">Rodzaj zestawienia</label>
+<select class="field" id="scenario-type"><option value="two">2 różne mecze</option><option value="three">3 różne mecze</option><option value="four">4 różne mecze</option><option value="same2">2 zdarzenia w jednym meczu</option><option value="same3">3 zdarzenia w jednym meczu</option></select>
+<button id="scenario-generate" type="button" class="action wide">Zbuduj zestawienia do analizy</button>
+<p class="caption">Wybieramy spotkania z co najmniej 6 zakończonymi meczami gospodarza u siebie i gościa na wyjeździe. Dwa niezależne mecze to tylko przybliżenie; wspólne zdarzenia jednego meczu liczymy z jednej siatki wyników.</p>
+</div>
+<div class="between section-head"><div><div class="kicker">KROK 2</div><h2>Propozycje do weryfikacji</h2></div><span class="chip muted" id="scenario-count">—</span></div>
+<p id="scenario-subtitle" class="hint">Przy każdej symulacji zobaczysz łączne prawdopodobieństwo z modelu oraz matematyczny próg kursowy.</p>
+<div id="scenario-results" class="vstack"><div class="panel empty">Wczytywanie danych…</div></div>
+<section class="section-head"><div class="kicker">INTERPRETACJA</div><h2>Co oznaczają liczby?</h2></section>
+<div class="panel space">
+<p><strong>Prawdopodobieństwo modelowe</strong> to prognoza z nieskalibrowanego modelu Poissona. Nie jest gwarantowaną szansą powodzenia.</p>
+<p><strong>Próg kursowy</strong> jest obliczany jako <code>1 / (0,88 × p)</code> przy standardowym podatku 12% od stawki. Kurs musi pochodzić z prawdziwej, łącznej wyceny bukmachera; model nie zna jego ceny, marży ani zasad promocji.</p>
+<p><strong>Zestawy 2–4 meczowe</strong> mnożą prawdopodobieństwa tylko dla różnych spotkań (przybliżenie niezależności). <strong>Bet Builder jednego meczu</strong> liczy przecięcie zdarzeń ze wspólnego rozkładu wyników.</p>
+<p><strong>Nie pokazujemy EV jako potwierdzonej przewagi.</strong> Przed realnymi decyzjami potrzebne są dane o kursach, weryfikacja skuteczności i test przyszłych prognoz. Również „brak scenariusza” to poprawny wynik.</p>
+</div>
+<p class="caption" style="margin-top:18px">Eksperyment do użytku osobistego. Dane nie są LIVE. Zakłady wiążą się z ryzykiem utraty pieniędzy. 18+.</p>
+<a href="./" class="backlink">← Powrót do radaru</a>
+</main></body></html>
