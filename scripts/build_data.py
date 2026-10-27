@@ -22,6 +22,14 @@ LEAGUES = {
     "FRA_1_ligue-1": "Ligue 1",
     "NED_1_eredivisie": "Eredivisie",
     "POR_1_primeira-liga": "Primeira Liga",
+    "POL_1_ekstraklasa": "Ekstraklasa",
+    "BEL_1_pro-league": "Belgijska Pro League",
+    "SCO_1_premiership": "Scottish Premiership",
+    "AUT_1_bundesliga": "Austriacka Bundesliga",
+    "TUR_1_super-lig": "Turecka Süper Lig",
+    "GER_2_2-bundesliga": "2. Bundesliga",
+    "ESP_2_segunda-division": "Segunda División",
+    "ITA_2_serie-b": "Serie B",
 }
 SEASON = "2627"
 HEADERS = {
