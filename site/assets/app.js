@@ -107,7 +107,7 @@ function topCandidates(){
   const interested=['o15','o25','u35','btts'];
   const best=interested.map(id=>({id,p:x.m.probs[id]})).sort((a,b)=>Math.abs(b.p-.5)-Math.abs(a.p-.5))[0];
   return{...x,market:best,score:x.m.score};
- }).sort((a,b)=>b.score-a.score||a.f.date.localeCompare(b.f.date)).slice(0,8);
+ }).sort((a,b)=>b.score-a.score||a.f.date.localeCompare(b.f.date)).slice(0,16);
 }
 function card(x,detailed=false){
  const f=x.f,m=x.m,caption=m.ok?`Próba ${m.nH} dom / ${m.nA} wyjazd · model eksperymentalny`:`Próba ${m.nH}/4 dom · ${m.nA}/4 wyjazd`;
@@ -120,7 +120,7 @@ function renderAll(stale=false){
  $('candidates').innerHTML=S.candidates.length?S.candidates.map(x=>card(x)).join(''):'<div class="panel empty">Dziś brak modeli z wystarczającą historią lub źródła są nieaktualne. Nie wymuszamy typów.</div>';
  $('count-picks').textContent=`${S.candidates.length} analiz`;
  const picked=new Set(S.candidates.map(x=>x.id));
- const more=all.filter(x=>!picked.has(x.id)).slice(0,18);
+ const more=all.filter(x=>!picked.has(x.id)).slice(0,30);
  $('more-matches').innerHTML=more.length?more.map(x=>card(x)).join(''):'<div class="panel empty">Brak kolejnych meczów w tym okresie.</div>';
  const sel=$('league'),prev=sel.value;sel.innerHTML='<option value="all">Wszystkie dostępne</option>'+S.leagues.map(l=>`<option value="${safe(l.name)}">${safe(l.name)}</option>`).join('');if([...sel.options].some(x=>x.value===prev))sel.value=prev;
  const builder=$('builder-match'),old=builder.value;
