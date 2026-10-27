@@ -27,6 +27,15 @@ jobs:
         run: python scripts/ht_coverage.py
       - name: Testy danych i bezpieczeństwa
         run: python -m unittest discover -s tests -v
+      - name: Model 0.7 — łamaki i ostrożny test chronologiczny
+        run: python scripts/ht_model07.py
+      - name: Zapisz osobne archiwum prognoz 2/1 i 1/2
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: halftime-07-${{ github.run_id }}-${{ github.run_attempt }}
+          path: site/data/ht07_future.json
+          retention-days: 45
+          if-no-files-found: error
       - name: Historyczny audyt Poissona (bez przyszłych wyników)
         run: python scripts/backtest.py
       - name: Zapisz prognozy przed przyszłymi meczami
