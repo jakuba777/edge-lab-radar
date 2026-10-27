@@ -42,13 +42,11 @@ async function load(){
   if(report.status!=='ready'||!report.holdout?.markets||!report.holdout?.selected||!report.coverage?.test_matches)
    throw Error('Raport nie przeszedł kontroli minimalnej próby.');
   $t('cmp-state','Porównanie przeprowadzone');
-  $t('cmp-source','Trening '+report.trained_on+' · niezależny test '+report.holdout+' · tylko wcześniejsze wyniki');
-  // holdout is an object: use explicit season descriptor instead of coercion.
-  $t('cmp-source','Trening: '+report.trained_on+' · Test: '+report.holdout.split_name?.holdout||'2025/26');
+  $t('cmp-source','Trening: '+report.trained_on+' · Test: 2025/26 (sezon niewykorzystany do doboru parametrów)');
   $t('cmp-leagues',report.coverage.league_pairs);
   $t('cmp-matches',report.coverage.test_matches);
   const params=report.selected_parameters;
-  $t('cmp-params','Parametry wybrane wyłącznie na 2024/25: półokres ważenia '+params.half_life_days+' dni; korekta ρ='+params.rho+'. Sprawdzono '+(report.training_grid?.length||0)+' z góry określonych kombinacji parametrów.');
+  $t('cmp-params','Parametry wybrane wyłącznie na 2024/25: półokres ważenia '+params.half_life_days+' dni; korekta ρ='+params.rho+'. '+(params.rho===0?'Zerowa korekta oznacza, że sam mechanizm Dixon–Coles został odrzucony przez kryterium treningowe. ':'')+'Sprawdzono '+(report.training_grid?.length||0)+' z góry określonych kombinacji parametrów.');
   const gate=$('cmp-gate');gate.replaceChildren();
   const d=report.holdout.decision||{};
   const good=Boolean(d.eligible_for_promotion);
