@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="pl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="theme-color" content="#091322"/><meta name="referrer" content="no-referrer"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self'; object-src 'none'; frame-src 'none'; form-action 'none'; base-uri 'self'"/>
+<title>Łamaki — EDGE LAB AI</title>
+<link rel="icon" href="./assets/icon.svg"/><link rel="stylesheet" href="./assets/styles.css"/>
+<link rel="stylesheet" href="./assets/kupony.css"/><link rel="stylesheet" href="./assets/lamaki.css"/>
+<script defer src="./assets/lamaki.js"></script>
+</head>
+<body><main class="shell coupon-shell">
+<header class="coupon-top"><a class="coupon-return" href="./kupony.html">‹ <span>KUPONY</span></a><span class="coupon-brand"><span class="radar-dot"></span> EDGE LAB / BADANIA</span><span class="coupon-edition">0.6 / HTFT</span></header>
+<div class="coupon-hero"><div class="kicker">PRZYGOTOWANIE DO ETAPU 0.7</div><h1>Łamaki: pod lupą</h1>
+<p>Najpierw sprawdzamy, gdzie mamy dane o prowadzeniu do przerwy i późniejszym odwróceniu wyniku.</p></div>
+<div class="coupon-warning"><strong>Badanie historyczne, nie prognoza:</strong> samo występowanie łamaków w lidze nie oznacza, że możemy trafnie przewidzieć kolejnego. Żadna liga na tej stronie nie jest automatyczną rekomendacją zakładu.</div>
+<section class="panel source-panel"><div class="kicker">JAKOŚĆ DANYCH HT/FT</div><h2 id="ht-status">Wczytywanie badania…</h2><p class="caption" id="ht-updated">Sprawdzanie sezonu 2026/27</p>
+<div class="metrics"><div><span>Ligi ogółem</span><strong id="ht-leagues">—</strong></div><div><span>Z kompletną próbą</span><strong id="ht-usable">—</strong></div><div><span>Minimalna próba</span><strong>45</strong></div></div><p class="error-box hidden" id="ht-error" role="alert"></p></section>
+<section class="section-head"><div class="kicker">JAK LICZYMY</div><h2>Co to jest łamak?</h2></section>
+<div class="panel space"><p><strong>2/1:</strong> goście prowadzą do przerwy, a gospodarze wygrywają cały mecz.</p>
+<p><strong>1/2:</strong> gospodarze prowadzą do przerwy, a goście wygrywają cały mecz.</p>
+<p>Nie liczymy remisów do przerwy jako łamaków. Puste pola HT nie są zastępowane zerami. Odrzucamy też wiersze, w których liczba goli do przerwy przewyższa wynik końcowy.</p></div>
+<section class="section-head"><div class="kicker">OBSZAR POSZUKIWAŃ</div><h2>Ligi i częstość zdarzeń</h2></section>
+<p class="coupon-explain">Wyświetlamy tylko historycznie zaobserwowane zdarzenia; liga musi mieć co najmniej 45 poprawnych wyników HT/FT i minimum 70% pokrycia danych.</p>
+<div id="ht-results" class="vstack"><div class="panel empty">Wczytywanie…</div></div>
+<section class="section-head"><div class="kicker">KOLEJNY KROK</div><h2>Zanim powstanie „Łowca łamaków”</h2></section>
+<div class="panel space"><p>Potrzebujemy kilku pełnych sezonów, testu oddzielonego od danych treningowych oraz kursów HT/FT, które były dostępne przed meczem. Dopiero wtedy da się ocenić przewidywania konkretnych spotkań.</p>
+<p>Na żywo przydatne byłyby aktualny wynik, strzały celne, czerwone kartki, czas gry i rzeczywisty kurs. Dane aktualizowane kilka razy dziennie przez GitHub Actions nie są systemem LIVE.</p></div>
+<p class="coupon-footer">Źródło: publiczne CSV open-matchday. Częstotliwości mogą nie reprezentować kolejnych sezonów. 18+.</p>
+<a href="./kupony.html" class="backlink">← Wróć do kuponów</a>
+</main></body></html>
