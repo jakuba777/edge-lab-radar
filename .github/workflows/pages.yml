@@ -23,6 +23,8 @@ jobs:
           python-version: '3.12'
       - name: Pobierz i sprawdź dane
         run: python scripts/build_data.py
+      - name: Oceń jakość HT/FT i zaobserwowane łamaki
+        run: python scripts/ht_coverage.py
       - name: Testy danych i bezpieczeństwa
         run: python -m unittest discover -s tests -v
       - name: Historyczny audyt Poissona (bez przyszłych wyników)
