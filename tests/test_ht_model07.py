@@ -1,5 +1,6 @@
 import datetime as dt
 import pathlib
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -90,5 +91,20 @@ class HalfTimeModelTests(unittest.TestCase):
         text=(ROOT/"scripts"/"ht_model07.py").read_text(encoding="utf-8")
         self.assertNotIn("football-data.co.uk/mmz4281",text)
         self.assertNotIn("urllib.request",text)
+
+    def test_web_ui_script_parses(self):
+        script=ROOT/"site/assets/lamaki07.js"
+        result=subprocess.run(["node","--check",str(script)],capture_output=True,text=True)
+        self.assertEqual(result.returncode,0,result.stderr)
+
+    def test_web_ui_has_required_readout_fields(self):
+        html=(ROOT/"site/lamaki.html").read_text(encoding="utf-8")
+        js=(ROOT/"site/assets/lamaki07.js").read_text(encoding="utf-8")
+        for marker_id in ("ht07-state","ht07-count","ht07-events","ht07-scores",
+                          "ht07-kind","ht07-candidates","ht07-error"):
+            self.assertIn('id="'+marker_id+'"',html)
+            self.assertIn(marker_id,js)
+        self.assertIn("./assets/lamaki07.js",html)
+        self.assertIn("connect-src 'self'",html)
 
 if __name__=="__main__":unittest.main()
