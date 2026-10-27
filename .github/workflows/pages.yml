@@ -36,6 +36,15 @@ jobs:
           path: proof/prospective.json
           retention-days: 45
           if-no-files-found: error
+      - name: Porównaj v0.4 i Dixon-Coles 0.5 na niewidzianym sezonie
+        run: python scripts/model05.py
+      - name: Archiwizuj nowe prognozy porównawcze przed meczami
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: comparison-05-${{ github.run_id }}-${{ github.run_attempt }}
+          path: site/data/model05_future.json
+          retention-days: 45
+          if-no-files-found: error
       - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
       - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
         with:
