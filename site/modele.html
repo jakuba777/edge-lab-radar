@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pl"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="theme-color" content="#091322"/><meta name="referrer" content="no-referrer"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'none'"/>
+<title>Model 0.5 — EDGE LAB AI</title>
+<meta name="description" content="Porównanie modelu Poissona i eksperymentalnego Dixon-Coles na sezonie 2025/26 niewykorzystanym do strojenia."/>
+<link rel="icon" href="./assets/icon.svg"/><link rel="stylesheet" href="./assets/styles.css"/><link rel="stylesheet" href="./assets/compare.css"/>
+<script src="./assets/compare.js" defer></script></head><body>
+<main class="shell">
+<header class="top"><div><div class="eyebrow">EDGE LAB / LABORATORIUM MODELI</div><h1>Test modelu 0.5</h1><p class="subtitle">Poisson 0.4 kontra Dixon–Coles z ważeniem formy</p></div><span class="version">0.5 LAB</span></header>
+<div class="alert"><strong>Warunek:</strong> obecny radar pozostaje przy modelu 0.4. Nowego silnika nie używamy do wyboru zakładów bez niezależnej walidacji i porównania z rzeczywistymi kursami.</div>
+<section class="panel source-panel">
+<div class="kicker">TEST SEZONOWY — ODDZIELONE DANE</div>
+<h2 id="cmp-state">Wczytywanie wyników…</h2>
+<p id="cmp-source" class="caption">Trening: 2024/25. Niewidziany sezon testowy: 2025/26.</p>
+<div class="metrics"><div><span>Lig testowych</span><strong id="cmp-leagues">—</strong></div><div><span>Spotkań</span><strong id="cmp-matches">—</strong></div><div><span>Hipotez</span><strong>6</strong></div></div>
+<div id="cmp-error" class="error-box hidden"></div>
+</section>
+<section class="section-head"><div class="kicker">ODGÓRNIE USTALONA BRAMKA</div><h2>Czy zasługuje na awans?</h2></section>
+<div class="panel" id="cmp-gate"><p class="caption">Oczekiwanie na pomiar.</p></div>
+<section class="section-head"><div class="kicker">PORÓWNANIE NA TEJ SAMEJ PRÓBIE</div><h2>Jakość prognoz</h2></section>
+<div class="panel" id="cmp-markets"><p class="caption">Wczytywanie…</p></div>
+<p class="caption">Brier score: niższa wartość jest lepsza. Δ to różnica „model 0.5 minus 0.4”: wartość ujemna oznacza poprawę. Wszystkie liczby dotyczą sezonu testowego 2025/26, a nie przyszłej rentowności.</p>
+<section class="section-head"><div class="kicker">WYBÓR RYNKU — BEZ ZMIANY REGUŁ</div><h2>Główna selekcja radaru</h2></section>
+<div class="panel" id="cmp-selected"><p class="caption">Wczytywanie…</p></div>
+<section class="section-head"><div class="kicker">KONTROLA STROJENIA</div><h2>Co zostało dopasowane?</h2></section>
+<div class="panel space"><p id="cmp-params" class="caption">Wczytywanie…</p>
+<p>Wykorzystujemy model oparty na liczbie goli gospodarzy i gości. Sezon 2024/25 służy wyłącznie do wyboru długości pamięci i parametru korekty niskich wyników (ρ). Parametrów nie dobieramy na podstawie sezonu 2025/26.</p>
+<p class="caption">To nie jest pełna, wieloparametrowa estymacja klasycznego modelu Dixon–Coles. Testujemy prostszą korektę Dixon–Coles na rozkładzie Poissona i osobne ważenie starszych spotkań.</p></div>
+<section class="section-head"><div class="kicker">PROGNOZY ZAPISANE PRZED MECZEM</div><h2>Porównanie na przyszłych spotkaniach</h2></section>
+<div class="panel space">
+<label for="cmp-market">Rynek do porównania</label>
+<select class="field" id="cmp-market"><option value="hg">Gospodarze strzelą</option><option value="ag">Goście strzelą</option><option value="o15">Powyżej 1,5 gola</option><option value="o25">Powyżej 2,5 gola</option><option value="btts">Obie strzelą</option><option value="u35">Poniżej 3,5 gola</option></select>
+<p id="cmp-live-meta" class="caption">Oczekiwanie na prognozy.</p></div>
+<div class="vstack" id="cmp-live"><div class="panel empty">Wczytywanie…</div></div>
+<section class="section-head"><div class="kicker">WAŻNE OGRANICZENIA</div><h2>Czego test nie potwierdza?</h2></section>
+<div class="panel space">
+<p>Dane historyczne mogły być korygowane po meczach. Drużyny, skład i intensywność treningowa zmieniają się w czasie. Jedno niewidziane sezonowe okno nie wystarcza do udowodnienia trwałej przewagi.</p>
+<p>Przedział 95% przedstawiany w raporcie to orientacyjna miara z założeniem niezależnych spotkań; mecze z tej samej ligi mogą być ze sobą powiązane.</p>
+<p><strong>Nie ma danych o kursach, marży, podatku, ROI ani potwierdzonym EV.</strong> Nawet lepszy Brier nie oznacza automatycznie opłacalnego kuponu.</p>
+</div><p class="caption" style="margin-top:18px">Źródła: football-data.co.uk (archiwum) i open-matchday (terminarz). Publiczne dane, bez kont bukmacherskich. 18+.</p>
+<p style="margin-top:18px"><a href="./">← Wróć do radaru</a> · <a href="./scenariusze.html">Scenariusze</a></p>
+</main></body></html>
