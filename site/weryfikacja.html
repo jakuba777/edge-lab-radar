@@ -1,0 +1,30 @@
+<!doctype html><html lang="pl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#091322"><meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<title>Skuteczność modeli — EDGE LAB AI</title>
+<link rel="stylesheet" href="./assets/styles.css"><link rel="stylesheet" href="./assets/audit.css">
+<script src="./assets/audit.js" defer></script></head>
+<body><main class="shell">
+<p class="eyebrow">EDGE LAB AI · ETAP 3</p>
+<h1>Weryfikacja modelu</h1>
+<p class="subtitle">Test historyczny walk-forward: jak dobrze przewidywaliśmy prawdopodobieństwa goli?</p>
+<div class="alert" style="margin-top:18px"><strong>Bez obietnic skuteczności.</strong> Trafienia nie oznaczają zysku. Test historyczny nie jest dowodem przewagi nad realnymi kursami.</div>
+<section class="panel source-panel"><div class="kicker">STAN TESTU</div><h2 id="audit-status">Wczytywanie raportu…</h2><p class="caption" id="audit-source">Analizujemy tylko wyniki zakończonych meczów.</p>
+<div class="metrics"><div><span>Ligi / sezony</span><strong id="audit-series">—</strong></div><div><span>Analizowane mecze</span><strong id="audit-matches">—</strong></div><div><span>Rynki</span><strong>6</strong></div></div>
+<div id="audit-warnings"></div></section>
+<section class="section-head"><div class="kicker">JAK CZYTAĆ WYNIKI</div><h2>Brier score</h2></section>
+<div class="panel"><p>Im niższa wartość, tym lepsze prognozy. Porównujemy model z prostą metodą: <strong>częstością danego zdarzenia w lidze obliczoną wyłącznie z wcześniejszych meczów.</strong></p>
+<p class="caption" style="margin-top:10px">Wartość ujemna w kolumnie Δ oznacza poprawę nad metodą odniesienia. Dodatnia — pogorszenie. Wyniki z jednej ligi lub rynku mogą być przypadkowe.</p></div>
+<section class="section-head"><div class="kicker">WYNIKI</div><h2>Porównanie rynków</h2></section>
+<div class="panel" id="markets"><p class="caption">Wczytywanie…</p></div>
+<section class="section-head"><div class="kicker">SELEKCJA RADARU</div><h2>Jedna hipoteza na mecz</h2></section>
+<div class="panel" id="selected"><p class="caption">Wczytywanie…</p></div>
+<section class="section-head"><div class="kicker">PODZIAŁ WYNIKÓW</div><h2>Wyniki dla lig</h2></section>
+<div id="leagues" class="vstack"><p class="caption">Wczytywanie…</p></div>
+<section class="section-head"><div class="kicker">OGRANICZENIA</div><h2>Co to naprawdę udowadnia?</h2></section>
+<div class="panel space"><p>To <strong>retrospektywny</strong> test. Algorytm przechodzi chronologicznie po meczach w tej samej lidze i sezonie. Do każdej prognozy dostaje wyłącznie mecze rozegrane we wcześniejszych dniach. Nie wolno utożsamiać tego z prawdziwą, zapisaną przed meczami historią typów.</p>
+<p>Wyniki archiwalne mogły być korygowane po zakończeniu spotkań. Model nie uwzględnia kontuzji, składów, kursów, zmian trenera i promocji. Brier nie mówi nic o rentowności bez rzeczywistych kursów i podatku.</p>
+<p class="caption">Metoda: model Poissona 0.3.1 bez zmiany parametrów po wynikach; minima: 4 mecze domowe i 4 wyjazdowe. Źródło: football-data.co.uk.</p></div>
+<p style="margin-top:20px"><a href="./">← Wróć do radaru</a></p>
+</main></body></html>
