@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="theme-color" content="#091322"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="EDGE LAB"/>
+<meta name="referrer" content="no-referrer"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; manifest-src 'self'; base-uri 'self'; form-action 'none'; object-src 'none'; frame-src 'none'"/>
+<title>EDGE LAB AI · Radar statystyczny</title>
+<meta name="description" content="Niezależny radar piłki nożnej. Dane rzeczywiste, modele eksperymentalne, bez automatycznych zakładów."/>
+<link rel="icon" href="./assets/icon.svg" type="image/svg+xml"/>
+<link rel="apple-touch-icon" href="./assets/icon.svg"/>
+<link rel="manifest" href="./manifest.webmanifest"/>
+<link rel="stylesheet" href="./assets/styles.css"/>
+<script src="./assets/app.js" defer></script>
+</head>
+<body>
+<div class="shell">
+<header class="top"><div><div class="eyebrow"><span class="radar-dot"></span> EDGE LAB / RESEARCH</div><h1>Radar analiz</h1><p class="subtitle" id="subdate">Rzeczywiste wyniki. Eksperymentalne modele.</p></div><span class="version">0.3.1</span></header>
+<div class="alert" role="note"><strong>Tryb analityczny</strong> — bez automatycznych zakładów. Statystyka nie gwarantuje zysku. Wysoki kurs to nie dowód przewagi.</div>
+<section class="screen is-active" id="screen-today">
+ <div class="panel source-panel">
+  <div class="between top-gap"><div><div class="kicker">STATUS ŹRÓDŁA</div><strong id="status-title">Oczekiwanie na dane</strong><p id="last-update" class="caption">Dane z własnej kopii HTTPS, aktualizowane przez GitHub Actions.</p></div><button type="button" id="refresh" class="action">↻ Odśwież</button></div>
+  <div class="metrics"><div><span>Ligi</span><strong id="metric-leagues">—</strong></div><div><span>Mecze</span><strong id="metric-matches">—</strong></div><div><span>Modele</span><strong id="metric-models">—</strong></div></div>
+  <div id="source-error" role="alert" class="error-box hidden"></div>
+ </div>
+ <div class="between section-head"><div><div class="kicker">SELEKCJA DO PRZEGLĄDU</div><h2>Dzisiejsze hipotezy</h2></div><span class="chip muted" id="count-picks">0 analiz</span></div>
+ <p class="hint">Maksymalnie 8 różnych spotkań. Ranking jakości danych, <strong>nie</strong> lista typów z potwierdzoną przewagą.</p>
+ <div id="candidates" class="vstack"><div class="panel empty">Wczytywanie źródeł…</div></div>
+ <div class="section-head"><div class="kicker">AKTUALNY TERMINARZ</div><h2>Więcej spotkań</h2></div>
+ <div id="more-matches" class="vstack"><div class="panel empty">Wczytywanie terminarza…</div></div>
+</section>
+<section class="screen" id="screen-matches">
+ <div class="section-head"><div class="kicker">WYNIKI I TERMINARZ</div><h2>Wyszukiwarka</h2></div>
+ <div class="panel space">
+ <label for="search">Drużyna lub liga</label><input class="field" id="search" placeholder="np. Arsenal, Real Madrid" autocapitalize="off"/>
+ <div class="two-fields"><div><label for="from-date">Od daty</label><input class="field" id="from-date" type="date"/></div><div><label for="range">Zakres</label><select id="range" class="field"><option value="7">7 dni</option><option value="14" selected>14 dni</option><option value="30">30 dni</option></select></div></div>
+ <label for="league">Liga</label><select id="league" class="field"><option value="all">Wszystkie dostępne</option></select>
+ </div><p id="matches-count" class="caption"></p><div class="vstack" id="all-matches"></div>
+</section>
+<section class="screen" id="screen-builder">
+ <div class="section-head"><div class="kicker">WSPÓLNY SCENARIUSZ BRAMKOWY</div><h2>Bet Builder</h2></div>
+ <div class="alert compact">Łączymy rynki na podstawie <strong>jednej siatki wyników meczu</strong>, nie mnożymy ich niezależnych szans. Model jest nieskalibrowany i nie wycenia kartek, rożnych ani zawodników.</div>
+ <div class="panel space"><label for="builder-match">Mecz</label><select id="builder-match" class="field"><option value="">Wybierz mecz po synchronizacji</option></select><div class="separator"></div><label>Wybierz 2–3 warunki</label><div id="builder-markets" class="market-grid"></div><button type="button" class="action wide" id="analyze-builder">Analizuj kombinację</button><div id="builder-result" aria-live="polite" class="small-result">Wybierz mecz i zdarzenia.</div></div>
+ <div class="panel space"><h3>Weryfikacja kursu</h3><label for="odds">Rzeczywisty kurs całej kombinacji</label><input id="odds" inputmode="decimal" class="field" placeholder="np. 4,50"/><div id="quote-result" class="small-result">Po wpisaniu kursu wyświetli się matematyczny próg rentowności po podatku.</div></div>
+</section>
+<section class="screen" id="screen-info">
+ <div class="section-head"><div class="kicker">JAK DZIAŁA SYSTEM</div><h2>Metoda i ograniczenia</h2></div>
+ <div class="panel space"><h3>Źródła prawdziwych danych</h3><p>GitHub Actions pobiera wyniki i terminarze z <a href="https://github.com/oladeeayo/open-matchday" target="_blank" rel="noopener noreferrer">open-matchday</a>. Strona pobiera pliki z domeny, na której jest opublikowana. Bez kluczy API.</p><p>Historyczne dane mogą być opóźnione. Brak kursów LIVE, xG, składów i pełnej statystyki zawodników. Dane tylko do użytku osobistego i niekomercyjnego.</p></div>
+ <div class="panel space"><h3>Kiedy pokazujemy model?</h3><p>Minimum 4 zakończone domowe mecze gospodarzy i 4 zakończone wyjazdowe mecze gości. Stosujemy prosty model goli Poissona z wygładzaniem do średniej ligi, bez kalibracji i wiarygodnego backtestu.</p><p>Wyniki to <strong>hipotezy</strong>, a nie gotowe typy o potwierdzonej przewadze.</p></div>
+ <div class="panel space"><h3>Prywatność</h3><p>Brak logowania, analityki reklamowej, śledzenia i backendu użytkownika. Witryna jest publiczna. Nie umieszczaj na niej żadnych prywatnych informacji ani tokenów.</p></div>
+ <div class="panel space"><h3>Ograniczenia finansowe</h3><p>Standardowy polski podatek 12% od stawki oznacza próg rentowności <code>1 / (0,88 × kurs)</code>. Bez kalibracji prawdopodobieństw nie potwierdzamy dodatniego EV.</p></div>
+ <p class="caption">Niekomercyjny projekt eksperymentalny. 18+. Zakłady mogą prowadzić do utraty pieniędzy.</p>
+</section>
+</div>
+<nav class="tabbar" aria-label="Główne ekrany">
+<button type="button" class="is-active" data-screen="today" aria-label="Dzisiaj">⌖<span>Dziś</span></button>
+<button type="button" data-screen="matches" aria-label="Wyszukiwarka meczów">▦<span>Mecze</span></button>
+<button type="button" data-screen="builder" aria-label="Analiza buildera">◈<span>Builder</span></button>
+<button type="button" data-screen="info" aria-label="O metodzie">ⓘ<span>Metoda</span></button>
+</nav>
+<dialog id="detail-dialog" aria-label="Szczegóły analizy"><div id="detail-body"></div><button type="button" class="close-button" id="close-detail">Zamknij</button></dialog>
+</body></html>
