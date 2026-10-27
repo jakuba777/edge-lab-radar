@@ -6,13 +6,34 @@
 <title>Łamaki — EDGE LAB AI</title>
 <link rel="icon" href="./assets/icon.svg"/><link rel="stylesheet" href="./assets/styles.css"/>
 <link rel="stylesheet" href="./assets/kupony.css"/><link rel="stylesheet" href="./assets/lamaki.css"/>
-<script defer src="./assets/lamaki.js"></script>
+<script defer src="./assets/lamaki.js"></script><script defer src="./assets/lamaki07.js"></script>
 </head>
 <body><main class="shell coupon-shell">
-<header class="coupon-top"><a class="coupon-return" href="./kupony.html">‹ <span>KUPONY</span></a><span class="coupon-brand"><span class="radar-dot"></span> EDGE LAB / BADANIA</span><span class="coupon-edition">0.6 / HTFT</span></header>
-<div class="coupon-hero"><div class="kicker">PRZYGOTOWANIE DO ETAPU 0.7</div><h1>Łamaki: pod lupą</h1>
-<p>Najpierw sprawdzamy, gdzie mamy dane o prowadzeniu do przerwy i późniejszym odwróceniu wyniku.</p></div>
+<header class="coupon-top"><a class="coupon-return" href="./kupony.html">‹ <span>KUPONY</span></a><span class="coupon-brand"><span class="radar-dot"></span> EDGE LAB / BADANIA</span><span class="coupon-edition">0.7 / HTFT</span></header>
+<div class="coupon-hero"><div class="kicker">EDGE LAB 0.7 · MODEL EKSPERYMENTALNY</div><h1>Łamaki: pod lupą</h1>
+<p>Teraz łączymy historię prowadzenia do przerwy z modelem bramek w pierwszej i drugiej połowie. Bez fikcyjnych kursów.</p></div>
 <div class="coupon-warning"><strong>Badanie historyczne, nie prognoza:</strong> samo występowanie łamaków w lidze nie oznacza, że możemy trafnie przewidzieć kolejnego. Żadna liga na tej stronie nie jest automatyczną rekomendacją zakładu.</div>
+<section class="panel source-panel" aria-live="polite">
+ <div class="kicker">TEST 0.7 / PAŹDZIERNIK 2026</div>
+ <h2 id="ht07-state">Pobieranie wyników testu…</h2>
+ <p class="caption" id="ht07-note">Model porównujemy z historyczną częstością zdarzeń w tej samej lidze; tylko wyniki sprzed rozpatrywanego spotkania.</p>
+ <div class="metrics"><div><span>Mecze w teście</span><strong id="ht07-count">—</strong></div><div><span>Zaobserwowane łamaki</span><strong id="ht07-events">—</strong></div><div><span>Próg minimalnej próby</span><strong>500</strong></div></div>
+ <div id="ht07-error" class="error-box hidden" role="alert"></div>
+</section>
+<section class="section-head"><div class="kicker">CZY MODEL DZIAŁA LEPIEJ NIŻ PROSTY PUNKT ODNIESIENIA?</div><h2>Wyniki 2/1 i 1/2</h2></section>
+<div id="ht07-scores" class="vstack"><div class="panel empty">Wczytywanie raportu…</div></div>
+<p class="caption">Brier score — niższy to lepsze przewidywanie. Nawet lepszy Brier nie oznacza dodatniego EV ani rentownego zakładu. Przy niewielu łamakach ocena jest niewiarygodna.</p>
+<section class="section-head"><div class="kicker">KANDYDACI DO PRZEGLĄDU — NIE TYPY</div><h2>Najbliższe spotkania</h2></section>
+<div class="panel space">
+ <label for="ht07-kind">Obserwowany scenariusz</label>
+ <select id="ht07-kind" class="field"><option value="2/1">2/1: prowadzą goście, wygrywają gospodarze</option><option value="1/2">1/2: prowadzą gospodarze, wygrywają goście</option></select>
+ <p id="ht07-candidates-info" class="caption">Bez zweryfikowanych kursów nie możemy wskazywać okazji do zagrania.</p>
+</div>
+<div id="ht07-candidates" class="vstack"><div class="panel empty">Wczytywanie nadchodzących meczów…</div></div>
+<section class="section-head"><div class="kicker">O CZYM PAMIĘTAĆ</div><h2>Ograniczenia modelu</h2></section>
+<div class="panel space"><p>To model czterech procesów bramkowych: gole gospodarzy i gości w pierwszej oraz drugiej połowie. Zakłada niezależność tych procesów, co może być szczególnie błędne przy czerwonych kartkach, zmianie tempa i odrabianiu strat.</p>
+<p>Weryfikacja obejmuje wyłącznie sezon 2026/27, z październikiem jako krótkim okresem testowym. Nie jest to pełny test na niezależnym sezonie. Niewystarczające dane oznaczają brak potwierdzonej skuteczności.</p>
+<p>Nie podajemy kursów, wartości oczekiwanej ani automatycznych rekomendacji 2/1 lub 1/2. Każda prognoza jest archiwizowana przed dniem meczu.</p></div>
 <section class="panel source-panel"><div class="kicker">JAKOŚĆ DANYCH HT/FT</div><h2 id="ht-status">Wczytywanie badania…</h2><p class="caption" id="ht-updated">Sprawdzanie sezonu 2026/27</p>
 <div class="metrics"><div><span>Ligi ogółem</span><strong id="ht-leagues">—</strong></div><div><span>Z kompletną próbą</span><strong id="ht-usable">—</strong></div><div><span>Minimalna próba</span><strong>45</strong></div></div><p class="error-box hidden" id="ht-error" role="alert"></p></section>
 <section class="section-head"><div class="kicker">JAK LICZYMY</div><h2>Co to jest łamak?</h2></section>
