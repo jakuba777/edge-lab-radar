@@ -27,6 +27,15 @@ jobs:
         run: python -m unittest discover -s tests -v
       - name: Historyczny audyt Poissona (bez przyszłych wyników)
         run: python scripts/backtest.py
+      - name: Zapisz prognozy przed przyszłymi meczami
+        run: python scripts/prospective.py
+      - name: Archiwum prognoz (publiczne dane, zachowane 45 dni)
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: forecast-${{ github.run_id }}-${{ github.run_attempt }}
+          path: proof/prospective.json
+          retention-days: 45
+          if-no-files-found: error
       - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
       - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
         with:
