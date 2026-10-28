@@ -1,30 +1,85 @@
-# EDGE LAB AI 0.3.1 — radar statystyczny na iPhone
+# EDGE LAB AI 0.8 — radar piłkarski i laboratorium badawcze
 
-**Status:** prototyp badawczy. Wymaga uruchomienia GitHub Pages oraz pomyślnego procesu GitHub Actions. Nie stanowi źródła zweryfikowanych typów ani porady finansowej.
+**Bezpłatna aplikacja badawcza, nie zweryfikowany system dochodu z zakładów.**
 
-## Uruchomienie
+Adres: https://jakuba777.github.io/edge-lab-radar/
 
-1. Repozytorium musi pozostać publiczne w GitHub Free.
-2. Otwórz Settings → Pages → Build and deployment i wybierz **Source: GitHub Actions**.
-3. Sprawdź zakładkę Actions → workflow **Aktualizacja danych i publikacja EDGE LAB**; uruchom ręcznie przyciskiem **Run workflow**, jeśli trzeba.
-4. Poczekaj na zielone zadania build oraz deploy. Otwórz faktyczny adres pokazany w Settings → Pages.
-5. Na iPhonie: Safari → Udostępnij → Dodaj do ekranu początkowego.
+## Aktualne moduły
 
-Strona pobiera wyłącznie pliki `./data/...` ze swojej domeny HTTPS. GitHub Actions raz na sześć godzin próbuje aktualizować publiczne CSV z [open-matchday](https://github.com/oladeeayo/open-matchday). To nie są dane LIVE. Przy braku poprawnych źródeł proces nie publikuje nowej wersji. Dane starsze niż 48 godzin wyłączają ranking analiz.
+- Radar — terminarz i szacunkowe prawdopodobieństwa bramek w 16 ligach.
+- Kupony (0.6) — cztery profile zestawień 2–4 meczów oraz Bet Builder, argumenty ZA/PRZECIW.
+- Łamaki (0.7) — historia HT/FT oraz model obserwacyjny 2/1 i 1/2; bez potwierdzonej przewagi.
+- Modele (0.5) — sezon 2025/26 do porównań z modelem Poissona.
+- LIVE LAB (0.8) — **wyłącznie REPLAY HISTORYCZNY**, nie podaje wyników na żywo.
+- Weryfikacja — historyczne raporty Brier i log-loss.
 
-## Ochrona danych
+## Ekrany na telefonie
 
-- Brak prywatnych kont użytkownika, reklam, trackerów, kluczy API, logowania do bukmachera lub banku.
-- Nie dodawaj do repozytorium plików prywatnych, tokenów, zrzutów z kont ani `.env`.
-- Kod jest publiczny. W GitHub włącz 2FA/passkey i ukrywanie adresu e-mail.
-- Automatyzacje używają przypiętych SHA akcji, bez nieaufanych pull requestów; uprawnienia build/deploy są rozdzielone.
-- CSP ogranicza połączenia JS do własnego hosta i dane z CSV są HTML-escaped.
-- HTTPS ogranicza podsłuch, lecz nie eliminuje phishingu, przejęcia konta ani błędów dostawców.
+Radar: https://jakuba777.github.io/edge-lab-radar/
 
-## Analizy
+Kupony: https://jakuba777.github.io/edge-lab-radar/kupony.html
 
-W konfiguracji 8 lig. System porównuje wyniki historyczne z terminarzem, tworzy eksperymentalny model Poissona dla goli (minimum 4 mecze domowe i 4 wyjazdowe), szacuje wspólne zdarzenia Bet Buildera z jednej siatki wyników i liczy próg rentowności przy ręcznie podanym **kursie całej kombinacji** po podatku 12%.
+Łamaki: https://jakuba777.github.io/edge-lab-radar/lamaki.html
 
-**Nie istnieje jeszcze potwierdzona przewaga kursowa ani kalibracja modelu.** Brak kursów LIVE, składów, pełnych statystyk zawodników oraz modeli kartek i rożnych. Możliwy jest brak hipotez danego dnia. Nie stawiaj pieniędzy na podstawie eksperymentalnego wyniku.
+LIVE LAB: https://jakuba777.github.io/edge-lab-radar/live.html
 
-Źródło danych: open-matchday, użytek osobisty/niekomercyjny. Zakłady mogą prowadzić do strat. 18+.
+Modele: https://jakuba777.github.io/edge-lab-radar/modele.html
+
+W Safari użyj Udostępnij → Dodaj do ekranu początkowego.
+
+## LIVE LAB 0.8 — znaczenie danych
+
+Źródło to sezon open-matchday 2026/27, skopiowany przez GitHub Actions
+do statycznych plików. Te dane **NIE SĄ LIVE**.
+
+Skrypt scripts/live_replay08.py:
+
+1. Odrzuca brakujące i nierozpoznane minuty bramek.
+2. Sprawdza, czy liczba minut zgadza się z liczbą goli; w niebudzących
+   wątpliwości przypadkach porównuje także liczbę goli do przerwy.
+3. Wymaga 40 wyników w lidze, minimum 55% kompletnego pokrycia
+   wszystkich wyników i minimum 60% dla spotkań z co najmniej jedną bramką.
+4. Odtwarza migawki 45., 60. i 75. minuty. Pokazuje tylko bramki
+   zdobyte do tej minuty i prognozuje gola w kolejne 15 minut.
+5. Porównuje model warunkowy względem tempa ostatnich 15 minut z
+   częstością zdarzenia w danej lidze, używając wyłącznie spotkań
+   z wcześniejszych dni.
+6. Raportuje próbę od października 2026 r. i nie dopuszcza do
+   mocnych wniosków. Trzy migawki jednego meczu nie są niezależne.
+
+Model nie zna zespołu, który zdobył każdą bramkę, ani faktycznych
+bieżących kursów, strzałów, jakości sytuacji xG, składów czy zmian
+tempa innych niż częstość bramek. Nie może wiarygodnie obiecać
+zyskownych zakładów LIVE.
+
+## Prawdziwy LIVE — warunki przed uruchomieniem
+
+Po pierwsze: test nieodpłatnego źródła API na 1–2 ligach bez
+przedpłaty za abonament.
+
+Po drugie: weryfikacja czasu wydarzenia, opóźnienia API, opóźnienia
+udostępnienia aktualnego kursu oraz rzeczywistej dostępności ofert.
+
+Po trzecie: osobny backend, w którym znajduje się prywatny klucz API,
+nigdy statyczna strona GitHub Pages.
+
+Po czwarte: archiwum sygnałów zapisanych przed wynikiem zdarzenia,
+kalibracja, kontrola odświeżania i automatyczne blokowanie starych
+lub niekompletnych danych.
+
+Po piąte: dopiero po niezależnym teście jakości oszacowanie różnicy
+między prawdopodobieństwem i faktycznie dostępnym kursem, uwzględniające
+polskie podatki i pozostałe koszty. Nie ma automatycznego obstawiania.
+
+## Bezpieczeństwo
+
+Repozytorium jest PUBLICZNE. Nie umieszczaj w nim tokenów, plików
+z hasłami, danych logowania, plików .env ani danych prywatnych.
+GitHub Pages serwuje statyczne pliki; skrypty przeglądarki pobierają
+dane wyłącznie z tej samej domeny HTTPS.
+
+Harmonogram publikacji: cztery próby dziennie w GitHub Actions.
+Testy: python -m unittest discover -s tests -v.
+Replay: python scripts/live_replay08.py po pobraniu danych.
+
+**Aplikacja nie posiada potwierdzonej przewagi finansowej nad rynkiem.**
