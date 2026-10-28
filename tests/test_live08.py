@@ -1,6 +1,7 @@
 import datetime as dt
 import importlib.util
 import json
+import subprocess
 import pathlib
 import tempfile
 import unittest
@@ -79,5 +80,27 @@ class Replay08Tests(unittest.TestCase):
         source=(ROOT/"scripts"/"live_replay08.py").read_text(encoding="utf-8")
         self.assertIn("strictly earlier",source.lower())
         self.assertNotIn("api-football.com",source)
+
+    def test_browser_script_parses_and_is_same_origin(self):
+        script=ROOT/"site/assets/live08.js"
+        p=subprocess.run(["node","--check",str(script)],capture_output=True,text=True)
+        self.assertEqual(p.returncode,0,p.stderr)
+        source=script.read_text(encoding="utf-8")
+        self.assertIn("mode:'same-origin'",source)
+        self.assertNotIn("api-sports.io",source)
+        self.assertIn("Odkryj, co wydarzyło się potem",source)
+
+    def test_page_explicitly_distinguishes_replay_from_live(self):
+        html=(ROOT/"site/live.html").read_text(encoding="utf-8")
+        home=(ROOT/"site/index.html").read_text(encoding="utf-8")
+        self.assertIn("Źródło LIVE: niepodłączone",html)
+        self.assertIn("REPLAY",html)
+        self.assertIn("connect-src 'self'",html)
+        self.assertIn('href="./live.html"',home)
+
+    def test_replay_is_grouped_by_past_match_date(self):
+        source=(ROOT/"scripts/live_replay08.py").read_text(encoding="utf-8")
+        self.assertIn('r["date"]<match["date"]',source)
+        self.assertIn('match["date"]<now.astimezone',source)
 
 if __name__=="__main__":unittest.main()
