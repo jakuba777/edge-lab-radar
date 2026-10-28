@@ -66,8 +66,10 @@ function renderReplay(){
  reveal.type='button';
  reveal.addEventListener('click',()=>{
   reveal.disabled=true;reveal.textContent='Wynik okna został odkryty';
+  const total=Number(match.fulltime_total_goals);
+  const noun=total===1?'gol':total>=2&&total<=4?'gole':'goli';
   root.appendChild(el('div',(frame.has_goal_next_15?'W następnych 15 minutach PADŁ gol.':'W następnych 15 minutach NIE PADŁ gol.')+
-    ' W całym zakończonym meczu padło '+match.fulltime_total_goals+' goli. Wcześniejsza prognoza nie korzystała z tego rezultatu.','live-outcome'));
+    ' W całym zakończonym meczu padło '+total+' '+noun+'. Wcześniejsza prognoza nie korzystała z tego rezultatu.','live-outcome'));
  });
  root.appendChild(reveal);
 }
