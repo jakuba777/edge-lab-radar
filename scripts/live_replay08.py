@@ -28,9 +28,9 @@ HORIZON=15
 MIN_BASE=15
 SMOOTH=24
 TEST_START=dt.date(2026,10,1)
-MIN_TEST_MATCHES=80
+MIN_TEST_MATCHES=500
 MIN_TEST_EVENTS=20
-MIN_TEST_OBSERVATIONS=150
+MIN_TEST_OBSERVATIONS=1000
 MAX_DISPLAY=60
 _TOKEN=re.compile(r"^(\d{1,3})(?:\+(\d{1,2}))?$")
 
@@ -72,6 +72,7 @@ def _num(s):
 
 def load_matches(path):
     matches=[];total=0
+    positive_total=0
     with path.open(encoding="utf-8-sig",newline="") as f:
         rows=csv.DictReader(f)
         cols=set(rows.fieldnames or [])
@@ -84,6 +85,7 @@ def load_matches(path):
                 hg,ag=_num(r.get("ft_home")),_num(r.get("ft_away"))
                 if hg is None or ag is None or not home or not away or home==away:continue
                 total+=1
+                positive_total+=int(hg+ag>0)
                 ht_h,ht_a=_num(r.get("ht_home")),_num(r.get("ht_away"))
                 if ht_h is not None and ht_h>hg:continue
                 if ht_a is not None and ht_a>ag:continue
@@ -93,7 +95,7 @@ def load_matches(path):
                                 "goals":hg+ag,"halftime":(ht_h+ht_a if ht_h is not None and ht_a is not None else None)})
             except (ValueError,KeyError):continue
     matches.sort(key=lambda r:(r["date"],r["home"],r["away"]))
-    return total,matches
+    return total,matches,positive_total
 
 def prior_count(match,t):
     return sum(t-15<m<=t for m in match["minutes"])
@@ -153,18 +155,21 @@ def run(now=None):
         "windows":list(WINDOWS),"horizon_minutes":HORIZON,
         "split":"2026-10-01+ walk-forward test, strictly earlier league match dates (no same-day scores)",
         "all_leagues":[],"test_results":{},"replays":[],
-        "notice":"No current scores, odds, shots or xG; no predictor proven profitable; not live."
+        "notice":"No current scores, odds, shots or xG; no predictor proven profitable; not live. Source may omit goal minutes selectively; goal-positive coverage is audited."
     }
     all_samples=[]
     all_test_matches=0
     for league in status["leagues"]:
         file=DATA/league["id"]/"results_2627.csv"
         if not file.exists():continue
-        total,valid=load_matches(file)
+        total,valid,positive_total=load_matches(file)
         ratio=len(valid)/total if total else 0
-        if total<40 or ratio<.55:
+        positive_valid=sum(m["goals"]>0 for m in valid)
+        positive_coverage=positive_valid/positive_total if positive_total else 0
+        if total<40 or ratio<.55 or positive_coverage<.60:
             result["all_leagues"].append({"league":league["name"],"total":total,
-                "reconciled":len(valid),"coverage":round(ratio,4),"status":"not_usable"})
+                "reconciled":len(valid),"coverage":round(ratio,4),
+                "goal_positive_coverage":round(positive_coverage,4),"status":"not_usable"})
             continue
         evaluated=0;league_samples=[]
         for match in valid:
@@ -188,18 +193,20 @@ def run(now=None):
         all_samples.extend(league_samples)
         result["all_leagues"].append({"league":league["name"],"total":total,
             "reconciled":len(valid),"coverage":round(ratio,4),
+            "goal_positive_coverage":round(positive_coverage,4),
             "status":"usable","test_matches":evaluated,
             "test":_metrics(league_samples)})
     result["replays"].sort(key=lambda x:(x["date"],x["league"]),reverse=True)
     result["replays"]=result["replays"][:MAX_DISPLAY]
     result["test_results"]=_metrics(all_samples)
     result["test_results"]["test_matches"]=all_test_matches
-    result["test_results"]["eligible_for_strong_claim"]=(
+    result["test_results"]["descriptive_sample_gate"]=(
         all_test_matches>=MIN_TEST_MATCHES
         and len(all_samples)>=MIN_TEST_OBSERVATIONS
         and result["test_results"].get("events",0)>=MIN_TEST_EVENTS
         and result["test_results"].get("brier_replay",1)<result["test_results"].get("brier_baseline",0)
     )
+    result["test_results"]["eligible_for_strong_claim"]=False
     result["test_results"]["status"]="research_only"
     result["test_results"]["caveat"]="Observations from a match are dependent; total snapshots do not equal independent matches."
     return result
