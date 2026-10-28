@@ -15,10 +15,11 @@ function fact(box,k,v){
  row.appendChild(el('strong',v));box.appendChild(row);
 }
 function bar(box,p,baseline){
- const outer=el('div',undefined,'live-track');
- const inside=el('div',undefined,'live-fill'+(baseline?' baseline':''));
- inside.style.width=String(Math.max(0,Math.min(100,100*p)))+'%';
- outer.appendChild(inside);box.appendChild(outer);
+ const progress=el('progress',undefined,'live-progress'+(baseline?' baseline':''));
+ progress.max=1;
+ progress.value=Number.isFinite(p)?Math.max(0,Math.min(1,p)):0;
+ progress.setAttribute('aria-label',baseline?'Prawdopodobieństwo metody bazowej':'Prawdopodobieństwo modelu');
+ box.appendChild(progress);
 }
 function renderEval(result){
  const root=$('l08-eval');root.replaceChildren();
@@ -28,9 +29,9 @@ function renderEval(result){
  pair(metrics,'Brier modelu 0.8',score(x.brier_replay));
  pair(metrics,'Brier prostej metody',score(x.brier_baseline));
  root.appendChild(metrics);
- const check=(x.test_matches||0)>=80&&(x.events||0)>=20&&(x.n||0)>=150;
+ const check=Boolean(x.descriptive_sample_gate);
  let message;
- if(!check)message='Próba jest za mała do wiarygodnego wniosku. Nie oceniaj skuteczności modelu na podstawie kilku udanych sygnałów.';
+ if(!check)message='Próba jest za mała (wymagamy minimum 500 meczów) do wiarygodnego wniosku. Nie oceniaj skuteczności modelu na podstawie kilku udanych sygnałów.';
  else if(x.brier_replay<x.brier_baseline)
   message='W tej próbie model poprawił Brier. Nadal wymaga większej, niezależnej weryfikacji i porównania z prawdziwymi kursami.';
  else message='W tej próbie model NIE poprawił przewidywań względem prostej metody bazowej. Nie traktujemy sygnałów jako okazji.';
