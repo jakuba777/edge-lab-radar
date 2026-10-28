@@ -1,0 +1,47 @@
+<!doctype html><html lang="pl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#091322"><meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'none'">
+<title>Co weszło? — EDGE LAB AI</title>
+<meta name="description" content="Rzetelna skuteczność prognoz zapisanych przed meczami; trafione, nietrafione, oczekujące oraz Brier score.">
+<link rel="icon" href="./assets/icon.svg"><link rel="stylesheet" href="./assets/styles.css"><link rel="stylesheet" href="./assets/track.css">
+<script src="./assets/track.js" defer></script>
+</head><body><main class="shell track-shell">
+<header class="track-header"><a href="./">‹ RADAR</a><span>EDGE LAB AI / HISTORIA</span><span class="track-version">0.9 LAB</span></header>
+<section class="track-hero"><div class="eyebrow">WYNIKI BEZ DOPISYWANIA TYPOW PO FAKCIE</div><h1>Co weszło?</h1>
+<p>Weryfikujemy wyłącznie wskazania zarchiwizowane przed dniem meczu. Zobacz trafienia, pomyłki i nierozstrzygnięte zdarzenia.</p></section>
+<div class="track-note"><strong>Ważne:</strong> procent trafień nie oznacza zysku. Wirtualne kupony nie są zawartymi zakładami. Brak danych lub niepotwierdzony wynik pozostaje nierozliczony.</div>
+<section class="panel track-top">
+<div class="kicker">AUTOMATYCZNY DZIENNIK</div><h2 id="track-state">Wczytywanie historii…</h2>
+<p id="track-date" class="caption">Aktualizacje przy wykonywaniu GitHub Actions; tylko zakończone poprzednie dni.</p>
+<div class="metrics"><div><span>Archiwa sprawdzone</span><strong id="track-archives">—</strong></div><div><span>Prognozy przed meczami</span><strong id="track-total">—</strong></div><div><span>Potwierdzone wyniki</span><strong id="track-scored">—</strong></div></div>
+<p id="track-error" class="error-box hidden" role="alert"></p>
+</section>
+<div class="section-head"><div class="kicker">01 / GŁÓWNE WSKAZANIA RADARU</div><h2>Prawdziwa skuteczność</h2></div>
+<div id="track-main-metrics" class="track-stats"><div class="panel">Wczytywanie…</div></div>
+<div class="section-head"><div class="kicker">02 / RYNKI BRAMKOWE</div><h2>Co wychodzi najlepiej?</h2></div>
+<p class="caption">Rynki poniżej to wszystkie cztery zapisywane prognozy dla meczu, a nie cztery osobno zagrane typy.</p>
+<section id="track-market" class="panel track-table">Wczytywanie…</section>
+<div class="section-head"><div class="kicker">03 / WIRTUALNE ZESTAWIENIA</div><h2>Całe kupony</h2></div>
+<div id="track-coupons-metrics" class="track-stats"><div class="panel">Wczytywanie…</div></div>
+<p class="caption">Rozliczamy cały kupon jako trafiony wyłącznie, jeśli wszystkie jego zdarzenia weszły. Kombinacje zapisujemy automatycznie przed spotkaniami; nie są realnymi kuponami bukmacherskimi.</p>
+<div class="section-head"><div class="kicker">04 / ŁAMAKI 2/1 I 1/2</div><h2>Badanie HT/FT</h2></div>
+<section id="track-halftime" class="panel track-table">Wczytywanie…</section>
+<p class="caption">HT/FT są prognozami badawczymi, a nie konkretnie wybranymi zakładami. Brak potwierdzonego wyniku do przerwy oznacza status „oczekuje”.</p>
+<div class="section-head"><div class="kicker">05 / HISTORIA ZDARZEŃ</div><h2>Które weszły?</h2></div>
+<section class="panel track-controls">
+<label for="track-kind">Rodzaj historii</label>
+<select class="field" id="track-kind"><option value="main">Główne prognozy</option><option value="coupons">Całe wirtualne kupony</option><option value="ht">HT/FT – łamaki</option></select>
+<label for="track-filter">Pokaż</label>
+<select class="field" id="track-filter"><option value="all">Wszystkie</option><option value="hit">Trafione</option><option value="miss">Nietrafione</option><option value="pending">Oczekujące</option></select>
+</section>
+<div id="track-history" class="vstack"><div class="panel empty">Wczytywanie historii…</div></div>
+<div class="section-head"><div class="kicker">WARUNKI UCZCIWEGO ROZLICZANIA</div><h2>Dlaczego wierzyć tym liczbom?</h2></div>
+<section class="panel track-explainer">
+<p>Każda prognoza ma niezmienny zapis z datą w GitHub Actions. Dla danego meczu wykorzystujemy <strong>najwcześniejszą zachowaną prognozę</strong> — nie wybieramy po fakcie najkorzystniejszego procentu.</p>
+<p>Rozliczamy jedynie mecze rozegrane w dniach wcześniejszych niż dzisiejszy dzień w Polsce, z wynikiem potwierdzonym przez naszą kopię źródła. Wyniki niezgodne lub brakujące pozostają nierozliczone.</p>
+<p>Archiwa są przechowywane przez ograniczony czas. Rejestr obejmuje tylko dostępne zapisy z ostatnich 45 dni; nie jest kompletną historią wszystkich kiedykolwiek wyświetlonych analiz.</p>
+<p><strong>Brier score</strong> mierzy jakość prawdopodobieństw, nie opłacalność. Bez rzeczywistych kursów i zapisów zawartych zakładów nie obliczamy zysku, ROI ani przewagi bukmacherskiej.</p>
+</section>
+<p class="track-foot">Brak automatycznego obstawiania, konta bukmacherskiego i danych osobowych. Projekt badawczy 18+.</p>
+</main></body></html>
