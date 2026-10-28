@@ -25,6 +25,8 @@ jobs:
         run: python scripts/build_data.py
       - name: Oceń jakość HT/FT i zaobserwowane łamaki
         run: python scripts/ht_coverage.py
+      - name: EDGE LIVE 0.8 — historyczny replay minut bramek
+        run: python scripts/live_replay08.py
       - name: Testy danych i bezpieczeństwa
         run: python -m unittest discover -s tests -v
       - name: Model 0.7 — łamaki i ostrożny test chronologiczny
