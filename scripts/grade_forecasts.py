@@ -242,6 +242,9 @@ def grade(forecasts,halftimes,coupons,scores,today):
     ticket_rows.sort(key=lambda r:(r["date"],r["profile"],r["id"]),reverse=True)
     hlist=sorted([x for rows in ht_rows.values() for x in rows],
                  key=lambda r:(r["date"],r["league"]),reverse=True)
+    # Keep recently settled events visible even when many future forecasts exist.
+    display=lambda rows:([x for x in rows if x["state"]!="pending"][:75]+
+                         [x for x in rows if x["state"]=="pending"][:30])
     return {
         "summary":{
             "main":summarize(main),
@@ -250,9 +253,9 @@ def grade(forecasts,halftimes,coupons,scores,today):
             "simulated_coupons":summarize(ticket_rows)
         },
         "entries":{
-            "main":main[:100],
-            "halftime_research":hlist[:100],
-            "simulated_coupons":ticket_rows[:100]
+            "main":display(main),
+            "halftime_research":display(hlist),
+            "simulated_coupons":display(ticket_rows)
         },
         "counts":{"forecast_matches":len(forecasts),"halftime_matches":len(halftimes),
                   "simulated_coupons":len(coupons)}
