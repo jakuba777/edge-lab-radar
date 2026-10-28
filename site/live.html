@@ -1,0 +1,48 @@
+<!doctype html><html lang="pl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#091322"><meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<title>LIVE LAB 0.8 — EDGE LAB AI</title>
+<meta name="description" content="Uczciwy replay historycznych minut bramek i weryfikacja hipotez kolejnego gola. To nie jest transmisja LIVE.">
+<link rel="icon" href="./assets/icon.svg"><link rel="stylesheet" href="./assets/styles.css">
+<link rel="stylesheet" href="./assets/live08.css">
+<script src="./assets/live08.js" defer></script></head>
+<body><main class="shell live-shell">
+<header class="live-header"><a href="./" class="live-back">‹ RADAR</a><span class="live-mark">EDGE LAB AI</span><span class="live-version">0.8 LAB</span></header>
+<section class="live-hero">
+<div class="eyebrow">STACJA BADAWCZA · REPLAY</div>
+<h1>LIVE Intelligence</h1>
+<p>Najpierw sprawdzamy, czy zmiany tempa bramek w trwającym meczu cokolwiek poprawiają. Tu odtwarzamy zakończone spotkania, nie udajemy transmisji LIVE.</p>
+</section>
+<div class="live-alert"><strong>Źródło LIVE: niepodłączone.</strong> Pokazujemy wyłącznie historyczne gole z zweryfikowanymi minutami. Nie ma bieżących wyników, prawdziwych kursów, xG ani automatycznych zakładów.</div>
+<section class="panel live-status" aria-live="polite">
+ <div class="kicker">KONTROLA DANYCH</div>
+ <h2 id="l08-state">Ładowanie danych…</h2>
+ <p id="l08-updated" class="caption">Publiczna historia sezonu 2026/27 · aktualizacja GitHub Actions.</p>
+ <div class="metrics"><div><span>Użyteczne ligi</span><strong id="l08-leagues">—</strong></div><div><span>Próbka testowa</span><strong id="l08-test">—</strong></div><div><span>Dostępne replaye</span><strong id="l08-matches">—</strong></div></div>
+ <p id="l08-error" class="error-box hidden" role="alert"></p>
+</section>
+<div class="section-head"><div class="kicker">01 / WERYFIKACJA</div><h2>Czy model poprawia przewidywania?</h2></div>
+<section class="panel live-eval" id="l08-eval"><p class="caption">Wczytywanie wyniku testu.</p></section>
+<p class="caption">Brier score: niższy jest lepszy. Próba obejmuje migawki 45., 60. i 75. minuty, ale są one powiązane w ramach jednego meczu — nie są niezależnymi zakładami. Test od 1 października 2026, wcześniejsze spotkania służą do prognoz.</p>
+<div class="section-head"><div class="kicker">02 / SYMULATOR PRZEBIEGU</div><h2>Odtwórz mecz</h2></div>
+<section class="panel live-controls">
+ <label for="l08-match">Zakończony mecz do odtworzenia</label>
+ <select id="l08-match" class="field"><option value="">Ładowanie…</option></select>
+ <label for="l08-minute">Wybierz moment obserwacji</label>
+ <div class="live-minutes" role="group" aria-label="Moment obserwacji">
+  <button type="button" class="live-minute is-active" data-minute="45" aria-pressed="true">45′</button>
+  <button type="button" class="live-minute" data-minute="60" aria-pressed="false">60′</button>
+  <button type="button" class="live-minute" data-minute="75" aria-pressed="false">75′</button>
+ </div>
+</section>
+<div id="l08-replay" class="panel live-replay"><p class="caption">Oczekiwanie na archiwalne dane.</p></div>
+<div class="section-head"><div class="kicker">03 / REALNE LIVE — NASTĘPNA WARSTWA</div><h2>Co trzeba podłączyć?</h2></div>
+<section class="panel live-roadmap">
+ <div><strong>1. Wiarygodne zdarzenia meczowe</strong><p>Rzeczywista minuta, wynik, kartki, strzały; znacznik czasu dostarczenia. Weryfikacja opóźnień i dostępności lig.</p></div>
+ <div><strong>2. Kursy z legalnych źródeł</strong><p>Dokładna oferta całego rynku i czas jej wystawienia; osobna kontrola zmian oraz braku kursu.</p></div>
+ <div><strong>3. Niezależna walidacja</strong><p>Zapisywanie sygnałów przed rozstrzygnięciem, mierzenie Brier, log-loss i różnic względem kursów. Brak automatycznych zakładów.</p></div>
+ <p class="caption">Dane obecnej aplikacji aktualizowane są kilka razy dziennie. GitHub Pages nie zapewnia własnego serwera do reakcji w ciągu kilku sekund. Płatnego źródła LIVE jeszcze nie włączamy.</p>
+</section>
+<p class="live-foot">EDGE LAB AI · prototyp badawczy · 18+ · analiza nie stanowi prognozy zarobku.</p>
+</main></body></html>
