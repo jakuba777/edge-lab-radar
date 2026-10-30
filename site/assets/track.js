@@ -86,7 +86,11 @@ function showHistory(){
  const source=kind==='main'?report.entries.main:kind==='coupons'?report.entries.simulated_coupons:report.entries.halftime_research;
  let rows=Array.isArray(source)?[...source]:[];
  if(filter!=='all')rows=rows.filter(x=>x.state===filter);
- else rows.sort((a,b)=>Number(a.state==='pending')-Number(b.state==='pending')||b.date.localeCompare(a.date));
+ const dateKey=x=>x.date||(Array.isArray(x.legs)&&x.legs.length?x.legs.map(l=>l.date).sort()[0]:'');
+ rows.sort((a,b)=>{
+  if(filter==='all'&&a.state!==b.state){if(a.state==='pending')return -1;if(b.state==='pending')return 1;}
+  return a.state==='pending'&&b.state==='pending'?dateKey(a).localeCompare(dateKey(b)):dateKey(b).localeCompare(dateKey(a));
+ });
  const root=$('track-history');root.replaceChildren();
  if(!rows.length){
   root.appendChild(el('div','Brak potwierdzonych wpisów dla tego filtra. Nie uzupełniamy historii domysłami.','panel track-empty'));return;
