@@ -7,6 +7,8 @@
  const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const today=()=>new Intl.DateTimeFormat('sv-SE',{year:'numeric',month:'2-digit',day:'2-digit',timeZone:'Europe/Warsaw'}).format(new Date());
  const state={matches:[],leagues:[],coupons:[],loaded:false,profile:'selective',stale:true};
+ const kickoff=m=>{const t=String(m.time||'').trim().match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/);const n=t&&+t[1]<24&&+t[2]<60?+t[1]*60+(+t[2]):1440;return m.date+' '+String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0');};
+ const chronological=(a,b)=>kickoff(a).localeCompare(kickoff(b));
  const descriptions={
    selective:'Wyższe szacunki modelu, ale to nie są „pewniaki” ani sprawdzone przewagi rynkowe.',
    balanced:'Kilka rynków, różne spotkania, próba uniknięcia powtórzeń. Brak dowodu rentowności.',
@@ -91,7 +93,7 @@
   const days=Number($('coupon-days').value)||14;
   const league=$('coupon-league').value;
   return state.matches.filter(m=>m.model&&C.daysBetween(m.date,today())>=1&&C.daysBetween(m.date,today())<=days
-    &&(league==='all'||m.leagueId===league));
+    &&(league==='all'||m.leagueId===league)).sort(chronological);
  }
  function profileName(type,count){return type==='builder'?'Scenariusz jednego meczu':count+' mecze / '+profileLabels[type];}
  function renderCard(c,i){
@@ -99,7 +101,7 @@
   const legs=c.legs.map((x,j)=>{
    const match=x.match;
    const contrast=c.profile==='contrarian'?'<div class="minor">Różnica wobec częstości ligi: '+(x.diff>0?'+':'')+((x.diff||0)*100).toFixed(1).replace('.',',')+' pkt proc.</div>':'';
-   return '<div class="coupon-leg"><div><div class="minor">ZDARZENIE '+(j+1)+' · '+escape(match.league)+' · '+escape(match.date)+'</div>'+
+   return '<div class="coupon-leg"><div><div class="minor">ZDARZENIE '+(j+1)+' · '+escape(match.league)+' · '+escape(match.date)+(match.time?' · '+escape(match.time):'')+'</div>'+
     '<div class="teams">'+escape(match.home)+' – '+escape(match.away)+'</div><div class="market">'+escape(x.label)+'</div>'+
     '<div class="minor">Próba: '+match.model.nH+' dom / '+match.model.nA+' wyjazd</div>'+contrast+'</div>'+
     '<div class="prob">'+C.fmtP(x.p)+'</div></div>';
@@ -138,7 +140,7 @@
   const profile=state.profile;
   const eligible=matchFilter();
   const count=Number($('coupon-count').value)||2;
-  state.coupons=C.createCoupons(eligible,profile,count,6);
+  state.coupons=C.createCoupons(eligible,profile,count,6).map(c=>({...c,legs:[...c.legs].sort((a,b)=>chronological(a.match,b.match))})).sort((a,b)=>chronological(a.legs[0].match,b.legs[0].match)||b.score-a.score);
   $('coupon-list-title').textContent='Warianty: '+profileLabels[profile];
   $('coupon-number').textContent=state.coupons.length+' hipotez';
   $('coupon-help').textContent=descriptions[profile];
