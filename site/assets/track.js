@@ -122,7 +122,7 @@ async function main(){
   }
   if(data.artifact_errors||data.conflicting_results){
    $('track-error').classList.remove('hidden');
-   $('track-error').textContent='Nieodczytane archiwa: '+(data.artifact_errors||0)+'. Niezgodne wyniki: '+(data.conflicting_results||0)+'.';
+   $('track-error').textContent=(ageHours>48?'Raport starszy niż 48 h. ':'')+'Nieodczytane archiwa: '+(data.artifact_errors||0)+'. Niezgodne wyniki: '+(data.conflicting_results||0)+'.';
   }
  }catch(e){
   $('track-state').textContent='Raport nie jest gotowy';
