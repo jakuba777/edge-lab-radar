@@ -103,8 +103,12 @@ async function main(){
   if(!response.ok)throw Error('Raport niedostępny (HTTP '+response.status+').');
   const data=await response.json();
   if(data.status!=='ready'||!data.summary?.main||!data.entries?.main)throw Error('Raport niekompletny.');
+  if(!data.updated_utc||!Number.isFinite(Date.parse(data.updated_utc)))throw Error('Raport bez poprawnej daty aktualizacji.');
+  const ageHours=(Date.now()-Date.parse(data.updated_utc))/3600000;
+  if(ageHours < -1)throw Error('Data raportu jest w przyszłości — sprawdź synchronizację.');
   report=data;
-  $('track-state').textContent='Archiwum aktywne';
+  $('track-error').classList.add('hidden');
+  $('track-state').textContent=ageHours>48?'Archiwum nieaktualne':'Archiwum aktywne';
   $('track-date').textContent='Aktualizacja: '+data.updated_utc.slice(0,16).replace('T',' ')+' UTC · rozliczamy tylko daty przed '+data.settle_only_dates_before_warsaw+'.';
   $('track-archives').textContent=String(data.artifacts_checked||0);
   $('track-total').textContent=String(data.counts?.forecast_matches||0);
@@ -112,6 +116,10 @@ async function main(){
   statCards('track-main-metrics',data.summary.main);
   statCards('track-coupons-metrics',data.summary.simulated_coupons||{});
   marketTables();showHistory();
+  if(ageHours>48){
+   $('track-error').classList.remove('hidden');
+   $('track-error').textContent='Uwaga: ostatnia aktualizacja ponad 48 godzin temu. Pokazane liczby są historyczne, nie bieżące.';
+  }
   if(data.artifact_errors||data.conflicting_results){
    $('track-error').classList.remove('hidden');
    $('track-error').textContent='Nieodczytane archiwa: '+(data.artifact_errors||0)+'. Niezgodne wyniki: '+(data.conflicting_results||0)+'.';
