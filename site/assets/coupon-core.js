@@ -50,12 +50,15 @@
  function n(s){return s!==''&&s!==undefined&&s!==null&&Number.isFinite(Number(s))?Number(s):null;}
  function daysBetween(d1,d2){return (Date.parse(d1+'T00:00:00Z')-Date.parse(d2+'T00:00:00Z'))/86400000;}
  function average(rows,fn){return rows.reduce((s,r)=>s+fn(r),0)/rows.length;}
- function analyze(match,history){
+ function analyze(match,history,options={}){
   // STRICT EXCLUSIVE day boundary: no same-day results, no future leakage.
+  // Exploratory 4/4 is never eligible for standard coupon selection.
+  const exploratory=options.exploratory===true;
+  const minTeam=exploratory?4:6;
   const past=history.filter(r=>r.date<match.date);
   const home=past.filter(r=>r.home===match.home).slice(-10);
   const away=past.filter(r=>r.away===match.away).slice(-10);
-  if(past.length<55||home.length<6||away.length<6)return null;
+  if(past.length<55||home.length<minTeam||away.length<minTeam)return null;
   const hb=Math.max(.2,average(past,r=>r.hs)),ab=Math.max(.2,average(past,r=>r.as));
   const shr=(xs,key,base)=>(average(xs,r=>r[key])*xs.length+base*5)/(xs.length+5);
   const lh=Math.max(.25,Math.min(3.7,Math.sqrt(shr(home,'hs',hb)*shr(away,'hs',hb))));
@@ -63,7 +66,7 @@
   const dist=grid(lh,la);
   const ps=Object.fromEntries(MARKETS.map(m=>[m.id,marketP(dist,m.id)]));
   const base=Object.fromEntries(MARKETS.map(m=>[m.id,(2+past.reduce((v,r)=>v+(m.fn(r.hs,r.as)?1:0),0))/(4+past.length)]));
-  return {lh,la,dist,ps,base,nH:home.length,nA:away.length,nLeague:past.length};
+  return {lh,la,dist,ps,base,nH:home.length,nA:away.length,nLeague:past.length,exploratory:exploratory&&(home.length<6||away.length<6)};
  }
  function quoteThreshold(p,tax=.12){return Number.isFinite(p)&&p>0&&p<=1&&tax>=0&&tax<1?1/((1-tax)*p):NaN;}
  function jointSameGame(rows,ids){
@@ -210,7 +213,7 @@
   }).slice(0,max);
  }
  function createCoupons(matches,profile,count,max=5){
-  const eligible=matches.filter(m=>m.model&&validDate(m.date)&&m.home&&m.away);
+  const eligible=matches.filter(m=>m.model&&!m.model.exploratory&&validDate(m.date)&&m.home&&m.away);
   if(profile==='builder')return buildBuilders(eligible,max);
   if(profile==='single')return buildSingles(eligible,max);
   if(!['selective','balanced','contrarian'].includes(profile))return [];
