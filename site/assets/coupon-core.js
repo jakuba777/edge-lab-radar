@@ -134,7 +134,7 @@
   }
   return picked;
  }
- function diversifyCoupons(results,max){
+ function diversifyCoupons(results,max,options={}){
   const selected=[],uses=new Map();
   for(const candidate of results){
    const legs=candidate.legs.map(x=>x.match.id+':'+x.id);
@@ -143,7 +143,13 @@
    const similar=selected.some(c=>{
     const existing=new Set(c.legs.map(x=>x.match.id+':'+x.id));
     const shared=legs.filter(k=>existing.has(k)).length;
-    return shared/Math.min(legs.length,c.legs.length)>.34;
+    if(shared/Math.min(legs.length,c.legs.length)>.34)return true;
+    if(options.checkMatches){
+     const prior=new Set(c.legs.map(x=>x.match.id));
+     const sharedMatches=candidate.legs.filter(x=>prior.has(x.match.id)).length;
+     if(sharedMatches/Math.min(legs.length,c.legs.length)>=.50)return true;
+    }
+    return false;
    });
    if(similar)continue;
    selected.push(candidate);
@@ -199,7 +205,7 @@
    (a,b)=>Math.abs(Math.log(a.requiredOdds/minThreshold))-Math.abs(Math.log(b.requiredOdds/minThreshold))
     ||b.score-a.score||b.p-a.p:
    (a,b)=>b.score-a.score||b.p-a.p);
-  return diversifyCoupons(results,max);
+  return diversifyCoupons(results,max,{checkMatches:profile==='high_odds'});
  }
  const CORRELATIONS=[
   ['btts','o25'],['hg','u35'],['ag','u35'],['o25','h2'],['o25','a2'],
