@@ -8,11 +8,11 @@ Adres: https://jakuba777.github.io/edge-lab-radar/
 
 - Radar — terminarz i szacunkowe prawdopodobieństwa bramek w 16 ligach.
 - Market Intelligence 1.0 (BETA) — ręczne porównanie kursu z modelem i bazą oraz diagnostyka opcjonalnych połączeń API.
-- Kupony (0.6) — cztery profile zestawień 2–4 meczów oraz Bet Builder, argumenty ZA/PRZECIW.
+- Kupony (0.9 – eksperyment) — osobny profil **Pojedyncze**, cztery dotychczasowe profile zestawień, odrzucanie bliskich duplikatów, szacunek ryzyka nietrafienia, argumenty ZA/PRZECIW.
 - Łamaki (0.7) — historia HT/FT oraz model obserwacyjny 2/1 i 1/2; bez potwierdzonej przewagi.
 - Modele (0.5) — sezon 2025/26 do porównań z modelem Poissona.
 - LIVE LAB (0.8) — **wyłącznie REPLAY HISTORYCZNY**, nie podaje wyników na żywo.
-- Weryfikacja — historyczne raporty Brier i log-loss.
+- Weryfikacja — historyczne raporty Brier i log-loss; raport ostatniego rozliczonego dnia z listą trafień i pomyłek, rzeczywistą liczbą zdarzeń i sumą oczekiwanych trafień; pojedyncze eksperymenty rozliczane oddzielnie od wielozdarzeniowych symulacji.
 
 ## Ekrany na telefonie
 
@@ -29,6 +29,16 @@ LIVE LAB: https://jakuba777.github.io/edge-lab-radar/live.html
 Modele: https://jakuba777.github.io/edge-lab-radar/modele.html
 
 W Safari użyj Udostępnij → Dodaj do ekranu początkowego.
+
+## Zmiany audytowe 31 października 2026
+
+- Dostępne dane historyczne liczymy wyłącznie na podstawie archiwów pre-match i wyników źródła; nie dopisujemy retrospektywnie typów z prywatnych kuponów.
+- Ostatni rozliczony dzień na stronie Skuteczność pokazywany jest oddzielnie: dokładne mecze, zwycięskie i przegrane hipotezy, Brier i porównanie oczekiwanej oraz faktycznej liczby trafień.
+- Pojedyncze analizy z profilu Pojedyncze są archiwizowane, a następnie osobno rozliczane w polu `single_research`. Historyczne `simulated_coupons` nadal oznacza wyłącznie kombinacje co najmniej 2 zdarzeń.
+- W kombinacjach blokujemy istotne duplikaty i ograniczamy ponowne użycie tego samego zdarzenia w prezentowanych wariantach. Jeżeli nie ma wystarczającej liczby różnorodnych hipotez, pokazujemy mniej zestawień.
+- W archiwum historii najpierw najnowsze rozliczone, potem oczekujące od najbliższej daty; backend przechowuje do 30 najbliższych przyszłych wskazań do wyświetlenia.
+- **Nie ma gwarancji, że zdjęcie prywatnego kuponu obejmuje wszystkie zdarzenia.** Nie przenosimy prywatnej historii zawartych zakładów ani identyfikatorów kuponów do publicznych plików GitHub.
+- Brak real-time LIVE i brak potwierdzonej przewagi względem kursów. Brak automatycznego obstawiania.
 
 ## Market Intelligence 1.0 — wdrożenie minimalne
 
