@@ -20,3 +20,6 @@
 .market-source b{color:var(--teal)}
 #football-status,#odds-status{font-size:12px;text-align:right}
 @media(min-width:640px){.market-output .snapshot{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
+.market-copy{width:100%;border:1px solid #426170;background:#172e3c;color:#c6e7e7;padding:10px 12px;border-radius:11px;font-size:12px;font-weight:700}
+.market-copy:focus-visible{outline:2px solid var(--teal)}
