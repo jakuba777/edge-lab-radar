@@ -299,12 +299,18 @@
   if(profile==='single')$('coupon-count').value='1';
   else if($('coupon-count').value==='1')$('coupon-count').value='2';
   $('coupon-count').disabled=profile==='builder'||profile==='single';
+  $('coupon-high-controls').classList.toggle('hidden',profile!=='high_odds');
   $('coupon-help').textContent=descriptions[profile];
+  updateDayOptions();
   render();
  }
  document.addEventListener('DOMContentLoaded',()=>{
   document.querySelectorAll('[data-profile]').forEach(btn=>btn.addEventListener('click',()=>selectProfile(btn.dataset.profile)));
-  ['coupon-count','coupon-days','coupon-league','coupon-include-today'].forEach(id=>$(id).addEventListener('change',render));
+  ['coupon-count','coupon-days','coupon-league','coupon-include-today'].forEach(id=>$(id).addEventListener('change',()=>{
+   updateDayOptions();render();
+  }));
+  $('coupon-day').addEventListener('change',()=>{updateDayOptions();render();});
+  $('coupon-high-min').addEventListener('change',render);
   $('coupon-build').addEventListener('click',render);
   $('coupon-reload').addEventListener('click',()=>{load();loadDailyAudit();});
   $('coupon-evening').addEventListener('click',e=>{const button=e.target.closest('[data-evening-copy]');if(button)copyTodayResearch(button.dataset.eveningCopy,button);});
