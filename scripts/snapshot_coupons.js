@@ -63,6 +63,10 @@ function generate(){
    }
   }
  }
+ // Prospective single-event research is archived separately by grade_forecasts.py.
+ for(const c of core.createCoupons(matches,'single',1,6)){
+  const record=packCoupon(c);if(!seen.has(record.id)){seen.add(record.id);result.candidates.push(record);}
+ }
  for(const c of core.createCoupons(matches,'builder',2,5)){
   const record=packCoupon(c);if(!seen.has(record.id)){seen.add(record.id);result.candidates.push(record);}
  }
