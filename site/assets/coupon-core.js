@@ -161,7 +161,11 @@
   const results=[],seen=new Set();
   for(let seed=0;seed<Math.min(profile==='high_odds'?110:55,pool.length);seed++){
    const legs=[],used=new Set(),usedLeagues=new Map(),marketCount=new Map();
-   const order=[pool[seed],...pool].filter(Boolean);
+   // High-threshold research rotates the pool to explore genuinely different matches;
+   // otherwise each seed would reuse the same top-ranked events.
+   const order=(profile==='high_odds'?
+    [pool[seed],...pool.slice(seed+1),...pool.slice(0,seed)]:
+    [pool[seed],...pool]).filter(Boolean);
    for(const x of order){
     if(used.has(x.match.id)||(marketCount.get(x.id)||0)>=2)continue;
     if(profile!=='selective'&&usedLeagues.get(x.match.leagueId)>=2)continue;
