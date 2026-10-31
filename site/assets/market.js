@@ -3,6 +3,7 @@
    Entered odds stay in browser memory: no accounts, bookmaker APIs or bets. */
 (function () {
   const C = window.EDGECOUPONS;
+  const W = window.EDGEWINDOW;
   const $ = id => document.getElementById(id);
   const state = {matches: [], ready: false, selectedId: ''};
   const today = () => new Intl.DateTimeFormat('sv-SE', {
@@ -198,7 +199,7 @@
     state.matches = [];
     const previous = $('market-match').value;
     try {
-      if (!C) throw Error('Nie załadowano silnika analitycznego.');
+      if (!C || !W) throw Error('Nie załadowano silnika i ochrony czasu rozpoczęcia.');
       const status = await getJSON('./data/status.json');
       if (!Array.isArray(status.leagues) || !status.leagues.length ||
           !status.retrieved_at_utc) throw Error('Nieprawidłowy raport źródła.');
@@ -228,8 +229,9 @@
         const list = [];
         for (const fixture of fixtures) {
           if (!C.validDate(fixture.date) || !fixture.home || !fixture.away ||
-              fixture.home === fixture.away || C.daysBetween(fixture.date, today()) < 1 ||
-              C.daysBetween(fixture.date, today()) > 14) continue;
+              fixture.home === fixture.away || C.daysBetween(fixture.date, today()) < 0 ||
+              C.daysBetween(fixture.date, today()) > 14 ||
+              !W.eligible(fixture,new Date(),age)) continue;
           const id = [league.id, fixture.date, fixture.home, fixture.away].join('|');
           if (seen.has(id)) continue;
           seen.add(id);
@@ -242,7 +244,7 @@
       const ok = batches.filter(x => x.status === 'fulfilled');
       if (!ok.length) throw Error('Nie udało się zweryfikować żadnej ligi.');
       state.matches = ok.flatMap(x => x.value)
-        .sort((a,b) => kickoffKey(a).localeCompare(kickoffKey(b)));
+        .sort((a,b) => W.sortKey(a).localeCompare(W.sortKey(b)));
       state.ready = true;
       const select = $('market-match');
       select.replaceChildren(el('option', 'Wybierz spotkanie'));
