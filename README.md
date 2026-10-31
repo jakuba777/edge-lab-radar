@@ -40,6 +40,26 @@ W Safari użyj Udostępnij → Dodaj do ekranu początkowego.
 - **Nie ma gwarancji, że zdjęcie prywatnego kuponu obejmuje wszystkie zdarzenia.** Nie przenosimy prywatnej historii zawartych zakładów ani identyfikatorów kuponów do publicznych plików GitHub.
 - Brak real-time LIVE i brak potwierdzonej przewagi względem kursów. Brak automatycznego obstawiania.
 
+## Pozostałe mecze dzisiaj — badanie 4/4
+
+Od 31 października ekran Kupony zawiera sekcję **Dzisiejsze badania przedmeczowe**.
+Jeśli source CSV posiada godzinę, a ostatnie pobranie nie jest starsze niż 8 godzin,
+pokażemy tylko mecze z godziną późniejszą niż bieżąca Europa/Warszawa + 15 minut.
+Terminarz open-matchday nie gwarantuje formalnie strefy czasowej ani rzeczywistego
+statusu rozpoczęcia, dlatego wszystkie dzisiejsze analizy są warunkowe, a czas
+trzeba sprawdzić w oficjalnym terminarzu.
+
+Standardowy generator kuponów nadal wymaga co najmniej 6 meczów domowych
+i 6 wyjazdowych oraz minimum 55 wcześniejszych spotkań w lidze.
+Osobny **tryb badawczy 4/4** pozwala obejrzeć niepewne oszacowania nawet wtedy,
+gdy zabraknie prób do generatora; nie generuje zakładów i nie jest
+dodawany do audytowanych symulacji kuponowych.
+
+Z karty dzisiejszej analizy można skopiować obserwację i czas jej utworzenia
+do prywatnych notatek. Takie zapisy nie są niezależnymi archiwami ani
+potwierdzeniem wyniku, dopóki nie mają niezmiennego zapisu i niezależnego
+rozliczenia. Po rozpoczęciu meczu opcja eksportu danej hipotezy jest blokowana.
+
 ## Market Intelligence 1.0 — wdrożenie minimalne
 
 Adres: https://jakuba777.github.io/edge-lab-radar/rynek.html
