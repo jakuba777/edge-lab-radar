@@ -56,6 +56,7 @@
   <input id="market-odds" class="field" type="text" inputmode="decimal" maxlength="12" placeholder="np. 1,85" autocomplete="off"/>
   <p class="caption">Nie wpisuj loginu, hasła, salda ani danych prywatnych. Kurs jest używany wyłącznie w tym widoku i nie jest przesyłany na serwer.</p>
   <button type="button" id="market-compare" class="action wide">Porównaj matematycznie</button>
+  <button type="button" id="market-copy" class="market-copy">Kopiuj analizę do notatek</button>
   <div id="market-output" class="market-output" aria-live="polite"><p class="caption">Wybierz mecz i wpisz kurs. Nie pokazujemy fikcyjnych cen.</p></div>
  </section>
  <div class="section-head"><div class="kicker">03 / KOLEJNOŚĆ CHRONOLOGICZNA</div><h2>Nadchodzące mecze do zbadania</h2></div>
@@ -65,7 +66,7 @@
  <section class="panel space">
   <p><strong>Implikowana szansa:</strong> 1 / kurs. To cena z marżą operatora, nie obiektywne prawdopodobieństwo.</p>
   <p><strong>Próg po podatku:</strong> przy założeniu polskiego podatku 12% od stawki obliczamy 1 / (0,88 × kurs). To matematyczny próg, nie potwierdzenie zysku.</p>
-  <p><strong>Model i baza:</strong> oba korzystają z danych historycznych. Ich różnica nie jest jeszcze przewagą nad rynkiem; konieczna jest kalibracja i prospektywne testy.</p>
+  <p><strong>Model i baza:</strong> używamy silnika Coupon Core 0.6 (minimum 6 meczów domowych i wyjazdowych oraz 55 wyników ligowych), którego warunki różnią się od głównego radaru. Oba oszacowania korzystają z danych historycznych. Ich różnica nie jest jeszcze przewagą nad rynkiem; konieczna jest kalibracja i prospektywne testy.</p>
   <p><strong>API:</strong> możliwość połączenia jest przygotowana. Nie publikujemy surowych kursów ani danych LIVE z usług zewnętrznych bez praw do wykorzystania i poprawnie skonfigurowanych kluczy.</p>
   <p class="caption">18+. Projekt edukacyjno-badawczy. Zakłady mogą prowadzić do strat.</p>
  </section>
