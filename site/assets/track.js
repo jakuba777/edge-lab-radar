@@ -4,7 +4,7 @@ const $=id=>document.getElementById(id);
 const el=(tag,text,cls)=>{const x=document.createElement(tag);if(text!==undefined)x.textContent=String(text);if(cls)x.className=cls;return x;};
 const marketNames={o15:'Powyżej 1,5',o25:'Powyżej 2,5',u35:'Poniżej 3,5',btts:'Obie strzelą'};
 const htNames={'2/1':'Łamak 2/1','1/2':'Łamak 1/2'};
-const profiles={selective:'Selektywny',balanced:'Balans',contrarian:'Kontrariański',builder:'Bet Builder'};
+const profiles={single:'Pojedyncze badanie',selective:'Selektywny',balanced:'Balans',contrarian:'Kontrariański',builder:'Bet Builder'};
 const labels={hit:'WESZŁO',miss:'NIE WESZŁO',pending:'OCZEKUJE'};
 const pct=x=>typeof x==='number'?(x*100).toFixed(1).replace('.',',')+'%':'—';
 const brier=x=>typeof x==='number'?x.toFixed(5).replace('.',','):'—';
@@ -66,7 +66,7 @@ function couponEntry(m){
  const title=el('div',undefined,'track-entry-top');
  const desc=el('div');
  desc.appendChild(el('div','Symulacja · '+(profiles[m.profile]||m.profile),'sub'));
- desc.appendChild(el('h3',m.legs.length+' zdarzenia · łączne P '+pct(m.p)));
+ desc.appendChild(el('h3',m.legs.length===1?'Jedno zdarzenie · P '+pct(m.p):m.legs.length+' zdarzenia · łączne P '+pct(m.p)));
  title.appendChild(desc);title.appendChild(stateTag(m.state));card.appendChild(title);
  const list=el('div',undefined,'track-legs');
  for(const leg of m.legs){
@@ -118,7 +118,7 @@ function latestMatchdayReview(){
 function showHistory(){
  if(!report)return;
  const kind=$('track-kind').value,filter=$('track-filter').value;
- const source=kind==='main'?report.entries.main:kind==='coupons'?report.entries.simulated_coupons:report.entries.halftime_research;
+ const source=kind==='main'?report.entries.main:kind==='coupons'?report.entries.simulated_coupons:kind==='single'?(report.entries.single_research||[]):report.entries.halftime_research;
  let rows=Array.isArray(source)?[...source]:[];
  if(filter!=='all')rows=rows.filter(x=>x.state===filter);
  const dateKey=x=>x.date||(Array.isArray(x.legs)&&x.legs.length?x.legs.map(l=>l.date).sort()[0]:'');
@@ -139,7 +139,7 @@ function showHistory(){
   const group=row.state==='pending'?'Oczekujące':'Zakończone — od najnowszych';
   if(group!==previous&&filter==='all')root.appendChild(el('h3',group,'track-history-group'));
   previous=group;
-  root.appendChild(kind==='main'?simpleEntry(row,false):kind==='coupons'?couponEntry(row):simpleEntry(row,true));
+  root.appendChild(kind==='main'?simpleEntry(row,false):kind==='coupons'||kind==='single'?couponEntry(row):simpleEntry(row,true));
  }
 }
 async function main(){
@@ -160,6 +160,7 @@ async function main(){
   $('track-scored').textContent=String(data.summary.main.scored||0);
   statCards('track-main-metrics',data.summary.main);
   statCards('track-coupons-metrics',data.summary.simulated_coupons||{});
+  statCards('track-singles-metrics',data.summary.single_research||{});
   marketTables();latestMatchdayReview();showHistory();
   if(ageHours>48){
    $('track-error').classList.remove('hidden');
@@ -173,6 +174,8 @@ async function main(){
   $('track-state').textContent='Raport nie jest gotowy';
   $('track-error').classList.remove('hidden');$('track-error').textContent=String(e?.message||e);
   $('track-main-metrics').replaceChildren(el('div','Brak wiarygodnych rozliczeń.','panel track-empty'));
+  $('track-singles-metrics').replaceChildren(el('div','Brak rozliczonych pojedynczych badań.','panel track-empty'));
+  $('track-coupons-metrics').replaceChildren(el('div','Brak wiarygodnych rozliczeń kuponów.','panel track-empty'));
   $('track-history').replaceChildren(el('div','Nie prezentujemy fikcyjnej skuteczności.','panel track-empty'));
   $('track-daily').replaceChildren(el('p','Raport jest niedostępny. Nie pokazujemy niezweryfikowanego bilansu dnia.','caption'));
  }
