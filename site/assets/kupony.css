@@ -41,3 +41,5 @@
 .coupon-day-count{font-weight:750}
 .coupon-day-empty{background:#151e2b;color:#abbccc;padding:16px;border-radius:11px}
 @media(max-width:399px){.coupon-day-picker .field{font-size:13px}.coupon-profile-high small{font-size:10px}}
+
+.coupon-high-controls.hidden{display:none}
