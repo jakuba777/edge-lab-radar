@@ -24,6 +24,12 @@ jobs:
           python-version: '3.12'
       - name: Pobierz i sprawdź dane
         run: python scripts/build_data.py
+      - name: EDGE LAB Market Intelligence — opcjonalny test API bez publikacji kursów
+        env:
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+          ODDSPAPI_KEY: ${{ secrets.ODDSPAPI_KEY }}
+          ODDSPAPI_TOURNAMENT_IDS: ${{ vars.ODDSPAPI_TOURNAMENT_IDS }}
+        run: python scripts/market_feed.py
       - name: Oceń jakość HT/FT i zaobserwowane łamaki
         run: python scripts/ht_coverage.py
       - name: EDGE LIVE 0.8 — historyczny replay minut bramek
