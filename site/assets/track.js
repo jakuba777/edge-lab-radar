@@ -4,7 +4,7 @@ const $=id=>document.getElementById(id);
 const el=(tag,text,cls)=>{const x=document.createElement(tag);if(text!==undefined)x.textContent=String(text);if(cls)x.className=cls;return x;};
 const marketNames={o15:'Powyżej 1,5',o25:'Powyżej 2,5',u35:'Poniżej 3,5',btts:'Obie strzelą'};
 const htNames={'2/1':'Łamak 2/1','1/2':'Łamak 1/2'};
-const profiles={single:'Pojedyncze badanie',selective:'Selektywny',balanced:'Balans',contrarian:'Kontrariański',builder:'Bet Builder'};
+const profiles={high_odds:'Wyższe kursy progowe (model)',single:'Pojedyncze badanie',selective:'Selektywny',balanced:'Balans',contrarian:'Kontrariański',builder:'Bet Builder'};
 const labels={hit:'WESZŁO',miss:'NIE WESZŁO',pending:'OCZEKUJE'};
 const pct=x=>typeof x==='number'?(x*100).toFixed(1).replace('.',',')+'%':'—';
 const brier=x=>typeof x==='number'?x.toFixed(5).replace('.',','):'—';
