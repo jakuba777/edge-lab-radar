@@ -46,7 +46,7 @@ function generate(){
  const source_time=Date.parse(status.retrieved_at_utc);
  const fresh=Number.isFinite(source_time)&&(now.getTime()-source_time)>=0&&(now.getTime()-source_time)<=48*3600000;
  const result={schema:1,created_utc:created,as_of_warsaw:today,source_retrieved_at_utc:status.retrieved_at_utc,
-  status:fresh?'ready':'stale_source',model:'EDGE LAB Coupon Core 0.6',version:'0.6',
+  status:fresh?'ready':'stale_source',model:'EDGE LAB Coupon Core 1.0',version:'1.0',
   candidates:[],matches_eligible:0,errors:[],note:'Archived simulations, not placed tickets or guaranteed profit.'};
  if(!fresh)return result;
  let matches=[];
@@ -60,6 +60,20 @@ function generate(){
   for(const count of [2,3,4]){
    for(const c of core.createCoupons(matches,profile,count,3)){
     const record=packCoupon(c);if(!seen.has(record.id)){seen.add(record.id);result.candidates.push(record);}
+   }
+  }
+ }
+ // Prospective per-day, higher modeled threshold simulations.
+ // Archive only FUTURE fixtures and never assign imaginary bookmaker odds.
+ const days=[...new Set(matches.map(m=>m.date))].sort().slice(0,8);
+ for(const day of days){
+  const daily=core.forSelectedDay(matches,day);
+  for(const [count,minThreshold] of [[2,5],[3,8]]){
+   for(const c of core.createCoupons(daily,'high_odds',count,2,{minThreshold})){
+    // A daily coupon must not silently contain a leg from a different day.
+    if(c.legs.some(leg=>leg.match.date!==day))continue;
+    const record=packCoupon(c);
+    if(!seen.has(record.id)){seen.add(record.id);result.candidates.push(record);}
    }
   }
  }
