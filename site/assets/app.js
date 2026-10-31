@@ -89,7 +89,7 @@ async function sync(){
   $('status-title').textContent=stale?'Dane nieaktualne — sprawdź synchronizację':'Dane sportowe załadowane';
   $('last-update').textContent=`Pobrano ${new Date(meta.retrieved_at_utc).toLocaleString('pl-PL',{timeZone:'Europe/Warsaw'})} · ${ok.length} lig · ${errors?errors+' błędów źródeł · ':''}${stale?'ponad 48 h temu':'dane nie są LIVE'}`;
   $('metric-leagues').textContent=ok.length;
-  $('metric-matches').textContent=S.fixtures.filter(x=>dateGap(x.date,today())>=0&&dateGap(x.date,today())<=14).length;
+  $('metric-matches').textContent=S.fixtures.filter(x=>isUpcoming(x)&&dateGap(x.date,today())<=14).length;
   $('metric-models').textContent=S.modeled.filter(x=>x.m.ok&&isUpcoming(x.f)&&dateGap(x.f.date,today())<=14).length;
   if(errors||stale){$('source-error').classList.remove('hidden');$('source-error').textContent=errors?`${errors} źródeł nie zadziałało. Wyniki mogą być niepełne.`:'Aktualizacja źródła jest opóźniona; nie używaj do decyzji na dziś.';}
   renderAll(stale);
@@ -103,15 +103,12 @@ async function sync(){
 }
 function kickoffKey(f){const m=String(f.time||'').trim().match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/);const n=m&&+m[1]<24&&+m[2]<60?+m[1]*60+(+m[2]):1440;return f.date+' '+String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0');}
 function isUpcoming(f){
- if(dateGap(f.date,today())<0)return false;
- const t=String(f.time||'').trim().match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/);
- if(!t||+t[1]>23||+t[2]>59)return true; // No reliable time-zone metadata: do not assume the fixture is finished.
- // Fixture time zone is not guaranteed by the feed; keep same-day fixtures visible.
- return true;
+ const age=S.meta?.retrieved_at_utc?(Date.now()-Date.parse(S.meta.retrieved_at_utc))/3600000:Infinity;
+ return !!window.EDGEWINDOW&&window.EDGEWINDOW.eligible(f,new Date(),age);
 }
 function byKickoff(a,b){return kickoffKey(a.f).localeCompare(kickoffKey(b.f))||(b.score||0)-(a.score||0);}
 function topCandidates(){
- const from=S.modeled.filter(x=>x.m.ok&&dateGap(x.f.date,today())>=0&&dateGap(x.f.date,today())<=14);
+ const from=S.modeled.filter(x=>x.m.ok&&isUpcoming(x.f)&&dateGap(x.f.date,today())<=14);
  return from.map(x=>{
   const interested=['o15','o25','u35','btts'];
   const best=interested.map(id=>({id,p:x.m.probs[id]})).sort((a,b)=>Math.abs(b.p-.5)-Math.abs(a.p-.5))[0];
@@ -124,7 +121,7 @@ function card(x,detailed=false){
  return `<button type="button" class="match-card" data-match="${safe(x.id)}"><div class="cardhead"><div><div class="cardleague">${safe(f.league)} · ${safe(f.date)}${f.time?' · '+safe(f.time):''}</div><div class="team">${safe(f.home)}<br>${safe(f.away)}</div></div><span class="chip ${m.ok?'good':'warn'}">${m.ok?'Model':'Brak modelu'}</span></div>${m.ok&&mt?`<div class="lead"><div><strong>${safe(mt.label)}</strong><small>Hipoteza statystyczna, bez weryfikacji kursu</small></div><span class="prob">${pct(x.market.p)}</span></div>`:''}<div class="card-foot">${safe(caption)}</div></button>`;
 }
 function renderAll(stale=false){
- const all=S.modeled.filter(x=>dateGap(x.f.date,today())>=0&&dateGap(x.f.date,today())<=14).sort(byKickoff);
+ const all=S.modeled.filter(x=>isUpcoming(x.f)&&dateGap(x.f.date,today())<=14).sort(byKickoff);
  S.candidates=stale?[]:topCandidates();
  $('candidates').innerHTML=S.candidates.length?S.candidates.map(x=>card(x)).join(''):'<div class="panel empty">Dziś brak modeli z wystarczającą historią lub źródła są nieaktualne. Nie wymuszamy typów.</div>';
  $('count-picks').textContent=`${S.candidates.length} analiz`;
@@ -133,7 +130,7 @@ function renderAll(stale=false){
  $('more-matches').innerHTML=more.length?more.map(x=>card(x)).join(''):'<div class="panel empty">Brak kolejnych meczów w tym okresie.</div>';
  const sel=$('league'),prev=sel.value;sel.innerHTML='<option value="all">Wszystkie dostępne</option>'+S.leagues.map(l=>`<option value="${safe(l.name)}">${safe(l.name)}</option>`).join('');if([...sel.options].some(x=>x.value===prev))sel.value=prev;
  const builder=$('builder-match'),old=builder.value;
- const avail=S.modeled.filter(x=>x.m.ok&&dateGap(x.f.date,today())>=0&&dateGap(x.f.date,today())<=14).sort(byKickoff);
+ const avail=S.modeled.filter(x=>x.m.ok&&isUpcoming(x.f)&&dateGap(x.f.date,today())<=14).sort(byKickoff);
  builder.innerHTML='<option value="">Wybierz mecz</option>'+avail.map(x=>`<option value="${safe(x.id)}">${safe(x.f.date)} · ${safe(x.f.home)} – ${safe(x.f.away)}</option>`).join('');if(avail.some(x=>x.id===old))builder.value=old;
  renderMatches();
 }
