@@ -80,6 +80,41 @@ function couponEntry(m){
  card.appendChild(el('div','Archiwum: '+m.snapshot_utc.slice(0,16).replace('T',' ')+' UTC. To nie jest rzeczywiście zawarty kupon.','sub'));
  return card;
 }
+function latestMatchdayReview(){
+ const root=$('track-daily');root.replaceChildren();
+ const entries=(report?.entries?.main||[]).filter(m=>(m.state==='hit'||m.state==='miss')&&m.date&&m.score);
+ if(!entries.length){
+  root.appendChild(el('p','Brak nowych rozliczonych spotkań w zachowanym archiwum. Nie dopisujemy ich ręcznie.','caption'));return;
+ }
+ const newest=entries.map(m=>m.date).sort().at(-1);
+ const latest=entries.filter(m=>m.date===newest);
+ const hits=latest.filter(m=>m.state==='hit').length,misses=latest.length-hits;
+ const h=el('div',undefined,'track-daily-head');
+ const meta=el('div');
+ meta.appendChild(el('div','OSTATNI DZIEŃ: '+newest,'kicker'));
+ meta.appendChild(el('h3',hits+' trafień · '+misses+' pomyłek / '+latest.length+' prognoz'));
+ h.appendChild(meta);root.appendChild(h);
+ root.appendChild(el('p','Kolejność: najpierw pomyłki do analizy, następnie trafienia. To nie jest rozliczenie rzeczywistych kuponów.','caption'));
+ const group=[
+  ['miss','Co nie zadziałało'],['hit','Potwierdzone trafienia']
+ ];
+ for(const [status,title] of group){
+  const selected=latest.filter(m=>m.state===status).sort((a,b)=>b.p-a.p||a.home.localeCompare(b.home));
+  if(!selected.length)continue;
+  root.appendChild(el('h4',title,'track-daily-label'));
+  for(const item of selected){
+   const row=el('div',undefined,'track-daily-row');
+   const info=el('div');
+   info.appendChild(el('strong',item.home+' – '+item.away));
+   info.appendChild(el('small',(item.label||item.market)+' · '+pct(item.p)+' · '+item.league));
+   row.appendChild(info);
+   const score=el('span',item.score,status==='hit'?'track-daily-hit':'track-daily-miss');
+   row.appendChild(score);root.appendChild(row);
+  }
+ }
+ const risk=latest.filter(m=>m.state==='miss'&&m.p>=.75).length;
+ if(risk)root.appendChild(el('p','Uwaga: '+risk+' nietrafionych prognoz miało deklarowaną szansę co najmniej 75%. Wysoki procent nie zastępuje kalibracji modelu.','track-daily-warning'));
+}
 function showHistory(){
  if(!report)return;
  const kind=$('track-kind').value,filter=$('track-filter').value;
@@ -88,14 +123,24 @@ function showHistory(){
  if(filter!=='all')rows=rows.filter(x=>x.state===filter);
  const dateKey=x=>x.date||(Array.isArray(x.legs)&&x.legs.length?x.legs.map(l=>l.date).sort()[0]:'');
  rows.sort((a,b)=>{
-  if(filter==='all'&&a.state!==b.state){if(a.state==='pending')return -1;if(b.state==='pending')return 1;}
-  return a.state==='pending'&&b.state==='pending'?dateKey(a).localeCompare(dateKey(b)):dateKey(b).localeCompare(dateKey(a));
+  if(a.state!==b.state){
+   if(a.state==='pending')return 1;
+   if(b.state==='pending')return -1;
+  }
+  if(a.state==='pending'&&b.state==='pending')return dateKey(a).localeCompare(dateKey(b))||(b.p||0)-(a.p||0);
+  return dateKey(b).localeCompare(dateKey(a))||(b.p||0)-(a.p||0);
  });
  const root=$('track-history');root.replaceChildren();
  if(!rows.length){
   root.appendChild(el('div','Brak potwierdzonych wpisów dla tego filtra. Nie uzupełniamy historii domysłami.','panel track-empty'));return;
  }
- for(const row of rows.slice(0,60))root.appendChild(kind==='main'?simpleEntry(row,false):kind==='coupons'?couponEntry(row):simpleEntry(row,true));
+ let previous='';
+ for(const row of rows.slice(0,60)){
+  const group=row.state==='pending'?'Oczekujące':'Zakończone — od najnowszych';
+  if(group!==previous&&filter==='all')root.appendChild(el('h3',group,'track-history-group'));
+  previous=group;
+  root.appendChild(kind==='main'?simpleEntry(row,false):kind==='coupons'?couponEntry(row):simpleEntry(row,true));
+ }
 }
 async function main(){
  try{
@@ -115,7 +160,7 @@ async function main(){
   $('track-scored').textContent=String(data.summary.main.scored||0);
   statCards('track-main-metrics',data.summary.main);
   statCards('track-coupons-metrics',data.summary.simulated_coupons||{});
-  marketTables();showHistory();
+  marketTables();latestMatchdayReview();showHistory();
   if(ageHours>48){
    $('track-error').classList.remove('hidden');
    $('track-error').textContent='Uwaga: ostatnia aktualizacja ponad 48 godzin temu. Pokazane liczby są historyczne, nie bieżące.';
@@ -129,6 +174,7 @@ async function main(){
   $('track-error').classList.remove('hidden');$('track-error').textContent=String(e?.message||e);
   $('track-main-metrics').replaceChildren(el('div','Brak wiarygodnych rozliczeń.','panel track-empty'));
   $('track-history').replaceChildren(el('div','Nie prezentujemy fikcyjnej skuteczności.','panel track-empty'));
+  $('track-daily').replaceChildren(el('p','Raport jest niedostępny. Nie pokazujemy niezweryfikowanego bilansu dnia.','caption'));
  }
 }
 document.addEventListener('DOMContentLoaded',()=>{
