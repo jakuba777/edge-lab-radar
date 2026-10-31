@@ -16,9 +16,10 @@
    single:'Pojedyncze zdarzenie do badania. Weryfikowane oddzielnie od wielozdarzeniowych symulacji.',
    balanced:'Kilka rynków, różne spotkania, próba uniknięcia powtórzeń. Brak dowodu rentowności.',
    contrarian:'Model odstaje od historycznej częstości ligi. „Czutka” jest hipotezą, nie algorytmem przewagi nad kursami.',
-   builder:'Wspólne zdarzenia jednego meczu policzone z tej samej siatki wyników.'
+   builder:'Wspólne zdarzenia jednego meczu policzone z tej samej siatki wyników.',
+   high_odds:'Badamy wyższe modelowe kursy progowe: mniejsza szansa powodzenia, bez dostępnych kursów Superbet i bez potwierdzonej przewagi.'
  };
- const profileLabels={single:'Pojedyncze',selective:'Selektywny',balanced:'Balans',contrarian:'Kontrariański',builder:'Bet Builder'};
+ const profileLabels={high_odds:'Wyższe kursy',single:'Pojedyncze',selective:'Selektywny',balanced:'Balans',contrarian:'Kontrariański',builder:'Bet Builder'};
  const fjson=async path=>{
   const r=await fetch(path,{cache:'no-store',credentials:'omit',mode:'same-origin'});
   if(!r.ok)throw Error('Błąd HTTP '+r.status+' przy '+path);
@@ -82,7 +83,7 @@
    select.innerHTML='<option value="all">Wszystkie dostępne</option>'+state.leagues.map(l=>
      '<option value="'+escape(l.id)+'">'+escape(l.name)+'</option>').join('');
    if([...select.options].some(x=>x.value===prior))select.value=prior;
-   render();renderTodayExplorer();
+   updateDayOptions();render();renderTodayExplorer();
   }catch(e){
    $('coupon-state').textContent='Źródła niedostępne';
    setFailure(String(e?.message||e));
@@ -91,17 +92,63 @@
    $('coupon-ready').textContent='0';
    $('coupon-cards').innerHTML='<div class="coupon-nothing">Nie mamy aktualnych danych. Nie generujemy sztucznych zestawień. Sprawdź synchronizację GitHub Actions.</div>';
    $('coupon-number').textContent='0';
+   $('coupon-day').replaceChildren(new Option('Brak dostępnych terminów',''));
+   $('coupon-day').disabled=true;
    $('coupon-evening-count').textContent='—';
    $('coupon-evening').textContent='Brak wiarygodnych danych do dzisiejszych badań.';
   }finally{$('coupon-reload').disabled=false;}
  }
- function matchFilter(){
+ function fixtureWindow(){
   const days=Number($('coupon-days').value)||14;
   const league=$('coupon-league').value;
-  return state.matches.filter(m=>m.model&&C.daysBetween(m.date,today())>=0&&C.daysBetween(m.date,today())<=days
-    &&(league==='all'||m.leagueId===league)
-    &&(m.date!==today()||$('coupon-include-today').checked)
-    &&W.eligible(m,new Date(),sourceAge())).sort(chronological);
+  const now=new Date(),age=sourceAge();
+  return state.matches.filter(m=>C.daysBetween(m.date,today())>=0&&C.daysBetween(m.date,today())<=days
+   &&(league==='all'||m.leagueId===league)
+   &&(m.date!==today()||$('coupon-include-today').checked)
+   &&W.eligible(m,now,age)).sort(chronological);
+ }
+ function formatDay(day){
+  const d=new Date(day+'T12:00:00Z');
+  return new Intl.DateTimeFormat('pl-PL',{timeZone:'UTC',weekday:'long',day:'numeric',month:'long'}).format(d);
+ }
+ function updateDayOptions(){
+  const select=$('coupon-day'),previous=select.value;
+  const matches=fixtureWindow(),stats=new Map();
+  for(const m of matches){
+   const x=stats.get(m.date)||{fixtures:0,model:0};
+   x.fixtures++;if(m.model)x.model++;stats.set(m.date,x);
+  }
+  const days=[...stats.keys()].sort();
+  select.replaceChildren();
+  if(!days.length){
+   select.appendChild(new Option('Brak dostępnych dni w tym filtrze',''));
+   select.disabled=true;
+   $('coupon-day-info').textContent='Brak spotkań z aktualnego terminarza dla wybranych filtrów.';
+   return;
+  }
+  select.disabled=false;
+  for(const date of days){
+   const data=stats.get(date);
+   const caption=(date===today()?'Dzisiaj · ':'')+formatDay(date)+
+    ' · '+data.model+' z modelem / '+data.fixtures+' meczów';
+   select.appendChild(new Option(caption,date));
+  }
+  select.appendChild(new Option('Wszystkie dni — łącz spotkania z całego zakresu','all'));
+  if([...select.options].some(o=>o.value===previous))select.value=previous;
+  else {
+   const minCount=state.profile==='single'||state.profile==='builder'?1:
+     Number($('coupon-count').value)||2;
+   select.value=days.find(day=>stats.get(day).model>=minCount)||
+    days.find(day=>stats.get(day).model>0)||days[0];
+  }
+  $('coupon-day-info').textContent=select.value==='all'?
+   'Tryb całego zakresu: kupony mogą łączyć mecze z różnych dni.':
+   'Wybrany dzień: '+formatDay(select.value)+'. Z modelem '+stats.get(select.value).model+
+    ' z '+stats.get(select.value).fixtures+' meczów. Wszystkie zdarzenia symulacji pochodzą z tej daty.';
+ }
+ function matchFilter(){
+  const day=$('coupon-day').value;
+  return C.forSelectedDay(fixtureWindow().filter(m=>m.model),day);
  }
  function renderTodayExplorer(){
   const root=$('coupon-evening');
