@@ -95,6 +95,53 @@
     return {match,id,p,diff,score,label:map.get(id).label};
   }).filter(Boolean).sort((a,b)=>b.score-a.score).slice(0,4);
  };
+ // Research-first: one event per match, before combining independent failures.
+ // High probability alone is not bookmaker edge; quality score is descriptive.
+ function buildSingles(matches,max=6){
+  const pool=[];
+  for(const match of matches){
+   const options=['selective','balanced','contrarian']
+    .flatMap(profile=>candidatesFor(match,profile))
+    .filter(c=>c.p>=.4&&c.p<=.85&&Number.isFinite(c.diff)&&Math.abs(c.diff)<=.16)
+    .sort((a,b)=>b.score-a.score);
+   if(!options.length)continue;
+   const chosen=options[0];
+   pool.push({profile:'single',type:'single',legs:[chosen],p:chosen.p,
+    requiredOdds:quoteThreshold(chosen.p),
+    date:match.date,score:chosen.score,
+    sampleMin:Math.min(match.model.nH,match.model.nA),
+    forText:'Jedno zdarzenie z zapisem modelu i prostym punktem odniesienia; brak kumulacji wielu spotkań.',
+    againstText:'Sam wybór zdarzenia przez model nie dowodzi przewagi nad ceną rynkową. Historyczne wyniki są nieskalibrowane.',
+    hypothesis:'Eksperyment pojedynczy; dopiero przyszły wynik i niezależna kalibracja pokażą jakość oceny.'});
+  }
+  pool.sort((a,b)=>a.date.localeCompare(b.date)||b.score-a.score);
+  const counts=new Map(),picked=[];
+  for(const c of pool){
+   const market=c.legs[0].id;
+   if((counts.get(market)||0)>=2)continue;
+   picked.push(c);counts.set(market,(counts.get(market)||0)+1);
+   if(picked.length>=max)break;
+  }
+  return picked;
+ }
+ function diversifyCoupons(results,max){
+  const selected=[],uses=new Map();
+  for(const candidate of results){
+   const legs=candidate.legs.map(x=>x.match.id+':'+x.id);
+   if(legs.some(k=>(uses.get(k)||0)>=2))continue;
+   // Skip near-duplicate combinations: share too many identical match+market legs.
+   const similar=selected.some(c=>{
+    const existing=new Set(c.legs.map(x=>x.match.id+':'+x.id));
+    const shared=legs.filter(k=>existing.has(k)).length;
+    return shared/Math.min(legs.length,c.legs.length)>.34;
+   });
+   if(similar)continue;
+   selected.push(candidate);
+   legs.forEach(k=>uses.set(k,(uses.get(k)||0)+1));
+   if(selected.length>=max)break;
+  }
+  return selected;
+ }
  function buildMultis(matches,profile,count,max=5){
   if(!Number.isInteger(count)||count<2||count>4)return [];
   const pool=[];
@@ -129,7 +176,7 @@
      'Selekcja na podstawie danych historycznych, a nie zweryfikowanej przewagi rynkowej.'
    });
   }
-  return results.sort((a,b)=>b.score-a.score||b.p-a.p).slice(0,max);
+  return diversifyCoupons(results.sort((a,b)=>b.score-a.score||b.p-a.p),max);
  }
  const CORRELATIONS=[
   ['btts','o25'],['hg','u35'],['ag','u35'],['o25','h2'],['o25','a2'],
@@ -162,11 +209,12 @@
  function createCoupons(matches,profile,count,max=5){
   const eligible=matches.filter(m=>m.model&&validDate(m.date)&&m.home&&m.away);
   if(profile==='builder')return buildBuilders(eligible,max);
+  if(profile==='single')return buildSingles(eligible,max);
   if(!['selective','balanced','contrarian'].includes(profile))return [];
   return buildMultis(eligible,profile,count,max);
  }
  const API={MARKETS,grid,poisson,probability,marketP,parseCSV,validDate,n,daysBetween,analyze,
-   quoteThreshold,jointSameGame,jointSeparate,candidatesFor,createCoupons,fmtP,fmt};
+   quoteThreshold,jointSameGame,jointSeparate,candidatesFor,createCoupons,buildSingles,diversifyCoupons,fmtP,fmt};
  if(typeof module!=='undefined'&&module.exports)module.exports=API;
  if(root)root.EDGECOUPONS=API;
 })(typeof window!=='undefined'?window:null);
