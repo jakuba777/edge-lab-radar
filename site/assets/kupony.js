@@ -2,13 +2,15 @@
 /* EDGE LAB 0.6 — offline-capable static UI: no login, no live odds, no bookmaker links. */
 (function(){
  const C=window.EDGECOUPONS;
- if(!C)throw Error('Coupon core missing');
+ const W=window.EDGEWINDOW;
+ if(!C||!W)throw Error('Coupon or Warsaw-time guard missing');
  const $=id=>document.getElementById(id);
  const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const today=()=>new Intl.DateTimeFormat('sv-SE',{year:'numeric',month:'2-digit',day:'2-digit',timeZone:'Europe/Warsaw'}).format(new Date());
- const state={matches:[],leagues:[],coupons:[],loaded:false,profile:'selective',stale:true};
+ const state={matches:[],leagues:[],coupons:[],loaded:false,profile:'selective',stale:true,sourceUTC:null};
+ const sourceAge=()=>state.sourceUTC?(Date.now()-Date.parse(state.sourceUTC))/3600000:Infinity;
  const kickoff=m=>{const t=String(m.time||'').trim().match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/);const n=t&&+t[1]<24&&+t[2]<60?+t[1]*60+(+t[2]):1440;return m.date+' '+String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0');};
- const chronological=(a,b)=>kickoff(a).localeCompare(kickoff(b));
+ const chronological=(a,b)=>W.sortKey(a).localeCompare(W.sortKey(b));
  const descriptions={
    selective:'Wyższe szacunki modelu, ale to nie są „pewniaki” ani sprawdzone przewagi rynkowe.',
    single:'Pojedyncze zdarzenie do badania. Weryfikowane oddzielnie od wielozdarzeniowych symulacji.',
@@ -32,7 +34,7 @@
   $('coupon-failure').textContent=msg;
  }
  async function load(){
-  state.loaded=false;state.stale=true;
+  state.loaded=false;state.stale=true;state.sourceUTC=null;
   $('coupon-failure').classList.add('hidden');
   $('coupon-state').textContent='Sprawdzam dane sportowe…';
   $('coupon-reload').disabled=true;
@@ -58,7 +60,8 @@
      const id=[league.id,f.date,f.home,f.away].join('|');
      if(seen.has(id))continue;seen.add(id);
      matches.push({id,date:f.date,home:f.home,away:f.away,leagueId:league.id,league:league.name,
-      time:f.time||'',model:C.analyze(f,history)});
+      time:f.time||'',model:C.analyze(f,history),
+      exploratoryModel:f.date===today()?C.analyze(f,history,{exploratory:true}):null});
     }
     return {league,matches};
    }));
@@ -66,11 +69,11 @@
    if(!valid.length)throw Error('Brak kompletnych źródeł danych — nie układamy fikcyjnych zestawień.');
    state.matches=valid.flatMap(x=>x.matches);
    state.leagues=valid.map(x=>x.league);
-   state.stale=false;state.loaded=true;
+   state.stale=false;state.loaded=true;state.sourceUTC=status.retrieved_at_utc;
    $('coupon-state').textContent='Dane wczytane · nie LIVE';
    $('coupon-updated').textContent='Pobrano '+new Date(status.retrieved_at_utc).toLocaleString('pl-PL',{timeZone:'Europe/Warsaw'})+' · brak gwarancji terminarza';
    $('coupon-leagues').textContent=String(valid.length);
-   const next=state.matches.filter(m=>C.daysBetween(m.date,today())>=1&&C.daysBetween(m.date,today())<=14);
+   const next=state.matches.filter(m=>C.daysBetween(m.date,today())>=0&&C.daysBetween(m.date,today())<=14&&W.eligible(m,new Date(),sourceAge()));
    $('coupon-fixtures').textContent=String(next.length);
    $('coupon-ready').textContent=String(next.filter(m=>m.model).length);
    const missed=attempts.length-valid.length;
@@ -79,7 +82,7 @@
    select.innerHTML='<option value="all">Wszystkie dostępne</option>'+state.leagues.map(l=>
      '<option value="'+escape(l.id)+'">'+escape(l.name)+'</option>').join('');
    if([...select.options].some(x=>x.value===prior))select.value=prior;
-   render();
+   render();renderTodayExplorer();
   }catch(e){
    $('coupon-state').textContent='Źródła niedostępne';
    setFailure(String(e?.message||e));
@@ -88,13 +91,70 @@
    $('coupon-ready').textContent='0';
    $('coupon-cards').innerHTML='<div class="coupon-nothing">Nie mamy aktualnych danych. Nie generujemy sztucznych zestawień. Sprawdź synchronizację GitHub Actions.</div>';
    $('coupon-number').textContent='0';
+   $('coupon-evening-count').textContent='—';
+   $('coupon-evening').textContent='Brak wiarygodnych danych do dzisiejszych badań.';
   }finally{$('coupon-reload').disabled=false;}
  }
  function matchFilter(){
   const days=Number($('coupon-days').value)||14;
   const league=$('coupon-league').value;
-  return state.matches.filter(m=>m.model&&C.daysBetween(m.date,today())>=1&&C.daysBetween(m.date,today())<=days
-    &&(league==='all'||m.leagueId===league)).sort(chronological);
+  return state.matches.filter(m=>m.model&&C.daysBetween(m.date,today())>=0&&C.daysBetween(m.date,today())<=days
+    &&(league==='all'||m.leagueId===league)
+    &&(m.date!==today()||$('coupon-include-today').checked)
+    &&W.eligible(m,new Date(),sourceAge())).sort(chronological);
+ }
+ function renderTodayExplorer(){
+  const root=$('coupon-evening');
+  if(!root)return;
+  if(!state.loaded||state.stale){
+   root.textContent='Źródła niedostępne. Nie wyświetlamy prognoz.';
+   return;
+  }
+  const remaining=state.matches.filter(m=>m.date===today()
+     &&W.status(m,new Date(),sourceAge())==='today_remaining_unverified_time_zone')
+     .sort(chronological);
+  const researched=remaining.filter(m=>m.exploratoryModel);
+  $('coupon-evening-count').textContent=researched.length+' analiz';
+  if(!remaining.length){
+   root.innerHTML='<div class="coupon-nothing">Brak dalszych meczów z wiarygodną godziną w świeżym terminarzu. Możesz sprawdzić jutro, bez wymuszania typów.</div>';
+   return;
+  }
+  if(!researched.length){
+   root.innerHTML='<div class="coupon-nothing">Pozostałe dzisiaj: '+remaining.length+' spotkań, ale brak modelu nawet przy obniżonej próbie 4/4. Nie zgadujemy prawdopodobieństw.</div>';
+   return;
+  }
+  root.innerHTML=researched.slice(0,14).map(m=>{
+   const model=m.exploratoryModel;
+   const status=model.exploratory?'MAŁA PRÓBA · TEST':'STANDARDOWA PRÓBA · TEST';
+   const type='ŹRÓDŁOWA GODZINA · WYMAGA POTWIERDZENIA';
+   return '<article class="coupon-evening-card">'+
+    '<div class="coupon-evening-head"><div><small>'+escape(m.league)+' · '+escape(m.time)+' · '+type+'</small>'+
+    '<strong>'+escape(m.home)+' – '+escape(m.away)+'</strong></div><span class="coupon-pill">'+status+'</span></div>'+
+    '<div class="coupon-evening-probs">'+
+    '<div><small>Powyżej 1,5</small><strong>'+C.fmtP(model.ps.o15)+'</strong></div>'+
+    '<div><small>Poniżej 3,5</small><strong>'+C.fmtP(model.ps.u35)+'</strong></div>'+
+    '<div><small>Obie strzelą</small><strong>'+C.fmtP(model.ps.btts)+'</strong></div></div>'+
+    '<p class="caption">Próba '+model.nH+' dom / '+model.nA+' wyjazd. Trzy oszacowania tego samego meczu, nie niezależne typy. Nie znamy kursu.</p>'+
+    '<button type="button" class="coupon-evening-copy" data-evening-copy="'+escape(m.id)+'">Skopiuj obserwację do notatek</button></article>';
+  }).join('');
+ }
+ async function copyTodayResearch(id,button){
+  const m=state.matches.find(x=>x.id===id&&x.date===today());
+  if(!m||!m.exploratoryModel||W.status(m,new Date(),sourceAge())!=='today_remaining_unverified_time_zone'){
+   button.textContent='Termin minął lub dane nieaktualne';return;
+  }
+  const p=m.exploratoryModel;
+  const note=['EDGE LAB · zapis lokalny (niezależnie niezweryfikowany)',
+   'Zapisano '+new Date().toLocaleString('pl-PL',{timeZone:'Europe/Warsaw'}),
+   m.date+' '+m.time+' (godzina źródłowa, niepotwierdzona)',
+   m.home+' – '+m.away+' · '+m.league,
+   'Model eksperymentalny: P(>1,5) '+C.fmtP(p.ps.o15),
+   'P(<3,5) '+C.fmtP(p.ps.u35),
+   'P(BTTS) '+C.fmtP(p.ps.btts),
+   'Próba '+p.nH+' / '+p.nA,
+   'Nie jest to potwierdzone prognozowanie ani kupon. Godzinę należy zweryfikować.'].join('\n');
+  try{await navigator.clipboard.writeText(note);button.textContent='Skopiowano';}
+  catch(_){button.textContent='Kopiowanie niedostępne';}
  }
  function profileName(type,count){return type==='single'?'1 zdarzenie / badanie':type==='builder'?'Scenariusz jednego meczu':count+' mecze / '+profileLabels[type];}
  function renderCard(c,i){
@@ -182,9 +242,10 @@
  }
  document.addEventListener('DOMContentLoaded',()=>{
   document.querySelectorAll('[data-profile]').forEach(btn=>btn.addEventListener('click',()=>selectProfile(btn.dataset.profile)));
-  ['coupon-count','coupon-days','coupon-league'].forEach(id=>$(id).addEventListener('change',render));
+  ['coupon-count','coupon-days','coupon-league','coupon-include-today'].forEach(id=>$(id).addEventListener('change',render));
   $('coupon-build').addEventListener('click',render);
   $('coupon-reload').addEventListener('click',()=>{load();loadDailyAudit();});
+  $('coupon-evening').addEventListener('click',e=>{const button=e.target.closest('[data-evening-copy]');if(button)copyTodayResearch(button.dataset.eveningCopy,button);});
   $('coupon-cards').addEventListener('input',e=>{
    if(e.target?.matches('[data-coupon-quote]'))quote(Number(e.target.dataset.couponQuote),e.target.value);
   });
