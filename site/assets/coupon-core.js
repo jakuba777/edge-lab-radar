@@ -225,6 +225,12 @@
    seen.add(key);return true;
   }).slice(0,max);
  }
+ function forSelectedDay(matches,day){
+  if(!Array.isArray(matches))return [];
+  if(day==='all')return [...matches];
+  if(!validDate(day))return [];
+  return matches.filter(m=>m.date===day);
+ }
  function createCoupons(matches,profile,count,max=5,options={}){
   const eligible=matches.filter(m=>m.model&&!m.model.exploratory&&validDate(m.date)&&m.home&&m.away);
   if(profile==='builder')return buildBuilders(eligible,max);
@@ -233,7 +239,7 @@
   return buildMultis(eligible,profile,count,max,options);
  }
  const API={MARKETS,grid,poisson,probability,marketP,parseCSV,validDate,n,daysBetween,analyze,
-   quoteThreshold,jointSameGame,jointSeparate,candidatesFor,createCoupons,buildSingles,diversifyCoupons,fmtP,fmt};
+   quoteThreshold,jointSameGame,jointSeparate,candidatesFor,createCoupons,forSelectedDay,buildSingles,diversifyCoupons,fmtP,fmt};
  if(typeof module!=='undefined'&&module.exports)module.exports=API;
  if(root)root.EDGECOUPONS=API;
 })(typeof window!=='undefined'?window:null);
