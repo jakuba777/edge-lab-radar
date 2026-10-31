@@ -1,0 +1,22 @@
+.market-shell{padding-bottom:55px}
+.market-note{margin-top:12px}
+.market-form{display:grid;gap:11px}
+.market-form label{margin:1px 0 -5px}
+.market-form .action{margin-top:3px}
+.market-output{background:#0e1c2c;border-radius:12px;min-height:60px;padding:13px}
+.market-output .snapshot{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:10px}
+.snapshot>div{background:#1a3041;border:1px solid #31485c;border-radius:11px;padding:10px}
+.snapshot small{display:block;color:var(--muted);font-size:11px}
+.snapshot strong{display:block;font-size:23px;color:#e7f5f6;font-variant-numeric:tabular-nums}
+.market-disclaimer{padding-top:10px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+.market-back{margin:20px 0 8px;font-size:13px}
+.market-match{width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;color:var(--text)}
+.market-match:focus-visible{outline:2px solid var(--teal)}
+.market-match small{display:block;color:var(--muted);font-size:11px}
+.market-match strong{font-size:15px;display:block}
+.market-error{color:#ffd1ca;font-size:12px}
+.market-fine{color:#b7d9e3;font-size:11px}
+.market-source{background:#182c3b;border-radius:8px;padding:9px 10px;font-size:12px;color:#c6d9e1}
+.market-source b{color:var(--teal)}
+#football-status,#odds-status{font-size:12px;text-align:right}
+@media(min-width:640px){.market-output .snapshot{grid-template-columns:repeat(4,minmax(0,1fr))}}
