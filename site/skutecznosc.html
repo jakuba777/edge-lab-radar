@@ -25,16 +25,19 @@
 <div class="section-head"><div class="kicker">02 / RYNKI BRAMKOWE</div><h2>Co wychodzi najlepiej?</h2></div>
 <p class="caption">Rynki poniżej to wszystkie cztery zapisywane prognozy dla meczu, a nie cztery osobno zagrane typy.</p>
 <section id="track-market" class="panel track-table">Wczytywanie…</section>
-<div class="section-head"><div class="kicker">03 / WIRTUALNE ZESTAWIENIA</div><h2>Całe kupony</h2></div>
+<div class="section-head"><div class="kicker">03 / POJEDYNCZE BADANIA</div><h2>Jedno zdarzenie, osobne rozliczenie</h2></div>
+<div id="track-singles-metrics" class="track-stats"><div class="panel">Wczytywanie…</div></div>
+<p class="caption">Pojedyncze eksperymenty zapisane przed meczami nie są łączone ze statystyką wirtualnych kuponów wielozdarzeniowych.</p>
+<div class="section-head"><div class="kicker">04 / WIRTUALNE ZESTAWIENIA</div><h2>Całe kupony</h2></div>
 <div id="track-coupons-metrics" class="track-stats"><div class="panel">Wczytywanie…</div></div>
 <p class="caption">Rozliczamy cały kupon jako trafiony wyłącznie, jeśli wszystkie jego zdarzenia weszły. Kombinacje zapisujemy automatycznie przed spotkaniami; nie są realnymi kuponami bukmacherskimi.</p>
-<div class="section-head"><div class="kicker">04 / ŁAMAKI 2/1 I 1/2</div><h2>Badanie HT/FT</h2></div>
+<div class="section-head"><div class="kicker">05 / ŁAMAKI 2/1 I 1/2</div><h2>Badanie HT/FT</h2></div>
 <section id="track-halftime" class="panel track-table">Wczytywanie…</section>
 <p class="caption">HT/FT są prognozami badawczymi, a nie konkretnie wybranymi zakładami. Brak potwierdzonego wyniku do przerwy oznacza status „oczekuje”.</p>
-<div class="section-head"><div class="kicker">05 / HISTORIA ZDARZEŃ</div><h2>Które weszły?</h2></div>
+<div class="section-head"><div class="kicker">06 / HISTORIA ZDARZEŃ</div><h2>Które weszły?</h2></div>
 <section class="panel track-controls">
 <label for="track-kind">Rodzaj historii</label>
-<select class="field" id="track-kind"><option value="main">Główne prognozy</option><option value="coupons">Całe wirtualne kupony</option><option value="ht">HT/FT – łamaki</option></select>
+<select class="field" id="track-kind"><option value="main">Główne prognozy</option><option value="coupons">Całe wirtualne kupony</option><option value="single">Pojedyncze eksperymenty</option><option value="ht">HT/FT – łamaki</option></select>
 <label for="track-filter">Pokaż</label>
 <select class="field" id="track-filter"><option value="all">Wszystkie</option><option value="hit">Trafione</option><option value="miss">Nietrafione</option><option value="pending">Oczekujące</option></select>
 </section>
