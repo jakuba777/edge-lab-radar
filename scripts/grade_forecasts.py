@@ -266,7 +266,7 @@ def grade(forecasts,halftimes,coupons,scores,today):
             "single_research":display(single_rows)
         },
         "counts":{"forecast_matches":len(forecasts),"halftime_matches":len(halftimes),
-                  "simulated_coupons":len(coupons)}
+                  "simulated_coupons":len(ticket_rows),"single_research":len(single_rows)}
     }
 
 def json_get(url,token):
