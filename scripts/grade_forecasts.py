@@ -164,7 +164,8 @@ def read_coupon_forecasts(meta,body):
     items=[]
     for raw in body.get("candidates",[])[:100]:
         legs=raw.get("legs")
-        if not isinstance(legs,list) or not 2<=len(legs)<=4:continue
+        if not isinstance(legs,list) or not 1<=len(legs)<=4:continue
+        if (len(legs)==1)!=(raw.get("profile")=="single"):continue
         data=[]
         for leg in legs:
             key=result_key(leg.get("league"),leg.get("date"),leg.get("home"),leg.get("away"))
@@ -235,11 +236,13 @@ def grade(forecasts,halftimes,coupons,scores,today):
         if any(l["state"]=="miss" for l in legs):state="miss";y=0
         elif all(l["state"]=="hit" for l in legs):state="hit";y=1
         else:state="pending";y=None
-        ticket_rows.append({"id":raw["id"],"date":min(l["date"] for l in legs),
+        target=single_rows if raw["profile"]=="single" else ticket_rows
+        target.append({"id":raw["id"],"date":min(l["date"] for l in legs),
             "profile":raw["profile"],"type":raw["type"],"snapshot_utc":raw["created_utc"],
             "state":state,"outcome":y,"p":raw["p"],"legs":legs})
     main.sort(key=lambda r:(r["date"],r["league"],r["home"]),reverse=True)
     ticket_rows.sort(key=lambda r:(r["date"],r["profile"],r["id"]),reverse=True)
+    single_rows.sort(key=lambda r:(r["date"],r["id"]),reverse=True)
     hlist=sorted([x for rows in ht_rows.values() for x in rows],
                  key=lambda r:(r["date"],r["league"]),reverse=True)
     # Keep recently settled events visible even when many future forecasts exist.
@@ -253,12 +256,14 @@ def grade(forecasts,halftimes,coupons,scores,today):
             "main":summarize(main),
             "market_probabilities":{m:summarize(markets[m]) for m in MARKETS},
             "halftime_research":{m:summarize(ht_rows[m]) for m in HTMARKETS},
-            "simulated_coupons":summarize(ticket_rows)
+            "simulated_coupons":summarize(ticket_rows),
+            "single_research":summarize(single_rows)
         },
         "entries":{
             "main":display(main),
             "halftime_research":display(hlist),
-            "simulated_coupons":display(ticket_rows)
+            "simulated_coupons":display(ticket_rows),
+            "single_research":display(single_rows)
         },
         "counts":{"forecast_matches":len(forecasts),"halftime_matches":len(halftimes),
                   "simulated_coupons":len(coupons)}
@@ -362,7 +367,7 @@ def main():
     print("TRACK RECORD "+json.dumps({
         "artifacts":len(all_artifacts),"errors":len(faults),
         "forecasts":len(forecasts),"ht_forecasts":len(halftime),
-        "coupons":len(coupons),"main":result["summary"]["main"],
+        "coupons":len(ticket_rows),"single_research":len(single_rows),"main":result["summary"]["main"],
         "tickets":result["summary"]["simulated_coupons"],
         "conflicts":conflicts},ensure_ascii=False))
     # Fail closed if GitHub API returns none despite forecasts being expected.
