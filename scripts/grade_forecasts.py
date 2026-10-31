@@ -240,6 +240,17 @@ def grade(forecasts,halftimes,coupons,scores,today):
         target.append({"id":raw["id"],"date":min(l["date"] for l in legs),
             "profile":raw["profile"],"type":raw["type"],"snapshot_utc":raw["created_utc"],
             "state":state,"outcome":y,"p":raw["p"],"legs":legs})
+    leg_keys=[(leg["key"],leg["market"]) for raw in coupons
+              if raw.get("profile")!="single" for leg in raw["legs"]]
+    frequency=defaultdict(int)
+    for key in leg_keys:frequency[key]+=1
+    dependencies={
+        "virtual_combinations":len(ticket_rows),
+        "legs_total":len(leg_keys),
+        "unique_market_events":len(frequency),
+        "unique_matches":len({key for key,market in leg_keys}),
+        "max_event_reuse":max(frequency.values(),default=0)
+    }
     main.sort(key=lambda r:(r["date"],r["league"],r["home"]),reverse=True)
     ticket_rows.sort(key=lambda r:(r["date"],r["profile"],r["id"]),reverse=True)
     single_rows.sort(key=lambda r:(r["date"],r["id"]),reverse=True)
@@ -257,7 +268,8 @@ def grade(forecasts,halftimes,coupons,scores,today):
             "market_probabilities":{m:summarize(markets[m]) for m in MARKETS},
             "halftime_research":{m:summarize(ht_rows[m]) for m in HTMARKETS},
             "simulated_coupons":summarize(ticket_rows),
-            "single_research":summarize(single_rows)
+            "single_research":summarize(single_rows),
+            "coupon_dependency":dependencies
         },
         "entries":{
             "main":display(main),
