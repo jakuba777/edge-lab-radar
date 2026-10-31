@@ -23,3 +23,5 @@
 
 .market-copy{width:100%;border:1px solid #426170;background:#172e3c;color:#c6e7e7;padding:10px 12px;border-radius:11px;font-size:12px;font-weight:700}
 .market-copy:focus-visible{outline:2px solid var(--teal)}
+
+.expert-panel{margin-top:12px}.expert-panel summary{cursor:pointer;font-size:13px;font-weight:750;color:var(--teal)}.expert-output{display:grid;gap:9px;margin-top:13px}.expert-item{border-top:1px solid var(--line);padding-top:10px}.expert-item strong{display:block;font-size:12px;margin-bottom:4px}.expert-item p{margin:0}
