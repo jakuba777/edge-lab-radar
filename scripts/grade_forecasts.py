@@ -367,7 +367,7 @@ def main():
     print("TRACK RECORD "+json.dumps({
         "artifacts":len(all_artifacts),"errors":len(faults),
         "forecasts":len(forecasts),"ht_forecasts":len(halftime),
-        "coupons":len(ticket_rows),"single_research":len(single_rows),"main":result["summary"]["main"],
+        "coupon_snapshots":len(coupons),"single_research":result["counts"]["single_research"],"main":result["summary"]["main"],
         "tickets":result["summary"]["simulated_coupons"],
         "conflicts":conflicts},ensure_ascii=False))
     # Fail closed if GitHub API returns none despite forecasts being expected.
