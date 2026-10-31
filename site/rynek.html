@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="theme-color" content="#091322"/>
+<meta name="referrer" content="no-referrer"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'none'"/>
+<title>Analiza rynku — EDGE LAB</title>
+<meta name="description" content="Badawczy panel porównywania oszacowań EDGE LAB z ręcznie podanym kursem. Bez dostępu do konta bukmacherskiego."/>
+<link rel="icon" href="./assets/icon.svg" type="image/svg+xml"/>
+<link rel="stylesheet" href="./assets/styles.css"/>
+<link rel="stylesheet" href="./assets/market.css"/>
+<script src="./assets/coupon-core.js" defer></script>
+<script src="./assets/market.js" defer></script>
+</head>
+<body>
+<main class="shell market-shell">
+ <header class="top">
+  <div><div class="eyebrow"><span class="radar-dot"></span> EDGE LAB / MARKET INTELLIGENCE</div>
+   <h1>Analiza rynku</h1><p class="subtitle">Dane, prawdopodobieństwa i kurs — trzy osobne rzeczy.</p></div>
+  <span class="version">1.0 BETA</span>
+ </header>
+ <div class="alert"><strong>Laboratorium, nie porada bukmacherska.</strong> Kurs wprowadzasz samodzielnie. Wyniki modeli nie są skalibrowane ani nie wykazują udowodnionej przewagi. Brak dostępu do prywatnego konta, kuponów lub automatycznych zakładów.</div>
+ <section class="panel source-panel" aria-live="polite">
+  <div class="between top-gap"><div><div class="kicker">STAN DANYCH</div><strong id="model-status">Sprawdzanie terminarza…</strong>
+   <p id="model-updated" class="caption">Oczekiwanie na pliki projektu.</p></div>
+   <button type="button" id="model-refresh" class="action">↻ Odśwież</button></div>
+  <div class="metrics">
+   <div><span>Źródła ligowe</span><strong id="model-leagues">—</strong></div>
+   <div><span>Mecze z modelem</span><strong id="model-count">—</strong></div>
+   <div><span>Aktualizacja</span><strong id="model-age">—</strong></div>
+  </div>
+  <p id="model-error" class="error-box hidden" role="alert"></p>
+ </section>
+ <div class="section-head"><div class="kicker">01 / WERYFIKACJA POŁĄCZEŃ</div><h2>Źródła zewnętrzne</h2></div>
+ <div class="panel">
+  <div class="data-row"><span>API-Football · zdarzenia</span><strong id="football-status">Brak odczytu</strong></div>
+  <div class="data-row"><span>OddsPapi · Superbet.pl</span><strong id="odds-status">Brak odczytu</strong></div>
+  <p id="connectivity-updated" class="caption market-note">Status połączeń z ostatniego procesu GitHub Actions. To nie jest transmisja LIVE ani potwierdzenie aktualnych kursów.</p>
+ </div>
+ <div class="section-head"><div class="kicker">02 / ANALIZA PRZEDMECZOWA</div><h2>Model kontra rzeczywista cena</h2></div>
+ <section class="panel market-form">
+  <label for="market-match">Najbliższy mecz z wystarczającą historią</label>
+  <select id="market-match" class="field"><option value="">Wczytywanie terminarza…</option></select>
+  <label for="market-type">Rynek</label>
+  <select id="market-type" class="field">
+   <option value="o15">Powyżej 1,5 gola</option>
+   <option value="o25">Powyżej 2,5 gola</option>
+   <option value="u35">Poniżej 3,5 gola</option>
+   <option value="btts">Obie drużyny strzelą</option>
+   <option value="hg">Gospodarze strzelą</option>
+   <option value="ag">Goście strzelą</option>
+  </select>
+  <label for="market-odds">Kurs dziesiętny sprawdzony samodzielnie u operatora</label>
+  <input id="market-odds" class="field" type="text" inputmode="decimal" maxlength="12" placeholder="np. 1,85" autocomplete="off"/>
+  <p class="caption">Nie wpisuj loginu, hasła, salda ani danych prywatnych. Kurs jest używany wyłącznie w tym widoku i nie jest przesyłany na serwer.</p>
+  <button type="button" id="market-compare" class="action wide">Porównaj matematycznie</button>
+  <div id="market-output" class="market-output" aria-live="polite"><p class="caption">Wybierz mecz i wpisz kurs. Nie pokazujemy fikcyjnych cen.</p></div>
+ </section>
+ <div class="section-head"><div class="kicker">03 / KOLEJNOŚĆ CHRONOLOGICZNA</div><h2>Nadchodzące mecze do zbadania</h2></div>
+ <p class="caption market-note">Lista zaczyna się od jutrzejszych spotkań. Godziny z surowego terminarza mogą nie mieć potwierdzonej strefy czasowej, dlatego nie wyświetlamy ich jako LIVE.</p>
+ <div id="market-upcoming" class="vstack"><div class="panel empty">Wczytywanie…</div></div>
+ <div class="section-head"><div class="kicker">04 / JAK CZYTAĆ WYNIK</div><h2>Kontrola błędnych wniosków</h2></div>
+ <section class="panel space">
+  <p><strong>Implikowana szansa:</strong> 1 / kurs. To cena z marżą operatora, nie obiektywne prawdopodobieństwo.</p>
+  <p><strong>Próg po podatku:</strong> przy założeniu polskiego podatku 12% od stawki obliczamy 1 / (0,88 × kurs). To matematyczny próg, nie potwierdzenie zysku.</p>
+  <p><strong>Model i baza:</strong> oba korzystają z danych historycznych. Ich różnica nie jest jeszcze przewagą nad rynkiem; konieczna jest kalibracja i prospektywne testy.</p>
+  <p><strong>API:</strong> możliwość połączenia jest przygotowana. Nie publikujemy surowych kursów ani danych LIVE z usług zewnętrznych bez praw do wykorzystania i poprawnie skonfigurowanych kluczy.</p>
+  <p class="caption">18+. Projekt edukacyjno-badawczy. Zakłady mogą prowadzić do strat.</p>
+ </section>
+ <p class="market-back"><a href="./">← Radar</a> · <a href="./skutecznosc.html">Weryfikacja wyników</a> · <a href="./modele.html">Testy modeli</a></p>
+</main>
+</body>
+</html>
