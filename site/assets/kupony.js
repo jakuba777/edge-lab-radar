@@ -174,6 +174,8 @@
    const active=btn.dataset.profile===profile;
    btn.classList.toggle('is-selected',active);btn.setAttribute('aria-pressed',String(active));
   });
+  if(profile==='single')$('coupon-count').value='1';
+  else if($('coupon-count').value==='1')$('coupon-count').value='2';
   $('coupon-count').disabled=profile==='builder'||profile==='single';
   $('coupon-help').textContent=descriptions[profile];
   render();
