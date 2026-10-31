@@ -17,7 +17,7 @@
 <header class="coupon-top">
   <a href="./" class="coupon-return" aria-label="Wróć do radaru">‹ <span>RADAR</span></a>
   <div class="coupon-brand"><span class="radar-dot"></span> EDGE LAB / RESEARCH</div>
-  <span class="coupon-edition">0.6 BETA</span>
+  <span class="coupon-edition">0.9 / AUDYT</span>
 </header>
 <div class="coupon-hero">
  <div class="kicker">AGENT SELEKCJI I KONSTRUKCJI</div>
@@ -31,16 +31,23 @@
  <div class="metrics"><div><span>Aktywne ligi</span><strong id="coupon-leagues">—</strong></div><div><span>Terminarz 14 dni</span><strong id="coupon-fixtures">—</strong></div><div><span>Z próbką</span><strong id="coupon-ready">—</strong></div></div>
  <p id="coupon-failure" class="error-box hidden" role="alert"></p>
 </section>
+<section class="panel coupon-daily-audit" aria-live="polite">
+ <div class="kicker">WNIOSKI Z OSTATNIEGO ROZLICZONEGO DNIA</div>
+ <h3 id="coupon-daily-title">Sprawdzanie wyników…</h3>
+ <p id="coupon-daily-note" class="caption">Korzystamy wyłącznie z wcześniejszych archiwalnych prognoz, nie z prywatnego kuponu.</p>
+ <a href="./skutecznosc.html" class="coupon-audit-link">Szczegóły trafień i pomyłek</a>
+</section>
 <div class="coupon-section-heading"><div><div class="kicker">01 / WYBIERZ PROFIL</div><h2>Jakich scenariuszy szukamy?</h2></div></div>
 <div class="coupon-profiles" role="group" aria-label="Profil selekcji">
  <button type="button" class="coupon-profile is-selected" data-profile="selective" aria-pressed="true"><strong>Selektywny</strong><small>Szanse wyższe, nadal bez gwarancji</small></button>
  <button type="button" class="coupon-profile" data-profile="balanced" aria-pressed="false"><strong>Balans</strong><small>Różne rynki i kombinacje</small></button>
  <button type="button" class="coupon-profile" data-profile="contrarian" aria-pressed="false"><strong>Kontrariański</strong><small>Odchylenia od częstości ligi</small></button>
+ <button type="button" class="coupon-profile" data-profile="single" aria-pressed="false"><strong>Pojedyncze</strong><small>Jeden mecz, bez ryzyka kumulacji</small></button>
  <button type="button" class="coupon-profile" data-profile="builder" aria-pressed="false"><strong>Bet Builder</strong><small>Wspólne zdarzenia jednego meczu</small></button>
 </div>
 <section class="panel coupon-controls">
  <div class="two-fields">
-  <div><label for="coupon-count">Liczba spotkań</label><select class="field" id="coupon-count"><option value="2" selected>2 mecze</option><option value="3">3 mecze</option><option value="4">4 mecze</option></select></div>
+  <div><label for="coupon-count">Liczba spotkań</label><select class="field" id="coupon-count"><option value="1">1 mecz (badanie)</option><option value="2" selected>2 mecze</option><option value="3">3 mecze</option><option value="4">4 mecze</option></select></div>
   <div><label for="coupon-days">Zakres</label><select class="field" id="coupon-days"><option value="7">7 dni</option><option value="14" selected>14 dni</option><option value="30">30 dni</option></select></div>
  </div>
  <label for="coupon-league">Liga</label><select class="field" id="coupon-league"><option value="all">Wszystkie dostępne</option></select>
@@ -60,8 +67,9 @@
 </div>
 <section class="panel coupon-method">
  <div class="kicker">JAK DZIAŁA SELEKCJA</div>
+ <p><strong>Pojedyncze:</strong> osobny eksperyment o jednym zdarzeniu. Nie kumuluje ryzyka wielu spotkań i ma oddzielne rozliczenie badawcze.</p>
  <p><strong>Selektywny:</strong> zdarzenia ze względnie wysokim szacunkiem modelu, co nie oznacza atrakcyjnego kursu.</p>
- <p><strong>Balans:</strong> kilka różnych rynków i spotkań, z kontrolą powtórzeń.</p>
+ <p><strong>Balans:</strong> kilka różnych rynków i spotkań, z kontrolą powtórzeń. Niemal identyczne zestawienia odrzucamy zamiast pokazywać je jako niezależne okazje.</p>
  <p><strong>Kontrariański:</strong> model wskazuje zauważalną różnicę względem częstości zdarzenia w lidze. To <em>nie</em> jest jeszcze różnica względem rynku bukmacherskiego.</p>
  <p><strong>Builder:</strong> scenariusz z tego samego meczu liczony ze wspólnej siatki wyników, a nie przez błędne mnożenie niezależnych szans.</p>
  <p>Do rozróżnienia korzystnej ceny od złej potrzebujemy wiarygodnych kursów <strong>całego kuponu</strong>, pomiarów kalibracji i dalszego testowania na nowych meczach.</p>
