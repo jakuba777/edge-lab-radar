@@ -11,11 +11,12 @@
  const chronological=(a,b)=>kickoff(a).localeCompare(kickoff(b));
  const descriptions={
    selective:'Wyższe szacunki modelu, ale to nie są „pewniaki” ani sprawdzone przewagi rynkowe.',
+   single:'Pojedyncze zdarzenie do badania. Weryfikowane oddzielnie od wielozdarzeniowych symulacji.',
    balanced:'Kilka rynków, różne spotkania, próba uniknięcia powtórzeń. Brak dowodu rentowności.',
    contrarian:'Model odstaje od historycznej częstości ligi. „Czutka” jest hipotezą, nie algorytmem przewagi nad kursami.',
    builder:'Wspólne zdarzenia jednego meczu policzone z tej samej siatki wyników.'
  };
- const profileLabels={selective:'Selektywny',balanced:'Balans',contrarian:'Kontrariański',builder:'Bet Builder'};
+ const profileLabels={single:'Pojedyncze',selective:'Selektywny',balanced:'Balans',contrarian:'Kontrariański',builder:'Bet Builder'};
  const fjson=async path=>{
   const r=await fetch(path,{cache:'no-store',credentials:'omit',mode:'same-origin'});
   if(!r.ok)throw Error('Błąd HTTP '+r.status+' przy '+path);
@@ -95,7 +96,7 @@
   return state.matches.filter(m=>m.model&&C.daysBetween(m.date,today())>=1&&C.daysBetween(m.date,today())<=days
     &&(league==='all'||m.leagueId===league)).sort(chronological);
  }
- function profileName(type,count){return type==='builder'?'Scenariusz jednego meczu':count+' mecze / '+profileLabels[type];}
+ function profileName(type,count){return type==='single'?'1 zdarzenie / badanie':type==='builder'?'Scenariusz jednego meczu':count+' mecze / '+profileLabels[type];}
  function renderCard(c,i){
   const multi=c.type==='separate';
   const legs=c.legs.map((x,j)=>{
@@ -106,7 +107,7 @@
     '<div class="minor">Próba: '+match.model.nH+' dom / '+match.model.nA+' wyjazd</div>'+contrast+'</div>'+
     '<div class="prob">'+C.fmtP(x.p)+'</div></div>';
   }).join('');
-  const math=multi?'Iloczyn szacunków dla różnych spotkań (przybliżenie niezależności).':
+  const math=c.type==='single'?'Jedno zdarzenie bez łączenia wyników wielu spotkań.':multi?'Iloczyn szacunków dla różnych spotkań (przybliżenie niezależności).':
    'Wspólne prawdopodobieństwo dwóch zdarzeń wyliczone łącznie, z korelacją.';
   return '<article class="coupon-card">'+
    '<div class="coupon-cardhead"><div><div class="eyebrow">WARIANT '+String(i+1).padStart(2,'0')+' · '+escape(profileLabels[c.profile])+'</div>'+
@@ -114,7 +115,7 @@
    '<div class="coupon-leglist">'+legs+'</div>'+
    '<div class="coupon-metrics"><div class="coupon-metric"><small>Prawdopodobieństwo modelowe</small><strong class="light">'+C.fmtP(c.p)+'</strong></div>'+
    '<div class="coupon-metric"><small>Próg kursu przy podatku 12%*</small><strong>'+C.fmt(c.requiredOdds)+'</strong></div></div>'+
-   '<p class="coupon-truth">'+escape(math)+' *To próg matematyczny, nie kurs dostępny u bukmachera ani dowód przewagi.</p>'+
+   '<p class="coupon-truth">'+escape(math)+' Modelowe ryzyko nietrafienia całego zestawienia: '+C.fmtP(1-c.p)+'. *To próg matematyczny, nie kurs dostępny u bukmachera ani dowód przewagi.</p>'+
    '<details class="coupon-check"><summary>Ocena ekspertów: ZA / PRZECIW / HIPOTEZA <span>+</span></summary>'+
    '<p><strong>ZA:</strong> '+escape(c.forText)+'</p><p class="danger"><strong>PRZECIW:</strong> '+escape(c.againstText)+'</p>'+
    '<p><strong>„CZUTKA” DO WERYFIKACJI:</strong> '+escape(c.hypothesis)+'</p>'+
@@ -134,6 +135,24 @@
   const threshold=1/(.88*odds);
   result.textContent='Dla kursu '+C.fmt(odds)+' matematyczny próg skuteczności wynosi '+C.fmtP(threshold)+
    '. Model szacuje '+C.fmtP(c.p)+', lecz nie jest skalibrowany; porównanie NIE potwierdza przewagi ani opłacalności.';
+ }
+ async function loadDailyAudit(){
+  const title=$('coupon-daily-title'),note=$('coupon-daily-note');
+  try{
+   const record=await fjson('./data/track_record.json');
+   if(record.status!=='ready'||!Number.isFinite(Date.parse(record.updated_utc)))throw Error('Report unavailable');
+   const age=(Date.now()-Date.parse(record.updated_utc))/3600000;
+   if(age>48||age< -1)throw Error('Report stale');
+   const settled=(record.entries?.main||[]).filter(x=>(x.state==='hit'||x.state==='miss')&&x.date);
+   if(!settled.length){title.textContent='Brak rozliczonych prognoz';note.textContent='Nie pokazujemy szacunkowych trafień.';return;}
+   const date=settled.map(x=>x.date).sort().at(-1);
+   const day=settled.filter(x=>x.date===date),hits=day.filter(x=>x.state==='hit').length;
+   title.textContent=date+' · '+hits+' trafionych / '+(day.length-hits)+' nietrafionych';
+   note.textContent='Wyniki '+day.length+' prognoz zapisanych przed meczami. To nie są faktycznie zawarte kupony. Wysoki procent nie gwarantuje wyniku.';
+  }catch(_){
+   title.textContent='Nie można potwierdzić aktualnego bilansu';
+   note.textContent='Dane rozliczeń nieaktualne lub niedostępne. Nie zgadujemy trafień.';
+  }
  }
  function render(){
   if(!state.loaded||state.stale)return;
@@ -155,7 +174,7 @@
    const active=btn.dataset.profile===profile;
    btn.classList.toggle('is-selected',active);btn.setAttribute('aria-pressed',String(active));
   });
-  $('coupon-count').disabled=profile==='builder';
+  $('coupon-count').disabled=profile==='builder'||profile==='single';
   $('coupon-help').textContent=descriptions[profile];
   render();
  }
@@ -163,10 +182,10 @@
   document.querySelectorAll('[data-profile]').forEach(btn=>btn.addEventListener('click',()=>selectProfile(btn.dataset.profile)));
   ['coupon-count','coupon-days','coupon-league'].forEach(id=>$(id).addEventListener('change',render));
   $('coupon-build').addEventListener('click',render);
-  $('coupon-reload').addEventListener('click',load);
+  $('coupon-reload').addEventListener('click',()=>{load();loadDailyAudit();});
   $('coupon-cards').addEventListener('input',e=>{
    if(e.target?.matches('[data-coupon-quote]'))quote(Number(e.target.dataset.couponQuote),e.target.value);
   });
-  load();
+  load();loadDailyAudit();
  });
 })();
