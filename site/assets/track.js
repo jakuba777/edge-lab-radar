@@ -94,6 +94,11 @@ function latestMatchdayReview(){
  meta.appendChild(el('div','OSTATNI DZIEŃ: '+newest,'kicker'));
  meta.appendChild(el('h3',hits+' trafień · '+misses+' pomyłek / '+latest.length+' prognoz'));
  h.appendChild(meta);root.appendChild(h);
+ const expected=latest.reduce((sum,m)=>sum+(Number.isFinite(m.p)?m.p:0),0);
+ const brierDay=latest.reduce((sum,m)=>sum+(m.p-(m.state==='hit'?1:0))**2,0)/latest.length;
+ root.appendChild(el('p','Model oczekiwał około '+expected.toFixed(1).replace('.',',')+
+  ' trafień, a faktycznie zanotowano '+hits+'. Brier dnia: '+
+  brierDay.toFixed(4).replace('.',',')+'. To mała, zależna próba — bez wniosku o opłacalności.','track-daily-insight'));
  root.appendChild(el('p','Kolejność: najpierw pomyłki do analizy, następnie trafienia. To nie jest rozliczenie rzeczywistych kuponów.','caption'));
  const group=[
   ['miss','Co nie zadziałało'],['hit','Potwierdzone trafienia']
