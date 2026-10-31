@@ -4,8 +4,8 @@
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="theme-color" content="#091322"/><meta name="referrer" content="no-referrer"/>
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'none'"/>
-<title>Kupony — EDGE LAB AI 0.6</title>
-<meta name="description" content="Analityczny konstruktor wariantów 2–4 meczów i Bet Builder. Symulacje, bez potwierdzonych przewag bukmacherskich."/>
+<title>Symulacje dzienne — EDGE LAB 1.0</title>
+<meta name="description" content="Symulacje z wybranego dnia, wyższe kursy progowe modelu i kontrola ryzyka. Bez zweryfikowanych przewag."/>
 <link rel="icon" href="./assets/icon.svg" type="image/svg+xml"/>
 <link rel="stylesheet" href="./assets/styles.css"/>
 <link rel="stylesheet" href="./assets/kupony.css"/>
@@ -18,7 +18,7 @@
 <header class="coupon-top">
   <a href="./" class="coupon-return" aria-label="Wróć do radaru">‹ <span>RADAR</span></a>
   <div class="coupon-brand"><span class="radar-dot"></span> EDGE LAB / RESEARCH</div>
-  <span class="coupon-edition">0.9 / AUDYT</span>
+  <span class="coupon-edition">1.0 / DNI + PROGI</span>
 </header>
 <div class="coupon-hero">
  <div class="kicker">AGENT SELEKCJI I KONSTRUKCJI</div>
@@ -53,17 +53,34 @@
  <button type="button" class="coupon-profile" data-profile="balanced" aria-pressed="false"><strong>Balans</strong><small>Różne rynki i kombinacje</small></button>
  <button type="button" class="coupon-profile" data-profile="contrarian" aria-pressed="false"><strong>Kontrariański</strong><small>Odchylenia od częstości ligi</small></button>
  <button type="button" class="coupon-profile" data-profile="single" aria-pressed="false"><strong>Pojedyncze</strong><small>Jeden mecz, bez ryzyka kumulacji</small></button>
+ <button type="button" class="coupon-profile coupon-profile-high" data-profile="high_odds" aria-pressed="false"><strong>Wyższe kursy</strong><small>Wysoki próg modelowy i większe ryzyko</small></button>
  <button type="button" class="coupon-profile" data-profile="builder" aria-pressed="false"><strong>Bet Builder</strong><small>Wspólne zdarzenia jednego meczu</small></button>
 </div>
 <section class="panel coupon-controls">
+ <div class="coupon-day-picker">
+  <label for="coupon-day">Wybierz dzień symulacji</label>
+  <select class="field" id="coupon-day"><option value="">Wczytywanie dostępnych dni…</option></select>
+  <p class="caption" id="coupon-day-info">Mecze w jednej symulacji pochodzą z wybranej daty. „Wszystkie dni” to osobny tryb.</p>
+ </div>
  <div class="two-fields">
   <div><label for="coupon-count">Liczba spotkań</label><select class="field" id="coupon-count"><option value="1">1 mecz (badanie)</option><option value="2" selected>2 mecze</option><option value="3">3 mecze</option><option value="4">4 mecze</option></select></div>
-  <div><label for="coupon-days">Zakres</label><select class="field" id="coupon-days"><option value="7">7 dni</option><option value="14" selected>14 dni</option><option value="30">30 dni</option></select></div>
+  <div><label for="coupon-days">Dni do wyboru</label><select class="field" id="coupon-days"><option value="7">7 dni</option><option value="14" selected>14 dni</option><option value="30">30 dni</option></select></div>
+ </div>
+ <div id="coupon-high-controls" class="coupon-high-controls hidden">
+  <label for="coupon-high-min">Minimalny kurs progowy (NIE kurs Superbet)</label>
+  <select class="field" id="coupon-high-min">
+   <option value="3">3,00</option>
+   <option value="5" selected>5,00</option>
+   <option value="8">8,00</option>
+   <option value="12">12,00</option>
+   <option value="20">20,00</option>
+  </select>
+  <p class="caption">Wyższy próg oznacza niższe modelowe prawdopodobieństwo całej kombinacji. Nie znamy aktualnej oferty bukmachera.</p>
  </div>
  <label class="coupon-today-toggle" for="coupon-include-today"><input id="coupon-include-today" type="checkbox" checked/> Uwzględnij pozostałe mecze dzisiaj (po sprawdzeniu godziny)</label>
  <label for="coupon-league">Liga</label><select class="field" id="coupon-league"><option value="all">Wszystkie dostępne</option></select>
  <div class="coupon-control-bottom">
-  <p id="coupon-help" class="caption">Model 0.4, sprawdzony historycznie, ale bez potwierdzonej przewagi. Każdy kupon zawiera inne mecze.</p>
+  <p id="coupon-help" class="caption">Wybierz konkretny dzień i profil. Symulacje są hipotezami, nie potwierdzoną przewagą.</p>
   <button type="button" id="coupon-build" class="action">Przeanalizuj</button>
  </div>
 </section>
@@ -81,6 +98,7 @@
  <p><strong>Pojedyncze:</strong> osobny eksperyment o jednym zdarzeniu. Nie kumuluje ryzyka wielu spotkań i ma oddzielne rozliczenie badawcze.</p>
  <p><strong>Selektywny:</strong> zdarzenia ze względnie wysokim szacunkiem modelu, co nie oznacza atrakcyjnego kursu.</p>
  <p><strong>Balans:</strong> kilka różnych rynków i spotkań, z kontrolą powtórzeń. Niemal identyczne zestawienia odrzucamy zamiast pokazywać je jako niezależne okazje.</p>
+ <p><strong>Wyższe kursy:</strong> symulacja szuka zestawień o matematycznym kursie progowym co najmniej wybranej wartości. To nie są kursy oferowane przez Superbet. Model nie dowodzi rentowności.</p>
  <p><strong>Kontrariański:</strong> model wskazuje zauważalną różnicę względem częstości zdarzenia w lidze. To <em>nie</em> jest jeszcze różnica względem rynku bukmacherskiego.</p>
  <p><strong>Builder:</strong> scenariusz z tego samego meczu liczony ze wspólnej siatki wyników, a nie przez błędne mnożenie niezależnych szans.</p>
  <p>Do rozróżnienia korzystnej ceny od złej potrzebujemy wiarygodnych kursów <strong>całego kuponu</strong>, pomiarów kalibracji i dalszego testowania na nowych meczach.</p>
