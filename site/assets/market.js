@@ -49,17 +49,49 @@
     item.appendChild(el('strong', value));
     root.appendChild(item);
   }
+  function renderExperts(match, market, data) {
+    const root = $('expert-output');
+    root.replaceChildren();
+    if (!data || !match) {
+      root.appendChild(el('p', 'Wybierz mecz i podaj kurs, aby uruchomić sześć jawnych reguł kontrolnych.', 'caption'));
+      return;
+    }
+    const delta = (data.model - data.base) * 100;
+    const notes = [
+      ['Kontrola danych', 'Model jest obliczany z historycznego źródła zaakceptowanego jako nie starsze niż 48 godzin. Nie jest to transmisja LIVE.'],
+      ['Statystyk', 'Różnica modelu do prostej bazy: ' +
+        (delta >= 0 ? '+' : '') + delta.toFixed(1).replace('.', ',') + ' pp. ' +
+        'To różnica oszacowań, a nie potwierdzona poprawa wyniku Brier.'],
+      ['Analityk rynku', 'Kurs ręczny ' + number(data.odds) +
+        ' oznacza szansę implikowaną ' + percent(data.implied) +
+        '; próg przy założonym podatku 12%: ' + percent(data.threshold) + '.'],
+      ['Specjalista LIVE', 'Brak zweryfikowanego czasu meczu, przebiegu LIVE i aktualnej ceny z API. ' +
+        'Nie wyciągamy wniosków dotyczących zdarzeń podczas meczu.'],
+      ['Sceptyk modelu', 'Coupon Core 0.6 nie został wystarczająco skalibrowany do stwierdzania przewagi nad rynkiem. ' +
+        'Sam dodatni wynik porównania nie oznacza korzyści finansowej.'],
+      ['Audyt', 'Wynik pozostaje lokalny. Możesz skopiować badawczy zapis do notatek, ' +
+        'ale nie będzie on potwierdzonym kuponem ani niezależnym rozliczeniem.']
+    ];
+    for (const note of notes) {
+      const block = el('div', undefined, 'expert-item');
+      block.appendChild(el('strong', note[0]));
+      block.appendChild(el('p', note[1], 'caption'));
+      root.appendChild(block);
+    }
+  }
   function renderComparison() {
     const output = $('market-output');
     output.replaceChildren();
     if (!state.ready) {
       output.appendChild(el('p', 'Brak aktualnego modelu. Porównanie jest wstrzymane.', 'market-error'));
+      renderExperts(null, null, null);
       return;
     }
     const match = state.matches.find(x => x.id === $('market-match').value);
     const market = $('market-type').value;
     if (!match || !Object.prototype.hasOwnProperty.call(label, market)) {
       output.appendChild(el('p', 'Wybierz mecz i rynek.', 'caption'));
+      renderExperts(null, null, null);
       return;
     }
     const p = match.model.ps[market];
@@ -68,6 +100,7 @@
     const result = compare(p, base, raw);
     if (!result) {
       output.appendChild(el('p', 'Wpisz poprawny rzeczywisty kurs dziesiętny, większy od 1.', 'market-error'));
+      renderExperts(null, null, null);
       return;
     }
     const snapshot = el('div', undefined, 'snapshot');
@@ -83,6 +116,7 @@
       'Próba: ' + match.model.nH + ' meczów domowych / ' + match.model.nA + ' wyjazdowych. ' +
       'Bez rzeczywistych kursów historycznych nie można wyciągać wniosków o rentowności.',
       'market-disclaimer'));
+    renderExperts(match, market, result);
   }
   async function copyAnalysis() {
     const m = state.matches.find(x => x.id === $('market-match').value);
