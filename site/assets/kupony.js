@@ -221,7 +221,9 @@
    '<h3>'+escape(profileName(c.profile,c.legs.length))+'</h3></div><span class="coupon-pill">HIPOTEZA</span></div>'+
    '<div class="coupon-leglist">'+legs+'</div>'+
    '<div class="coupon-metrics"><div class="coupon-metric"><small>Prawdopodobieństwo modelowe</small><strong class="light">'+C.fmtP(c.p)+'</strong></div>'+
-   '<div class="coupon-metric"><small>Próg kursu przy podatku 12%*</small><strong>'+C.fmt(c.requiredOdds)+'</strong></div></div>'+
+   '<div class="coupon-metric"><small>Kurs progowy modelu po podatku 12%*</small><strong>'+C.fmt(c.requiredOdds)+'</strong></div></div>'+
+   (c.profile==='high_odds'?'<p class="coupon-model-odds"><strong>Wyższy kurs progowy — większe ryzyko.</strong> '+
+    'Modelowa szansa nietrafienia: '+C.fmtP(1-c.p)+'. To NIE kurs Superbet.</p>':'')+
    '<p class="coupon-truth">'+escape(math)+' Modelowe ryzyko nietrafienia całego zestawienia: '+C.fmtP(1-c.p)+'. *To próg matematyczny, nie kurs dostępny u bukmachera ani dowód przewagi.</p>'+
    '<details class="coupon-check"><summary>Ocena ekspertów: ZA / PRZECIW / HIPOTEZA <span>+</span></summary>'+
    '<p><strong>ZA:</strong> '+escape(c.forText)+'</p><p class="danger"><strong>PRZECIW:</strong> '+escape(c.againstText)+'</p>'+
@@ -266,13 +268,26 @@
   const profile=state.profile;
   const eligible=matchFilter();
   const count=Number($('coupon-count').value)||2;
-  state.coupons=C.createCoupons(eligible,profile,count,6).map(c=>({...c,legs:[...c.legs].sort((a,b)=>chronological(a.match,b.match))})).sort((a,b)=>chronological(a.legs[0].match,b.legs[0].match)||b.score-a.score);
-  $('coupon-list-title').textContent='Warianty: '+profileLabels[profile];
+  const threshold=Number($('coupon-high-min').value)||5;
+  const candidates=C.createCoupons(eligible,profile,count,6,{minThreshold:threshold})
+    .map(c=>({...c,legs:[...c.legs].sort((a,b)=>chronological(a.match,b.match))}));
+  state.coupons=profile==='high_odds'?
+    candidates.sort((a,b)=>Math.abs(Math.log(a.requiredOdds/threshold))-Math.abs(Math.log(b.requiredOdds/threshold))||b.score-a.score):
+    candidates.sort((a,b)=>chronological(a.legs[0].match,b.legs[0].match)||b.score-a.score);
+  $('coupon-list-title').textContent='Warianty: '+profileLabels[profile]+
+    (profile==='high_odds'?' · próg od '+C.fmt(threshold):'');
   $('coupon-number').textContent=state.coupons.length+' hipotez';
   $('coupon-help').textContent=descriptions[profile];
-  $('coupon-explain').textContent='Dostępne spotkania z wymaganą próbką: '+eligible.length+'. '+descriptions[profile];
+  const date=$('coupon-day').value;
+  $('coupon-explain').textContent=(date==='all'?'Wszystkie dni w filtrze':date||'Brak dnia')+
+    ' · '+eligible.length+' meczów z wymaganą próbką. '+descriptions[profile]+
+    (profile==='high_odds'?' Szukamy progu od '+C.fmt(threshold)+
+      '; aktualne kursy operatora są nieznane.':'');
   $('coupon-cards').innerHTML=state.coupons.length?state.coupons.map(renderCard).join(''):
-   '<div class="coupon-nothing">Brak scenariuszy spełniających filtry i warunki jakości. Zmień termin lub profil. Nie generujemy kuponów na siłę.</div>';
+    '<div class="coupon-nothing">Brak scenariuszy dla wybranego dnia i kryteriów. '+
+    (profile==='high_odds'?'Nie znaleziono progu '+C.fmt(threshold)+'. Spróbuj innej daty, liczby meczów lub progu.':
+    'Wybierz inny dzień albo liczbę meczów.')+
+    ' Nie tworzymy fikcyjnych ofert ani wymuszonych kombinacji.</div>';
  }
  function selectProfile(profile){
   if(!descriptions[profile])return;
