@@ -10,3 +10,5 @@
 .track-daily-miss{color:#f5a4a7}
 .track-daily-warning{background:#3b2928;border:1px solid #69413f;border-radius:9px;color:#f2beba;font-size:11px;line-height:1.5;padding:9px;margin-top:13px}
 .track-history-group{font-size:14px;color:#b9d8dc;margin:16px 0 3px}
+
+.track-daily-insight{color:#bce9e2;font-size:12px;background:#14363c;border-radius:10px;padding:11px;margin:10px 0;line-height:1.55}
