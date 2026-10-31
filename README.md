@@ -8,7 +8,7 @@ Adres: https://jakuba777.github.io/edge-lab-radar/
 
 - Radar — terminarz i szacunkowe prawdopodobieństwa bramek w 16 ligach.
 - Market Intelligence 1.0 (BETA) — ręczne porównanie kursu z modelem i bazą oraz diagnostyka opcjonalnych połączeń API.
-- Kupony (0.9 – eksperyment) — osobny profil **Pojedyncze**, cztery dotychczasowe profile zestawień, odrzucanie bliskich duplikatów, szacunek ryzyka nietrafienia, argumenty ZA/PRZECIW.
+- Kupony (1.0 – eksperyment) — wybór pojedynczego dnia, tryb łączenia dat, osobne profile **Pojedyncze** i **Wyższe kursy**, odrzucanie duplikatów, szacunek ryzyka nietrafienia oraz argumenty ZA/PRZECIW.
 - Łamaki (0.7) — historia HT/FT oraz model obserwacyjny 2/1 i 1/2; bez potwierdzonej przewagi.
 - Modele (0.5) — sezon 2025/26 do porównań z modelem Poissona.
 - LIVE LAB (0.8) — **wyłącznie REPLAY HISTORYCZNY**, nie podaje wyników na żywo.
@@ -39,6 +39,15 @@ W Safari użyj Udostępnij → Dodaj do ekranu początkowego.
 - W archiwum historii najpierw najnowsze rozliczone, potem oczekujące od najbliższej daty; backend przechowuje do 30 najbliższych przyszłych wskazań do wyświetlenia.
 - **Nie ma gwarancji, że zdjęcie prywatnego kuponu obejmuje wszystkie zdarzenia.** Nie przenosimy prywatnej historii zawartych zakładów ani identyfikatorów kuponów do publicznych plików GitHub.
 - Brak real-time LIVE i brak potwierdzonej przewagi względem kursów. Brak automatycznego obstawiania.
+
+## Symulacje dzienne i profile wyższych kursów progowych (1.0)
+
+- Strona `kupony.html` oferuje **wybór konkretnego dnia** z rzeczywiście pobranych spotkań w wybranym zakresie 7, 14 lub 30 dni. Wtedy wszystkie zdarzenia w jednej symulacji pochodzą wyłącznie z wybranej daty. Opcja „Wszystkie dni” zachowuje wcześniejszy tryb łączenia meczów z wielu terminów.
+- Po wyborze ligi lub zakresu dni kalendarz wskazuje ile spotkań ma wystarczającą próbę; zachowuje wybraną datę, jeżeli nadal jest dostępna. Jeśli liczba meczów jest niewystarczająca, aplikacja pokazuje brak analiz zamiast przenosić je na inny dzień.
+- Profil **„Wyższe kursy”** bada umiarkowanie mniej prawdopodobne rynki i **matematyczny kurs progowy** 3, 5, 8, 12 lub 20 na podstawie `1/(0,88 × P_modelu)`, przy założeniu podatku 12% od stawki. Nie odczytuje ani nie symuluje realnych kursów Superbet. Bardzo ryzykowne symulacje z obliczonym progiem powyżej 35 są pomijane.
+- Generator wybiera od 2 do 4 różnych meczów, ogranicza podobieństwo kombinacji po tożsamości meczu i rynku, nie pozwala dwukrotnie uwzględnić tego samego spotkania w jednym zestawieniu. Priorytetem jest bliskość zadanego progu i jakość próby, a nie samo maksymalizowanie kursu.
+- Tylko model ze standardową próbką 6/6 i 55 wynikami ligi jest dopuszczony do symulacji. Dzisiejszy, osobny podgląd 4/4 nadal pozostaje wyłącznie eksperymentem z opisem ograniczeń.
+- Wybrane przyszłe **dzienne** kombinacje profilu wysokich progów są również archiwizowane przed meczami w procesie `scripts/snapshot_coupons.js` do prospektywnej weryfikacji (maksymalnie 8 dni naprzód, po dwa warianty na konfigurację 2 oraz 3 zdarzeń). Wybrane ręcznie w przeglądarce konfiguracje **nie są automatycznie zapisywane ani rozliczane**; nie należy przypisywać im wyników z archiwum bez zgodności klucza zdarzeń.
 
 ## Pozostałe mecze dzisiaj — badanie 4/4
 
