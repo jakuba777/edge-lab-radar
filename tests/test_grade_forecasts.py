@@ -73,6 +73,21 @@ class GradeTests(unittest.TestCase):
         grading=G.grade([],[],[combo],{**self.score,match2:(1,1,0,0)},dt.date(2026,10,31))
         self.assertEqual(grading["summary"]["simulated_coupons"]["hit"],1)
 
+    def test_single_event_research_is_not_mixed_with_multi_coupons(self):
+        one={"id":"c"*24,"profile":"single","type":"single",
+             "created_utc":"2026-10-27T12:00:00Z","p":.79,
+             "legs":[{"key":self.key,"market":"o15","p":.79}]}
+        two={"id":"d"*24,"profile":"balanced","type":"separate",
+             "created_utc":"2026-10-27T12:00:00Z","p":.50,
+             "legs":[{"key":self.key,"market":"o15","p":.79},
+                     {"key":("Premier League","2026-10-30","C","D"),"market":"o15","p":.64}]}
+        result=G.grade([],[],[one,two],self.score,self.today)
+        self.assertEqual(result["summary"]["single_research"]["hit"],1)
+        self.assertEqual(result["counts"]["single_research"],1)
+        self.assertEqual(result["counts"]["simulated_coupons"],1)
+        self.assertEqual(result["summary"]["simulated_coupons"]["pending"],1)
+        self.assertEqual(result["entries"]["single_research"][0]["profile"],"single")
+
     def test_forecast_snapshot_archive_parse(self):
         meta={"id":111,"created_at":"2026-10-27T20:00:00Z"}
         body={"schema":1,"status":"ready","created_utc":"2026-10-27T19:00:00Z",
