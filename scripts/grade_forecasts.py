@@ -243,8 +243,11 @@ def grade(forecasts,halftimes,coupons,scores,today):
     hlist=sorted([x for rows in ht_rows.values() for x in rows],
                  key=lambda r:(r["date"],r["league"]),reverse=True)
     # Keep recently settled events visible even when many future forecasts exist.
+    # Show recent settled results and NEAREST upcoming research first.
+    # Archived candidates have dates but not trusted kickoff time zones.
     display=lambda rows:([x for x in rows if x["state"]!="pending"][:75]+
-                         [x for x in rows if x["state"]=="pending"][:30])
+                         sorted((x for x in rows if x["state"]=="pending"),
+                                key=lambda x:(x["date"],-x.get("p",0)))[:30])
     return {
         "summary":{
             "main":summarize(main),
