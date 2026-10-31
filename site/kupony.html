@@ -9,6 +9,7 @@
 <link rel="icon" href="./assets/icon.svg" type="image/svg+xml"/>
 <link rel="stylesheet" href="./assets/styles.css"/>
 <link rel="stylesheet" href="./assets/kupony.css"/>
+<script defer src="./assets/time-window.js"></script>
 <script defer src="./assets/coupon-core.js"></script>
 <script defer src="./assets/kupony.js"></script>
 </head>
@@ -37,6 +38,15 @@
  <p id="coupon-daily-note" class="caption">Korzystamy wyłącznie z wcześniejszych archiwalnych prognoz, nie z prywatnego kuponu.</p>
  <a href="./skutecznosc.html" class="coupon-audit-link">Szczegóły trafień i pomyłek</a>
 </section>
+<section class="panel coupon-evening-lab" aria-live="polite">
+ <div class="between top-gap"><div>
+  <div class="kicker">NOWOŚĆ · TEST JESZCZE DZIŚ</div>
+  <h3>Dzisiejsze badania przedmeczowe</h3>
+  <p class="caption">Tylko mecze, których planowana godzina jeszcze nie minęła. Wersja eksperymentalna 4/4 z mniejszą próbą; bez potwierdzonej skuteczności.</p>
+ </div><span id="coupon-evening-count" class="chip muted">—</span></div>
+ <div id="coupon-evening" class="coupon-evening-list"><p class="caption">Sprawdzam pozostałe spotkania…</p></div>
+ <p class="caption coupon-evening-disclaimer">Godziny w źródle nie mają gwarantowanej strefy czasowej ani statusu LIVE. Przed jakąkolwiek decyzją należy zweryfikować rozpoczęcie w oficjalnym terminarzu. To obserwacje do testu, nie rekomendacje zakładów.</p>
+</section>
 <div class="coupon-section-heading"><div><div class="kicker">01 / WYBIERZ PROFIL</div><h2>Jakich scenariuszy szukamy?</h2></div></div>
 <div class="coupon-profiles" role="group" aria-label="Profil selekcji">
  <button type="button" class="coupon-profile is-selected" data-profile="selective" aria-pressed="true"><strong>Selektywny</strong><small>Szanse wyższe, nadal bez gwarancji</small></button>
@@ -50,6 +60,7 @@
   <div><label for="coupon-count">Liczba spotkań</label><select class="field" id="coupon-count"><option value="1">1 mecz (badanie)</option><option value="2" selected>2 mecze</option><option value="3">3 mecze</option><option value="4">4 mecze</option></select></div>
   <div><label for="coupon-days">Zakres</label><select class="field" id="coupon-days"><option value="7">7 dni</option><option value="14" selected>14 dni</option><option value="30">30 dni</option></select></div>
  </div>
+ <label class="coupon-today-toggle" for="coupon-include-today"><input id="coupon-include-today" type="checkbox" checked/> Uwzględnij pozostałe mecze dzisiaj (po sprawdzeniu godziny)</label>
  <label for="coupon-league">Liga</label><select class="field" id="coupon-league"><option value="all">Wszystkie dostępne</option></select>
  <div class="coupon-control-bottom">
   <p id="coupon-help" class="caption">Model 0.4, sprawdzony historycznie, ale bez potwierdzonej przewagi. Każdy kupon zawiera inne mecze.</p>
