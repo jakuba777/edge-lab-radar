@@ -104,22 +104,25 @@
     .flatMap(profile=>candidatesFor(match,profile))
     .filter(c=>c.p>=.4&&c.p<=.85&&Number.isFinite(c.diff)&&Math.abs(c.diff)<=.16)
     .sort((a,b)=>b.score-a.score);
-   if(!options.length)continue;
-   const chosen=options[0];
-   pool.push({profile:'single',type:'single',legs:[chosen],p:chosen.p,
-    requiredOdds:quoteThreshold(chosen.p),
-    date:match.date,score:chosen.score,
+   // Same candidate may appear in more than one research profile.
+   const unique=options.filter((c,i)=>options.findIndex(x=>x.id===c.id)===i);
+   if(unique.length)pool.push({match,options:unique});
+  }
+  pool.sort((a,b)=>a.match.date.localeCompare(b.match.date)||
+   b.options[0].score-a.options[0].score);
+  const counts=new Map(),picked=[];
+  for(const entry of pool){
+   // Select an alternate market when one candidate dominates the whole dashboard.
+   const chosen=entry.options.find(c=>(counts.get(c.id)||0)<2);
+   if(!chosen)continue;
+   const match=entry.match;
+   picked.push({profile:'single',type:'single',legs:[chosen],p:chosen.p,
+    requiredOdds:quoteThreshold(chosen.p),date:match.date,score:chosen.score,
     sampleMin:Math.min(match.model.nH,match.model.nA),
     forText:'Jedno zdarzenie z zapisem modelu i prostym punktem odniesienia; brak kumulacji wielu spotkań.',
-    againstText:'Sam wybór zdarzenia przez model nie dowodzi przewagi nad ceną rynkową. Historyczne wyniki są nieskalibrowane.',
-    hypothesis:'Eksperyment pojedynczy; dopiero przyszły wynik i niezależna kalibracja pokażą jakość oceny.'});
-  }
-  pool.sort((a,b)=>a.date.localeCompare(b.date)||b.score-a.score);
-  const counts=new Map(),picked=[];
-  for(const c of pool){
-   const market=c.legs[0].id;
-   if((counts.get(market)||0)>=2)continue;
-   picked.push(c);counts.set(market,(counts.get(market)||0)+1);
+    againstText:'Wybór modelowy nie dowodzi przewagi nad ceną rynkową. Brak potwierdzonej kalibracji.',
+    hypothesis:'Eksperyment pojedynczy; wynik prospektywny będzie oceniany osobno od kuponów łączonych.'});
+   counts.set(chosen.id,(counts.get(chosen.id)||0)+1);
    if(picked.length>=max)break;
   }
   return picked;
