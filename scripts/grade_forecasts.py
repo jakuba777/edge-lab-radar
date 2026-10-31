@@ -210,7 +210,7 @@ def summarize(rows, probability_field="p"):
     return result
 
 def grade(forecasts,halftimes,coupons,scores,today):
-    main=[];markets=defaultdict(list);ht_rows=defaultdict(list);ticket_rows=[]
+    main=[];markets=defaultdict(list);ht_rows=defaultdict(list);ticket_rows=[];single_rows=[]
     for raw in forecasts:
         key=raw["key"]
         event=assess_event(key,raw["market"],raw["p"],scores,today)
