@@ -71,7 +71,7 @@
       return;
     }
     const snapshot = el('div', undefined, 'snapshot');
-    appendMetric(snapshot, 'EDGE LAB, eksperyment', percent(result.model));
+    appendMetric(snapshot, 'Coupon Core 0.6', percent(result.model));
     appendMetric(snapshot, 'Baza ligowa', percent(result.base));
     appendMetric(snapshot, 'Implikowane z kursu', percent(result.implied));
     appendMetric(snapshot, 'Próg po 12% podatku', percent(result.threshold));
@@ -83,6 +83,34 @@
       'Próba: ' + match.model.nH + ' meczów domowych / ' + match.model.nA + ' wyjazdowych. ' +
       'Bez rzeczywistych kursów historycznych nie można wyciągać wniosków o rentowności.',
       'market-disclaimer'));
+  }
+  async function copyAnalysis() {
+    const m = state.matches.find(x => x.id === $('market-match').value);
+    const type = $('market-type').value;
+    const data = m && state.ready && Object.prototype.hasOwnProperty.call(label, type)
+      ? compare(m.model.ps[type], m.model.base[type], $('market-odds').value) : null;
+    if (!data) {
+      $('market-copy').textContent = 'Najpierw wybierz mecz i poprawny kurs';
+      return;
+    }
+    const lines = [
+      'EDGE LAB 1.0 · prywatna notatka badawcza',
+      m.date + ' · ' + m.home + ' – ' + m.away + ' (' + m.league + ')',
+      label[type],
+      'Model Coupon Core 0.6: ' + percent(data.model),
+      'Baza ligowa: ' + percent(data.base),
+      'Kurs wpisany ręcznie: ' + number(data.odds),
+      'Szansa implikowana: ' + percent(data.implied),
+      'Próg przy podatku 12%: ' + percent(data.threshold),
+      'Różnica model – próg: ' + (data.difference * 100).toFixed(1) + ' pp',
+      'Hipoteza nieskalibrowana. Brak potwierdzonej przewagi i bez automatycznego zakładu.'
+    ];
+    try {
+      await navigator.clipboard.writeText(lines.join('\n'));
+      $('market-copy').textContent = 'Skopiowano do schowka';
+    } catch (_) {
+      $('market-copy').textContent = 'Kopiowanie niedostępne w tej przeglądarce';
+    }
   }
   function showUpcoming() {
     const root = $('market-upcoming');
@@ -220,6 +248,7 @@
   document.addEventListener('DOMContentLoaded', () => {
     $('model-refresh').addEventListener('click', () => {load(); loadConnectivity();});
     $('market-compare').addEventListener('click', renderComparison);
+    $('market-copy').addEventListener('click', copyAnalysis);
     $('market-match').addEventListener('change', renderComparison);
     $('market-type').addEventListener('change', renderComparison);
     $('market-odds').addEventListener('input', renderComparison);
