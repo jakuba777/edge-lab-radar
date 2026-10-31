@@ -83,17 +83,21 @@
   let ids;
   if(profile==='selective')ids=['hg','ag','o15','u35','oneX','x2'];
   else if(profile==='balanced')ids=['hg','ag','o15','o25','u35','btts','oneX','x2'];
+  else if(profile==='high_odds')ids=['o25','btts','home','away','h2','a2','oneX','x2','hg','ag','u35'];
   else ids=['hg','ag','o25','u35','btts','home','away','h2','a2'];
   return ids.map(id=>{
     const p=ps[id],diff=p-base[id];
     const eligible=profile==='selective'?p>=.69&&p<=.90:
       profile==='balanced'?p>=.49&&p<=.82:
+      profile==='high_odds'?p>=.30&&p<=.74&&Math.abs(diff)<=.20&&match.model.nLeague>=55:
       p>=.27&&p<=.75&&Math.abs(diff)>=.07&&match.model.nLeague>=100;
     if(!eligible)return null;
     // Ranking is intentionally descriptive, NOT projected bookmaker edge.
     const evidence=Math.min(1,Math.min(match.model.nH,match.model.nA)/10);
     const score=profile==='selective'?(p*.75+evidence*.25):
      profile==='balanced'?(.6*Math.min(p,.75)+evidence*.28+.12*(1-Math.abs(diff))):
+     profile==='high_odds'?(evidence*.48 + (1-Math.abs(p-.53))*.27 +
+      (1-Math.min(1,Math.abs(diff)*3))*.25):
      (.5*Math.abs(diff)+.3*evidence+.2*(1-Math.abs(p-.5)));
     return {match,id,p,diff,score,label:map.get(id).label};
   }).filter(Boolean).sort((a,b)=>b.score-a.score).slice(0,4);
@@ -148,14 +152,14 @@
   }
   return selected;
  }
- function buildMultis(matches,profile,count,max=5){
+ function buildMultis(matches,profile,count,max=5,options={}){
   if(!Number.isInteger(count)||count<2||count>4)return [];
   const pool=[];
   for(const match of matches)pool.push(...candidatesFor(match,profile));
   pool.sort((a,b)=>b.score-a.score||a.match.date.localeCompare(b.match.date));
   // Use bounded greedy search with distinct seed offsets and a diversity penalty.
   const results=[],seen=new Set();
-  for(let seed=0;seed<Math.min(55,pool.length);seed++){
+  for(let seed=0;seed<Math.min(profile==='high_odds'?110:55,pool.length);seed++){
    const legs=[],used=new Set(),usedLeagues=new Map(),marketCount=new Map();
    const order=[pool[seed],...pool].filter(Boolean);
    for(const x of order){
@@ -170,7 +174,10 @@
    const key=legs.map(x=>x.match.id+':'+x.id).sort().join('|');
    if(seen.has(key))continue;seen.add(key);
    const p=jointSeparate(legs);
-   if(!Number.isFinite(p)||p<.045)continue;
+   if(!Number.isFinite(p)||p<(profile==='high_odds'?.035:.045))continue;
+   const q=quoteThreshold(p);
+   const minThreshold=Number(options.minThreshold)||5;
+   if(profile==='high_odds'&&(q<minThreshold||q>35))continue;
    results.push({
      profile,type:'separate',legs,p,requiredOdds:quoteThreshold(p),
      sampleMin:Math.min(...legs.map(x=>x.match.model.nH),...legs.map(x=>x.match.model.nA)),
@@ -179,10 +186,16 @@
      forText:'Model opiera się na wcześniejszych spotkaniach dom/wyjazd; '+legs.length+' osobne mecze.',
      againstText:'Iloczyn szans zakłada niezależność meczów. Nie znamy kursów, zmian składu ani aktualnej sytuacji klubów.',
      hypothesis:profile==='contrarian'?'Odchylenie modelu od historycznej częstości ligowej, nie od ceny bukmachera.':
+     profile==='high_odds'?'Scenariusz bada wyższy kurs progowy modelu, NIE kurs oferowany przez Superbet. Nie ma dowodu przewagi.':
      'Selekcja na podstawie danych historycznych, a nie zweryfikowanej przewagi rynkowej.'
    });
   }
-  return diversifyCoupons(results.sort((a,b)=>b.score-a.score||b.p-a.p),max);
+  const minThreshold=Number(options.minThreshold)||5;
+  results.sort(profile==='high_odds'?
+   (a,b)=>Math.abs(Math.log(a.requiredOdds/minThreshold))-Math.abs(Math.log(b.requiredOdds/minThreshold))
+    ||b.score-a.score||b.p-a.p:
+   (a,b)=>b.score-a.score||b.p-a.p);
+  return diversifyCoupons(results,max);
  }
  const CORRELATIONS=[
   ['btts','o25'],['hg','u35'],['ag','u35'],['o25','h2'],['o25','a2'],
@@ -212,12 +225,12 @@
    seen.add(key);return true;
   }).slice(0,max);
  }
- function createCoupons(matches,profile,count,max=5){
+ function createCoupons(matches,profile,count,max=5,options={}){
   const eligible=matches.filter(m=>m.model&&!m.model.exploratory&&validDate(m.date)&&m.home&&m.away);
   if(profile==='builder')return buildBuilders(eligible,max);
   if(profile==='single')return buildSingles(eligible,max);
-  if(!['selective','balanced','contrarian'].includes(profile))return [];
-  return buildMultis(eligible,profile,count,max);
+  if(!['selective','balanced','contrarian','high_odds'].includes(profile))return [];
+  return buildMultis(eligible,profile,count,max,options);
  }
  const API={MARKETS,grid,poisson,probability,marketP,parseCSV,validDate,n,daysBetween,analyze,
    quoteThreshold,jointSameGame,jointSeparate,candidatesFor,createCoupons,buildSingles,diversifyCoupons,fmtP,fmt};
