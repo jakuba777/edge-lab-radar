@@ -44,6 +44,18 @@ function marketTables(){
   }
  }
 }
+function dependencyReview(){
+ const root=$('track-dependence');root.replaceChildren();
+ const d=report?.summary?.coupon_dependency;
+ if(!d||!Number.isFinite(d.legs_total)){
+  root.appendChild(el('p','Brak danych do oceny współzależności symulacji.','caption'));return;
+ }
+ root.appendChild(el('div','KONTROLA POWTARZANIA ZDARZEŃ','kicker'));
+ root.appendChild(el('h3',d.virtual_combinations+' symulacji · '+d.unique_matches+' różnych meczów'));
+ root.appendChild(el('p','Łącznie '+d.legs_total+' użyć zdarzeń, ale tylko '+
+  d.unique_market_events+' różnych par mecz–rynek. Najczęściej użyte zdarzenie wystąpiło '+
+  d.max_event_reuse+' razy. Kombinacje nie są niezależnymi obserwacjami.','caption'));
+}
 function stateTag(status){
  return el('span',labels[status]||'—','track-state '+status);
 }
@@ -166,7 +178,7 @@ async function main(){
   statCards('track-main-metrics',data.summary.main);
   statCards('track-coupons-metrics',data.summary.simulated_coupons||{});
   statCards('track-singles-metrics',data.summary.single_research||{});
-  marketTables();latestMatchdayReview();showHistory();
+  marketTables();dependencyReview();latestMatchdayReview();showHistory();
   if(ageHours>48){
    $('track-error').classList.remove('hidden');
    $('track-error').textContent='Uwaga: ostatnia aktualizacja ponad 48 godzin temu. Pokazane liczby są historyczne, nie bieżące.';
@@ -180,6 +192,7 @@ async function main(){
   $('track-error').classList.remove('hidden');$('track-error').textContent=String(e?.message||e);
   $('track-main-metrics').replaceChildren(el('div','Brak wiarygodnych rozliczeń.','panel track-empty'));
   $('track-singles-metrics').replaceChildren(el('div','Brak rozliczonych pojedynczych badań.','panel track-empty'));
+  $('track-dependence').replaceChildren(el('p','Brak raportu powtarzalności zdarzeń.','caption'));
   $('track-coupons-metrics').replaceChildren(el('div','Brak wiarygodnych rozliczeń kuponów.','panel track-empty'));
   $('track-history').replaceChildren(el('div','Nie prezentujemy fikcyjnej skuteczności.','panel track-empty'));
   $('track-daily').replaceChildren(el('p','Raport jest niedostępny. Nie pokazujemy niezweryfikowanego bilansu dnia.','caption'));
