@@ -5,3 +5,22 @@
 .coupon-profile[data-profile="single"]{border-color:#456a75}
 .coupon-profile[data-profile="single"].is-selected{border-color:#59d7c5}
 @media(min-width:640px){.coupon-profiles{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+
+.coupon-evening-lab{margin-bottom:17px;border-color:#3f696e;background:linear-gradient(145deg,#132b37,#142135)}
+.coupon-evening-lab .caption{margin-top:5px}
+.coupon-evening-list{display:grid;gap:10px;margin-top:15px}
+.coupon-evening-card{border:1px solid #30485c;background:#0c1c2b;border-radius:13px;padding:12px;display:grid;gap:10px}
+.coupon-evening-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.coupon-evening-head small{display:block;color:#9db7c8;font-size:10px;line-height:1.4;margin-bottom:5px}
+.coupon-evening-head strong{display:block;font-size:14px;line-height:1.4}
+.coupon-evening-head .coupon-pill{white-space:normal;text-align:right;max-width:120px}
+.coupon-evening-probs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.coupon-evening-probs>div{border-radius:9px;background:#203949;padding:9px}
+.coupon-evening-probs small{display:block;color:#b9cdd5;font-size:10px}
+.coupon-evening-probs strong{display:block;color:#a3e8df;font-size:19px;font-variant-numeric:tabular-nums}
+.coupon-evening-copy{background:none;border:1px solid #426a74;color:#b4ded9;border-radius:10px;padding:9px;font-size:11px;justify-self:start}
+.coupon-evening-disclaimer{border-top:1px solid #324a5c;margin-top:14px!important;padding-top:12px}
+.coupon-today-toggle{display:flex;align-items:center;gap:8px;color:#b4deda;font-size:12px;padding:4px 0}
+.coupon-today-toggle input{width:17px;height:17px;accent-color:#59d7c5}
+@media(max-width:370px){.coupon-evening-probs strong{font-size:16px}.coupon-evening-head .coupon-pill{font-size:9px}}
