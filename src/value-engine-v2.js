@@ -23,6 +23,7 @@
     if (marketStatus !== "open") errors.push("market_not_open");
     if (!calibrated) errors.push("uncalibrated_model");
     if (!modelVersion || !matchId || !marketId) errors.push("missing_provenance");
+    if (valid(odds) && valid(taxRate) && odds * (1 - taxRate) <= 1) errors.push("unprofitable_even_if_certain");
     if (errors.length) return { status: "NO_EDGE", reasons: errors };
     const multiplier = odds * (1 - taxRate);
     const expectedRoi = probability * multiplier - 1;
@@ -46,5 +47,37 @@
       return { valid: false, reasons: ["non_value_selection"] };
     return { valid: true, reasons: [] };
   }
-  return Object.freeze({ evaluate, validateCoupon });
+  function rankCandidates(candidates) {
+    if (!Array.isArray(candidates)) return [];
+    return candidates.map(x => ({ input: x, result: evaluate(x) }))
+      .filter(x => x.result.status === "VALUE_CANDIDATE")
+      .sort((a,b) => b.result.conservativeRoi - a.result.conservativeRoi ||
+        String(a.result.matchId).localeCompare(String(b.result.matchId)));
+  }
+  function buildCoupons(candidates, maxLegs = 3, limit = 20) {
+    const ranked = rankCandidates(candidates);
+    const output = [];
+    function visit(start, selected) {
+      if (selected.length) {
+        const verdict = validateCoupon(selected.map(x => ({
+          matchId: x.result.matchId, status: x.result.status
+        })), maxLegs);
+        if (verdict.valid) output.push({
+          selections: selected.map(x => x.result),
+          // Probabilities may be correlated; deliberately no synthetic coupon EV.
+          combinedProbability: null,
+          combinedExpectedRoi: null,
+          reason: "joint_probability_not_estimated"
+        });
+      }
+      if (selected.length >= maxLegs) return;
+      for (let i=start;i<ranked.length;i++) {
+        if (selected.some(x => x.result.matchId === ranked[i].result.matchId)) continue;
+        visit(i+1,selected.concat(ranked[i]));
+      }
+    }
+    visit(0,[]);
+    return output.slice(0,Math.max(0,Math.min(100,Math.trunc(limit)||0)));
+  }
+  return Object.freeze({ evaluate, validateCoupon, rankCandidates, buildCoupons });
 });
