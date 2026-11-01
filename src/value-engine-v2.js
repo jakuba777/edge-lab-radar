@@ -9,7 +9,7 @@
   function evaluate(input) {
     const { odds, probability, lowerProbability, taxRate = 0.12,
       oddsTimestamp, evaluatedAt, maxAgeMinutes = 30, marketStatus = "open",
-      calibrated = false, modelVersion, matchId, marketId } = input || {};
+      calibrated = false, calibrationEvidence, modelVersion, matchId, marketId } = input || {};
     const errors = [];
     if (!valid(odds) || odds <= 1) errors.push("invalid_odds");
     if (!valid(probability) || probability < 0 || probability > 1) errors.push("invalid_probability");
@@ -21,7 +21,7 @@
     if (!Number.isFinite(now) || !Number.isFinite(timestamp) || timestamp > now ||
       now - timestamp > maxAgeMinutes * 60000) errors.push("stale_or_missing_odds");
     if (marketStatus !== "open") errors.push("market_not_open");
-    if (!calibrated) errors.push("uncalibrated_model");
+    if (!calibrated || !calibrationEvidence || calibrationEvidence.verified !== true || !calibrationEvidence.datasetId || !calibrationEvidence.method || !Number.isInteger(calibrationEvidence.sampleSize) || calibrationEvidence.sampleSize < 100) errors.push("unverified_calibration");
     if (!modelVersion || !matchId || !marketId) errors.push("missing_provenance");
     if (valid(odds) && valid(taxRate) && odds * (1 - taxRate) <= 1) errors.push("unprofitable_even_if_certain");
     if (errors.length) return { status: "NO_EDGE", reasons: errors };
