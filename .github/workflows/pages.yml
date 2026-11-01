@@ -78,6 +78,18 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: python scripts/grade_forecasts.py
+      - name: Publish standalone laboratories from repository root
+        run: |
+          mkdir -p site/src
+          cp value-lab.html dual-lab.html multi-market-lab.html site/
+          cp src/value-engine-v2.js src/dual-engine.js src/multi-market.js src/market-labels.js site/src/
+          python - <<'PY'
+          from pathlib import Path
+          for page in ('value-lab.html', 'dual-lab.html', 'multi-market-lab.html'):
+              assert (Path('site') / page).is_file(), page
+          for script in ('value-engine-v2.js', 'dual-engine.js', 'multi-market.js', 'market-labels.js'):
+              assert (Path('site/src') / script).is_file(), script
+          PY
       - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
       - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
         with:
