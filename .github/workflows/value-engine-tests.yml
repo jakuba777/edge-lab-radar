@@ -6,6 +6,8 @@ on:
       - 'tests/value-engine-v2.test.cjs'
       - 'value-lab.html'
       - 'tests/value-lab-html.test.cjs'
+      - 'src/dual-engine.js'
+      - 'tests/dual-engine.test.cjs'
       - '.github/workflows/value-engine-tests.yml'
   workflow_dispatch:
 jobs:
@@ -22,3 +24,4 @@ jobs:
         run: |
           node tests/value-engine-v2.test.cjs
           node tests/value-lab-html.test.cjs
+          node tests/dual-engine.test.cjs
