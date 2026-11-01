@@ -55,7 +55,7 @@
         String(a.result.matchId).localeCompare(String(b.result.matchId)));
   }
   function buildCoupons(candidates, maxLegs = 3, limit = 20) {
-    const ranked = rankCandidates(candidates);
+    const ranked = rankCandidates(candidates).slice(0, 12);
     const output = [];
     function visit(start, selected) {
       if (selected.length) {
