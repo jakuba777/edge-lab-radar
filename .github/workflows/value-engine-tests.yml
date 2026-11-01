@@ -28,6 +28,7 @@ on:
       - 'site/analiza.html'
       - 'site/assets/analiza.js'
       - 'site/assets/analiza.css'
+      - 'site/assets/edge-feature.css'
       - 'site/index.html'
       - 'tests/mobile-analysis.test.cjs'
       - '.github/workflows/value-engine-tests.yml'
