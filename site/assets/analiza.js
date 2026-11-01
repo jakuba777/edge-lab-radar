@@ -8,17 +8,17 @@
  const fmt=m=>m.date+' · '+(m.time||'godzina nieznana')+' · '+m.league;
  async function fetchFile(path,kind){const r=await fetch(path,{cache:'no-store',credentials:'omit',mode:'same-origin'});if(!r.ok)throw Error(path+' HTTP '+r.status);return kind==='json'?r.json():r.text();}
  function choose(m){
-  state.selected=m;state.legs=[];$('detail').classList.remove('hide');$('fixture').textContent=m.home+' — '+m.away;
+  state.selected=m;state.legs=[];$('detail').classList.remove('hide');document.querySelectorAll('[data-tab]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.tab==='analysis')));for(const tab of ['analysis','markets','builder'])$(tab).classList.toggle('hide',tab!=='analysis');$('fixture').textContent=m.home+' — '+m.away;
   $('context').textContent=fmt(m);
   const a=$('analysis');a.replaceChildren();
-  if(!m.model){a.append(text('p','Brak wystarczających danych historycznych do wiarygodnego wyliczenia. Nie tworzymy typów.','warning'));$('markets').replaceChildren();$('builder').replaceChildren();return;}
+  if(!m.model){a.append(text('p','Za mało danych do analizy tego spotkania.','warning'));$('markets').replaceChildren();$('builder').replaceChildren();$('detail').scrollIntoView({block:'start'});return;}
   const x=m.model;
-  a.append(text('h3','Analiza przedmeczowa'));
-  a.append(text('p','Próba: '+x.nH+' ostatnich domowych gospodarzy, '+x.nA+' wyjazdowych gości; '+x.nLeague+' wcześniejszych meczów ligowych.'));
+  a.append(text('h3','Co pokazuje model?'));
+  const details=document.createElement('details');details.className='analysis-method';details.append(text('summary','Źródła i ograniczenia modelu'));details.append(text('p','Próba: '+x.nH+' meczów domowych gospodarzy, '+x.nA+' wyjazdowych gości; '+x.nLeague+' wcześniejszych meczów ligowych.'));
   a.append(text('p','Oczekiwane gole (model Poissona): '+x.lh.toFixed(2)+' — '+x.la.toFixed(2)));
-  a.append(text('p','ZA: model bazuje wyłącznie na wynikach sprzed daty meczu. PRZECIW: nie uwzględnia potwierdzonych składów, kontuzji ani kursów; prawdopodobieństwa nie są skalibrowane.','muted'));
-  a.append(text('p','Ocena ryzyka: NIEZWERYFIKOWANE — nie ma podstaw do deklarowania przewagi nad bukmacherem.','warning'));
-  renderMarkets();renderBuilder();
+  details.append(text('p','ZA: tylko dane sprzed meczu. OGRANICZENIA: bez składów, kontuzji i kursów. Prawdopodobieństwa nie są skalibrowane.','muted'));a.append(details);
+  a.append(text('p','Model eksperymentalny · brak potwierdzonej przewagi nad bukmacherem.','warning'));
+  renderMarkets();renderBuilder();$('detail').scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});
  }
  function renderMarkets(){
   const node=$('markets');node.replaceChildren();node.append(text('p','Nazwy rynków ułatwiają wyszukiwanie w Superbet, ale mogą różnić się od aktualnej oferty. Nie pobieramy kursów.','muted'));
@@ -38,7 +38,7 @@
   const day=$('day').value,league=$('league').value,box=$('matches');box.replaceChildren();
   const found=state.matches.filter(m=>(day==='all'||m.date===day)&&(league==='all'||m.leagueId===league)).slice(0,100);
   if(!found.length)box.append(text('p','Brak nadchodzących spotkań w wybranym filtrze.','muted'));
-  for(const m of found){const btn=text('button',m.home+' — '+m.away,'match');btn.type='button';btn.append(text('small',fmt(m)+(m.model?' · model dostępny':' · brak próby')));btn.addEventListener('click',()=>choose(m));box.append(btn);}
+  for(const m of found){const btn=text('button','', 'match');btn.type='button';btn.append(text('span',m.home+' — '+m.away,'match-teams'));btn.append(text('small',fmt(m)));btn.append(text('span',m.model?'Analiza dostępna':'Za mało danych',m.model?'match-state ready':'match-state'));btn.addEventListener('click',()=>choose(m));box.append(btn);}
  }
  async function load(){
   try{
