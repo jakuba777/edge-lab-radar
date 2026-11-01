@@ -1,0 +1,30 @@
+name: EDGE LAB VALUE — tests
+on:
+  pull_request:
+    paths:
+      - 'src/value-engine-v2.js'
+      - 'tests/value-engine-v2.test.cjs'
+      - 'value-lab.html'
+      - 'tests/value-lab-html.test.cjs'
+      - 'src/dual-engine.js'
+      - 'tests/dual-engine.test.cjs'
+      - 'dual-lab.html'
+      - 'tests/dual-lab-html.test.cjs'
+      - '.github/workflows/value-engine-tests.yml'
+  workflow_dispatch:
+jobs:
+  value-engine:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Value engine unit tests
+        run: |
+          node tests/value-engine-v2.test.cjs
+          node tests/value-lab-html.test.cjs
+          node tests/dual-engine.test.cjs
+          node tests/dual-lab-html.test.cjs
