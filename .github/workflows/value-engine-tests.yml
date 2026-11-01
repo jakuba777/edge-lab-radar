@@ -23,6 +23,8 @@ on:
       - 'tests/multi-market-html.test.cjs'
       - 'src/quote-snapshots.js'
       - 'tests/quote-snapshots.test.cjs'
+      - 'src/market-labels.js'
+      - 'tests/market-labels.test.cjs'
       - '.github/workflows/value-engine-tests.yml'
   workflow_dispatch:
 jobs:
@@ -46,3 +48,4 @@ jobs:
           node tests/multi-market.test.cjs
           node tests/multi-market-html.test.cjs
           node tests/quote-snapshots.test.cjs
+          node tests/market-labels.test.cjs
