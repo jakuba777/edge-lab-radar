@@ -23,4 +23,6 @@ for (const coupon of [...output.stable, ...output.highOdds]) {
 assert.ok(output.highOdds.every(x => x.combinedOdds >= 6 && x.combinedOdds <= 10));
 assert.equal(buildDual([]).highOdds.length, 0);
 assert.equal(buildDual(inputs.map(x => ({ ...x, calibrated: false }))).stable.length, 0);
+assert.equal(buildDual(inputs.map(x=>({...x,modelVersion:"DEMO-SYNTHETIC"}))).stable.length,0);
+assert.ok(buildDual(inputs.map(x=>({...x,modelVersion:"DEMO-SYNTHETIC"})),{allowDemo:true}).stable.length>0);
 console.log("EDGE LAB DUAL: assertions passed");
