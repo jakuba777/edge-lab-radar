@@ -13,4 +13,11 @@ assert.equal(audit([{...base,id:"future-odds",oddsAt:"2026-10-01T12:30:00Z",won:
 assert.equal(audit([{...base,id:"closed",marketStatus:"closed",won:true}]).count,0);
 assert.equal(audit([]).status,"INSUFFICIENT_DATA");
 assert.throws(()=>audit([],{taxRate:-1}),/invalid_config/);
+const early={...base,id:"early",predictedAt:"2026-10-01T09:00:00Z",oddsAt:"2026-10-01T08:59:00Z",won:false};
+const late={...base,id:"late",predictedAt:"2026-10-01T12:00:00Z",won:true};
+const unordered=audit([late,early],{stake:10,taxRate:.12});
+assert.deepEqual(unordered.records.map(x=>x.id),["early","late"]);
+assert.equal(unordered.maxDrawdownUnits,10);
+assert.equal(audit([{...base,id:42,won:true}]).count,0);
+assert.equal(audit([{...base,id:"   ",won:true}]).count,0);
 console.log("BACKTEST AUDIT: assertions passed");
