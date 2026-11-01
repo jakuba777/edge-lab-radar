@@ -8,7 +8,7 @@ function audit(records,config={}){
  if(!Array.isArray(records))throw Error("records_must_be_array");
  const seen=new Set(),accepted=[],rejected=[];
  for(const row of records){
-  const id=String(row&&row.id||"");
+  const id=typeof (row&&row.id)==="string"?row.id.trim():"";
   const placed=Date.parse(row&&row.predictedAt||"");
   const start=Date.parse(row&&row.startsAt||"");
   const oddsTime=Date.parse(row&&row.oddsAt||"");
@@ -19,6 +19,7 @@ function audit(records,config={}){
   const profit=result?stake*(odds*(1-tax)-1):-stake;
   accepted.push({id,predictedAt:row.predictedAt,profit,won:result,odds});
  }
+ accepted.sort((a,b)=>Date.parse(a.predictedAt)-Date.parse(b.predictedAt)||a.id.localeCompare(b.id));
  const n=accepted.length,wins=accepted.filter(x=>x.won).length;
  const total=accepted.reduce((a,x)=>a+x.profit,0);
  let balance=0,peak=0,maxDrawdown=0;
