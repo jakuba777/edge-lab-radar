@@ -1,0 +1,15 @@
+const assert=require("node:assert/strict");
+const {validate,append,settle}=require("../src/prediction-ledger.js");
+const x={id:"a",matchId:"m",marketId:"over15",modelVersion:"v1",source:"fixture",predictedAt:"2026-11-01T10:00:00Z",startsAt:"2026-11-01T12:00:00Z",oddsAt:"2026-11-01T09:59:00Z",odds:2,probability:.6,lowerProbability:.55,marketStatus:"open"};
+assert.equal(validate(x).valid,true);
+assert.ok(validate({...x,oddsAt:"2026-11-01T10:01:00Z"}).reasons.includes("future_odds"));
+assert.ok(validate({...x,predictedAt:"2026-11-01T13:00:00Z"}).reasons.includes("prediction_after_start"));
+assert.ok(validate({...x,marketStatus:"closed"}).reasons.includes("market_not_open"));
+assert.ok(validate({...x,lowerProbability:.7}).reasons.includes("invalid_lower_probability"));
+const a=append([],x);assert.equal(a.ok,true);assert.equal(a.ledger.length,1);
+assert.equal(append(a.ledger,x).ok,false);
+assert.equal(a.ledger.length,1);
+const settled=settle(a.ledger,[{id:"a",won:true}]);assert.equal(settled[0].won,true);
+assert.equal(a.ledger[0].won,undefined);
+assert.throws(()=>settle(a.ledger,[{id:"a",won:true},{id:"a",won:false}]),/invalid_outcome/);
+console.log("PREDICTION LEDGER: assertions passed");
