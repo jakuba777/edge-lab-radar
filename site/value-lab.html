@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EDGE LAB 2.0 — Laboratorium VALUE</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,sans-serif;background:#09121c;color:#f0f5fb}
+*{box-sizing:border-box}body{margin:0;padding:18px;max-width:780px;margin-inline:auto}
+h1{font-size:1.6rem;margin-bottom:6px}.muted{color:#a7b5c4;font-size:.9rem}
+.panel{background:#142333;border:1px solid #304258;border-radius:15px;padding:17px;margin:16px 0}
+label{display:block;font-size:.88rem;margin:12px 0 5px}input,select,button{width:100%;background:#0b1724;color:#fff;border:1px solid #53647a;border-radius:8px;padding:11px;font-size:1rem}
+button{background:#1b695d;border:0;margin-top:16px;font-weight:700;cursor:pointer}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.result{font-size:1.1rem;white-space:pre-wrap;line-height:1.6}
+.bad{color:#ffae9c}.good{color:#8ce2bb}small{color:#a7b5c4}a{color:#8ce2bb}
+</style></head><body>
+<p><a href="./">← EDGE LAB</a> · <a href="dual-lab.html">DUAL LAB — dwa tory</a></p>
+<h1>VALUE LAB 2.0</h1>
+<p class="muted">Eksperymentalny kalkulator ręcznych danych. Nie pobiera kursów, nie obstawia, nie zapisuje danych. Sam kurs nie potwierdza przewagi.</p>
+<div class="panel">
+<label for="match">Identyfikator meczu</label><input id="match" placeholder="np. liga-data-gospodarz-gosc">
+<label for="market">Rynek</label><select id="market"><option value="over25">Powyżej 2,5 gola</option><option value="over15">Powyżej 1,5 gola</option><option value="btts">Obie strzelą</option><option value="home">Wygrana gospodarzy</option><option value="draw">Remis</option><option value="away">Wygrana gości</option></select>
+<div class="row"><div><label for="odds">Kurs dziesiętny</label><input id="odds" type="number" min="1.01" step=".01" placeholder="np. 2.20"></div><div><label for="prob">Prawdopodobieństwo modelu (%)</label><input id="prob" type="number" min="0" max="100" step=".1" placeholder="np. 65"></div></div>
+<div class="row"><div><label for="lower">Dolna granica P (%)</label><input id="lower" type="number" min="0" max="100" step=".1" placeholder="np. 60"></div><div><label for="tax">Podatek od stawki (%)</label><input id="tax" type="number" min="0" max="99" step=".1" value="12"></div></div>
+<label for="timestamp">Czas pobrania kursu (z offsetem, ISO 8601)</label><input id="timestamp" placeholder="2026-11-01T14:00:00+01:00">
+<label for="version">Wersja modelu</label><input id="version" placeholder="np. calibrated-2026-11">
+<p class="muted">Status kalibracji: NIEZWERYFIKOWANY. Ręczny formularz nie może sam potwierdzać jakości modelu. Status VALUE wymaga audytu zewnętrznego.</p>
+<button id="calculate">Oceń kurs</button>
+</div>
+<div class="panel"><div id="output" class="result" role="status" aria-live="polite">Uzupełnij pola. Bez zweryfikowanej kalibracji wynik otrzyma status NO_EDGE.</div></div>
+<p class="muted">Domyślny podatek 12% od stawki dotyczy standardowego sposobu rozliczenia polskich zakładów; zmień parametr, jeśli nie ma zastosowania. Dolna granica prawdopodobieństwa powinna wynikać z walidacji, a nie z uznaniowego wpisu.</p>
+<script src="src/value-engine-v2.js"></script><script>
+document.getElementById("calculate").addEventListener("click",function(){
+ const val=id=>document.getElementById(id).value;
+ const num=id=>val(id).trim()===""?NaN:Number(val(id));
+ const now=new Date().toISOString();
+ const input={matchId:val("match").trim(),marketId:val("market"),odds:num("odds"),
+ probability:num("prob")/100,lowerProbability:num("lower")/100,taxRate:num("tax")/100,
+ oddsTimestamp:val("timestamp").trim(),evaluatedAt:now,modelVersion:val("version").trim(),
+ calibrated:false,calibrationEvidence:null};
+ const out=document.getElementById("output");
+ if(!window.EdgeValueEngine){out.textContent="Błąd: silnik VALUE nie został załadowany.";return;}
+ const result=window.EdgeValueEngine.evaluate(input);
+ if(result.reasons.includes("invalid_probability")||result.reasons.includes("invalid_lower_bound")||result.reasons.includes("invalid_odds")){out.className="result bad";out.textContent="Nieprawidłowe dane liczbowe. Sprawdź kurs i prawdopodobieństwa.";return;}
+ out.className="result "+(result.status==="VALUE_CANDIDATE"?"good":"bad");
+ if(result.expectedRoi===undefined){
+  const odds=input.odds,p=input.probability,lo=input.lowerProbability,t=input.taxRate;
+  const valid=[odds,p,lo,t].every(Number.isFinite)&&odds>1&&p>=0&&p<=1&&lo>=0&&lo<=p&&t>=0&&t<1;
+  if(valid){
+    out.textContent=[
+      "TYLKO SYMULACJA — BRAK POTWIERDZONEJ KALIBRACJI",
+      "Próg rentowności: "+(100/(odds*(1-t))).toFixed(2)+"%",
+      "EV przy wpisanej prognozie: "+(100*(p*odds*(1-t)-1)).toFixed(2)+"%",
+      "Ostrożny EV: "+(100*(lo*odds*(1-t)-1)).toFixed(2)+"%",
+      "Brak rekomendacji: "+result.reasons.join(", ")
+    ].join(String.fromCharCode(10));
+  } else out.textContent="NO_EDGE — "+result.reasons.join(", ");
+  return;
+}
+out.textContent=[
+  result.status,
+  "Próg rentowności: "+(result.breakEvenProbability*100).toFixed(2)+"%",
+  "EV netto: "+(result.expectedRoi*100).toFixed(2)+"%",
+  "Ostrożny EV: "+(result.conservativeRoi*100).toFixed(2)+"%",
+  result.reasons.length?"Powód: "+result.reasons.join(", "):"Wyłącznie kandydat do dalszej analizy — nie gwarancja zysku."
+].join(String.fromCharCode(10));
+});
+</script></body></html>
