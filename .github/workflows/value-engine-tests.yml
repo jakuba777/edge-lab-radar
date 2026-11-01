@@ -4,6 +4,8 @@ on:
     paths:
       - 'src/value-engine-v2.js'
       - 'tests/value-engine-v2.test.cjs'
+      - 'value-lab.html'
+      - 'tests/value-lab-html.test.cjs'
       - '.github/workflows/value-engine-tests.yml'
   workflow_dispatch:
 jobs:
@@ -17,4 +19,6 @@ jobs:
         with:
           node-version: '22'
       - name: Value engine unit tests
-        run: node tests/value-engine-v2.test.cjs
+        run: |
+          node tests/value-engine-v2.test.cjs
+          node tests/value-lab-html.test.cjs
