@@ -17,6 +17,6 @@ const dict=Object.freeze({
  "goal_both_halves_yes":{group:"Gol w obu połowach",selection:"Tak",search:"Gol w obu połowach"}
 });
 function label(id){const x=dict[id];return x?{...x,display:x.group+": "+x.selection}:null;}
-function builder(ids){if(!Array.isArray(ids)||!ids.length)return null;const parts=ids.map(label);return parts.some(x=>!x)?null:{display:parts.map(x=>x.display).join(" + "),parts};}
-return Object.freeze({label,builder});
+const paths=Object.freeze({\n "1x2_home":["Wynik meczu","1"],"1x2_draw":["Wynik meczu","X"],"1x2_away":["Wynik meczu","2"],\n "dc_1x":["Podwójna szansa","1X"],"dc_x2":["Podwójna szansa","X2"],"dc_12":["Podwójna szansa","12"],\n "btts_yes":["Gole","Obie drużyny strzelą gola","Tak"],"btts_no":["Gole","Obie drużyny strzelą gola","Nie"],\n "total_over_15":["Gole","Suma goli","Powyżej 1,5"],"total_over_25":["Gole","Suma goli","Powyżej 2,5"],"total_under_35":["Gole","Suma goli","Poniżej 3,5"],\n "corners_over_85":["Rzuty rożne","Suma rzutów rożnych","Powyżej 8,5"],\n "goal_both_halves_yes":["Gole","Gol w obu połowach","Tak"]\n});\nfunction navigation(id,mode="standard"){const parts=paths[id];return parts?{parts:[...(mode==="builder"?["Bet Builder"]:[]),...parts],display:[...(mode==="builder"?["Bet Builder"]:[]),...parts].join(" → "),verified:false}:null;}\nfunction builder(ids){if(!Array.isArray(ids)||!ids.length)return null;const parts=ids.map(label);return parts.some(x=>!x)?null:{display:parts.map(x=>x.display).join(" + "),parts};}
+return Object.freeze({label,builder,navigation});
 });
