@@ -4,18 +4,18 @@
    Node unit tests and browser UI share this exact engine. */
 (function(root){
  const MARKETS=[
-  {id:'hg',label:'Gospodarze strzelą gola',fn:(h,a)=>h>0},
-  {id:'ag',label:'Goście strzelą gola',fn:(h,a)=>a>0},
-  {id:'o15',label:'Powyżej 1,5 gola',fn:(h,a)=>h+a>=2},
-  {id:'o25',label:'Powyżej 2,5 gola',fn:(h,a)=>h+a>=3},
-  {id:'u35',label:'Poniżej 3,5 gola',fn:(h,a)=>h+a<=3},
-  {id:'btts',label:'Obie strzelą',fn:(h,a)=>h>0&&a>0},
-  {id:'h2',label:'Gospodarze 2+ gole',fn:(h,a)=>h>=2},
-  {id:'a2',label:'Goście 2+ gole',fn:(h,a)=>a>=2},
-  {id:'oneX',label:'Gospodarze nie przegrają (1X)',fn:(h,a)=>h>=a},
-  {id:'x2',label:'Goście nie przegrają (X2)',fn:(h,a)=>a>=h},
-  {id:'home',label:'Wygrana gospodarzy',fn:(h,a)=>h>a},
-  {id:'away',label:'Wygrana gości',fn:(h,a)=>a>h}
+  {id:'hg',label:'Gole gospodarzy — Powyżej 0,5',fn:(h,a)=>h>0},
+  {id:'ag',label:'Gole gości — Powyżej 0,5',fn:(h,a)=>a>0},
+  {id:'o15',label:'Suma goli — Powyżej 1,5',fn:(h,a)=>h+a>=2},
+  {id:'o25',label:'Suma goli — Powyżej 2,5',fn:(h,a)=>h+a>=3},
+  {id:'u35',label:'Suma goli — Poniżej 3,5',fn:(h,a)=>h+a<=3},
+  {id:'btts',label:'Obie drużyny strzelą gola — Tak',fn:(h,a)=>h>0&&a>0},
+  {id:'h2',label:'Gole gospodarzy — Powyżej 1,5',fn:(h,a)=>h>=2},
+  {id:'a2',label:'Gole gości — Powyżej 1,5',fn:(h,a)=>a>=2},
+  {id:'oneX',label:'Podwójna szansa — 1X',fn:(h,a)=>h>=a},
+  {id:'x2',label:'Podwójna szansa — X2',fn:(h,a)=>a>=h},
+  {id:'home',label:'Wynik meczu — 1',fn:(h,a)=>h>a},
+  {id:'away',label:'Wynik meczu — 2',fn:(h,a)=>a>h}
  ];
  const map=new Map(MARKETS.map(m=>[m.id,m]));
  const fmtP=x=>Number.isFinite(x)?(x*100).toFixed(1).replace('.',',')+'%':'—';

@@ -13,7 +13,7 @@
   const a=$('analysis');a.replaceChildren();
   if(!m.model){a.append(text('p','Brak wystarczających danych historycznych do wiarygodnego wyliczenia. Nie tworzymy typów.','warning'));$('markets').replaceChildren();$('builder').replaceChildren();return;}
   const x=m.model;
-  a.append(text('h3','Co wiemy z modelu'));
+  a.append(text('h3','Analiza przedmeczowa'));
   a.append(text('p','Próba: '+x.nH+' ostatnich domowych gospodarzy, '+x.nA+' wyjazdowych gości; '+x.nLeague+' wcześniejszych meczów ligowych.'));
   a.append(text('p','Oczekiwane gole (model Poissona): '+x.lh.toFixed(2)+' — '+x.la.toFixed(2)));
   a.append(text('p','ZA: model bazuje wyłącznie na wynikach sprzed daty meczu. PRZECIW: nie uwzględnia potwierdzonych składów, kontuzji ani kursów; prawdopodobieństwa nie są skalibrowane.','muted'));
@@ -21,8 +21,8 @@
   renderMarkets();renderBuilder();
  }
  function renderMarkets(){
-  const node=$('markets');node.replaceChildren();node.append(text('p','Nazwy przybliżone do rynków bukmacherskich; nie są zweryfikowaną nawigacją Superbet. Dotknij „Kopiuj”, aby wyszukać ręcznie.','muted'));
-  for(const def of C.MARKETS){const row=text('div','', 'market');const left=document.createElement('div');left.append(text('strong',def.label));left.append(text('div','Szacunek modelu: '+pct(state.selected.model.ps[def.id]),'muted tiny'));const btn=text('button','Kopiuj');btn.type='button';btn.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(def.label);btn.textContent='Skopiowano';}catch(_){btn.textContent='Zaznacz nazwę ręcznie';}});row.append(left,btn);node.append(row);}
+  const node=$('markets');node.replaceChildren();node.append(text('p','Nazwy rynków ułatwiają wyszukiwanie w Superbet, ale mogą różnić się od aktualnej oferty. Nie pobieramy kursów.','muted'));
+  for(const def of C.MARKETS){const row=text('div','', 'market');const left=document.createElement('div');left.append(text('strong',def.label));left.append(text('div','Prawdopodobieństwo modelu: '+pct(state.selected.model.ps[def.id]),'muted tiny'));const btn=text('button','Kopiuj');btn.type='button';btn.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(def.label);btn.textContent='Skopiowano';}catch(_){btn.textContent='Zaznacz nazwę ręcznie';}});row.append(left,btn);node.append(row);}
  }
  function renderBuilder(){
   const node=$('builder');node.replaceChildren();const m=state.selected;

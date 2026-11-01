@@ -29,6 +29,12 @@ on:
       - 'site/assets/analiza.js'
       - 'site/assets/analiza.css'
       - 'site/assets/edge-feature.css'
+      - 'site/assets/editorial.css'
+      - 'site/assets/coupon-core.js'
+      - 'site/assets/app.js'
+      - 'site/kupony.html'
+      - 'site/skutecznosc.html'
+      - 'tests/editorial-ui.test.cjs'
       - 'site/index.html'
       - 'tests/mobile-analysis.test.cjs'
       - '.github/workflows/value-engine-tests.yml'
@@ -56,3 +62,4 @@ jobs:
           node tests/quote-snapshots.test.cjs
           node tests/market-labels.test.cjs
           node tests/mobile-analysis.test.cjs
+          node tests/editorial-ui.test.cjs
