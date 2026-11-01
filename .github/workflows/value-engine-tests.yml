@@ -1,5 +1,8 @@
 name: EDGE LAB VALUE — tests
 on:
+  push:
+    branches:
+      - main
   pull_request:
     paths:
       - 'src/value-engine-v2.js'
