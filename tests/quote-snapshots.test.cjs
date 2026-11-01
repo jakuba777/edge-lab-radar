@@ -1,0 +1,11 @@
+const assert=require("node:assert/strict");const {ingest,latest}=require("../src/quote-snapshots.js");
+const receivedAt="2026-11-01T18:00:00Z";
+const q={snapshotId:"s1",quoteId:"q1",matchId:"m1",marketId:"over25",source:"manual",oddsAt:"2026-11-01T17:59:00Z",odds:2.1,marketStatus:"open"};
+const a=ingest([],[q],{receivedAt});assert.equal(a.accepted,1);assert.equal(a.records[0].receivedAt,receivedAt);
+assert.equal(ingest(a.records,[q],{receivedAt}).accepted,0);
+assert.equal(ingest([],[{...q,snapshotId:"future",oddsAt:"2026-11-01T18:01:00Z"}],{receivedAt}).accepted,0);
+assert.equal(ingest([],[{...q,snapshotId:"bad",odds:NaN}],{receivedAt}).accepted,0);
+const b=ingest(a.records,[{...q,snapshotId:"s2",quoteId:"q2",oddsAt:"2026-11-01T18:00:00Z",odds:2.2}],{receivedAt});
+assert.equal(latest(b.records).length,1);assert.equal(latest(b.records)[0].odds,2.2);
+assert.equal(a.records[0].odds,2.1);
+console.log("QUOTE SNAPSHOTS: assertions passed");
