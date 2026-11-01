@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EDGE LAB DUAL — laboratorium</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,sans-serif;background:#09121c;color:#f0f5fb}
+*{box-sizing:border-box}body{margin:0 auto;padding:18px;max-width:850px}h1{font-size:1.65rem}
+p,small{color:#a7b5c4;line-height:1.5}.panel{background:#142333;border:1px solid #304258;border-radius:14px;padding:16px;margin:15px 0}
+button{background:#187965;border:0;color:white;padding:13px;border-radius:9px;font-weight:700;width:100%;cursor:pointer}
+a{color:#8ce2bb}.cards{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:600px){.cards{grid-template-columns:1fr}}.stat{font-size:2rem;font-weight:700}
+</style></head><body>
+<p><a href="./">← EDGE LAB</a> · <a href="value-lab.html">VALUE LAB</a></p>
+<h1>EDGE LAB DUAL</h1>
+<p>Laboratorium dwóch strategii. Tryb demonstracyjny — dane są syntetyczne, nie są to typy ani rekomendacje do obstawiania.</p>
+<div class="cards">
+<section class="panel"><h2>TOR A — Stabilność</h2><p>Single i duble. Wyższa szacowana skuteczność pojedynczych zdarzeń.</p><div class="stat" id="a">—</div><small>Przykładowe kombinacje</small></section>
+<section class="panel"><h2>TOR B — Wysoki kurs</h2><p>2–3 zdarzenia, kurs łączny od 6.00 do 10.00.</p><div class="stat" id="b">—</div><small>Przykładowe kombinacje</small></section>
+</div>
+<button id="run">Uruchom symulację demonstracyjną</button>
+<div class="panel"><h2>Wyniki demonstracji</h2><div id="output" role="status" aria-live="polite">Uruchom symulację, aby zobaczyć działanie generatora.</div></div>
+<p>Wspólne prawdopodobieństwo i wartość oczekiwana kuponu pozostają nieznane. Kalkulator nie pobiera kursów na żywo, nie obstawia i nie potwierdza skuteczności.</p>
+<script src="src/value-engine-v2.js"></script><script src="src/dual-engine.js"></script><script>
+document.getElementById("run").addEventListener("click",function(){
+ const out=document.getElementById("output");
+ if(!window.EdgeDual){out.textContent="Błąd ładowania silnika DUAL.";return;}
+ const now=new Date().toISOString();
+ function sample(id,track,odds,p){
+  return {matchId:id,track,odds,probability:p,lowerProbability:p-0.03,
+   oddsTimestamp:now,evaluatedAt:now,modelVersion:"DEMO-NOT-VALIDATED",marketId:"demo",
+   calibrated:true,calibrationEvidence:{verified:true,datasetId:"SYNTHETIC-NOT-REAL",
+   method:"demonstration-only",sampleSize:300}};
+ }
+ const result=window.EdgeDual.buildDual([
+  sample("demo-a1","A",1.7,0.78),sample("demo-a2","A",1.7,0.78),
+  sample("demo-b1","B",2.1,0.66),sample("demo-b2","B",2.1,0.66),
+  sample("demo-b3","B",2.1,0.66)]);
+ document.getElementById("a").textContent=result.stable.length;
+ document.getElementById("b").textContent=result.highOdds.length;
+ const render=(label,items)=>label+": "+(items.length?items.slice(0,5).map(x=>x.combinedOdds.toFixed(2)+" ("+x.selections.length+" zd.)").join(", "):"brak");
+ out.textContent=render("TOR A",result.stable)+"\n"+render("TOR B",result.highOdds)+"\nDane syntetyczne; prawdopodobieństwo kuponów nieoszacowane.";
+ out.style.whiteSpace="pre-wrap";
+});
+</script></body></html>
