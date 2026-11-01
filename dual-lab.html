@@ -33,7 +33,7 @@ document.getElementById("run").addEventListener("click",function(){
  const result=window.EdgeDual.buildDual([
   sample("demo-a1","A",1.7,0.78),sample("demo-a2","A",1.7,0.78),
   sample("demo-b1","B",2.1,0.66),sample("demo-b2","B",2.1,0.66),
-  sample("demo-b3","B",2.1,0.66)]);
+  sample("demo-b3","B",2.1,0.66)],{allowDemo:true});
  document.getElementById("a").textContent=result.stable.length;
  document.getElementById("b").textContent=result.highOdds.length;
  const render=(label,items)=>label+": "+(items.length?items.slice(0,5).map(x=>x.combinedOdds.toFixed(2)+" ("+x.selections.length+" zd.)").join(", "):"brak");
