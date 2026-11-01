@@ -14,4 +14,11 @@ assert.ok(evaluate({...base,probability:1.2}).reasons.includes("invalid_probabil
 assert.equal(validateCoupon([{matchId:"a",status:"VALUE_CANDIDATE"},{matchId:"a",status:"VALUE_CANDIDATE"}]).valid,false);
 assert.equal(validateCoupon([{matchId:"a",status:"VALUE_CANDIDATE"},{matchId:"b",status:"VALUE_CANDIDATE"}]).valid,true);
 assert.equal(validateCoupon(Array.from({length:4},(_,i)=>({matchId:String(i),status:"VALUE_CANDIDATE"}))).valid,false);
-console.log("EDGE LAB Value Engine: 10 checks passed");
+assert.ok(evaluate({...base,odds:1.05}).reasons.includes("unprofitable_even_if_certain"));
+const { rankCandidates, buildCoupons } = require("../src/value-engine-v2.js");
+const candidate2 = {...base, matchId:"m2",odds:2.5, probability:.7,lowerProbability:.62};
+assert.equal(rankCandidates([base,candidate2]).length,2);
+assert.equal(buildCoupons([base,candidate2]).filter(x=>x.selections.length===2).length,1);
+assert.ok(buildCoupons([base,candidate2]).every(x=>x.combinedExpectedRoi===null));
+assert.equal(buildCoupons([base,{...base,marketId:"btts"}]).filter(x=>x.selections.length===2).length,0);
+console.log("EDGE LAB Value Engine: 15 assertions passed");
