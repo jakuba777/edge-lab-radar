@@ -21,7 +21,7 @@
     if (!Number.isFinite(now) || !Number.isFinite(timestamp) || timestamp > now ||
       now - timestamp > maxAgeMinutes * 60000) errors.push("stale_or_missing_odds");
     if (marketStatus !== "open") errors.push("market_not_open");
-    if (!calibrated || !calibrationEvidence || calibrationEvidence.verified !== true || !calibrationEvidence.datasetId || !calibrationEvidence.method || !Number.isInteger(calibrationEvidence.sampleSize) || calibrationEvidence.sampleSize < 100) errors.push("unverified_calibration");
+    if (!calibrated || !calibrationEvidence || calibrationEvidence.verified !== true || !calibrationEvidence.datasetId || !calibrationEvidence.method || String(modelVersion || "").startsWith("DEMO-") || String(calibrationEvidence.datasetId).startsWith("SYNTHETIC-") || !Number.isInteger(calibrationEvidence.sampleSize) || calibrationEvidence.sampleSize < 100) errors.push("unverified_calibration");
     if (!modelVersion || !matchId || !marketId) errors.push("missing_provenance");
     if (valid(odds) && valid(taxRate) && odds * (1 - taxRate) <= 1) errors.push("unprofitable_even_if_certain");
     if (errors.length) return { status: "NO_EDGE", reasons: errors };
