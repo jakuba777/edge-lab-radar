@@ -17,6 +17,10 @@ on:
       - 'tests/backtest-audit.test.cjs'
       - 'src/prediction-ledger.js'
       - 'tests/prediction-ledger.test.cjs'
+      - 'src/multi-market.js'
+      - 'tests/multi-market.test.cjs'
+      - 'multi-market-lab.html'
+      - 'tests/multi-market-html.test.cjs'
       - '.github/workflows/value-engine-tests.yml'
   workflow_dispatch:
 jobs:
@@ -38,3 +42,4 @@ jobs:
           node tests/backtest-audit.test.cjs
           node tests/prediction-ledger.test.cjs
           node tests/multi-market.test.cjs
+          node tests/multi-market-html.test.cjs
