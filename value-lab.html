@@ -21,7 +21,7 @@ button{background:#1b695d;border:0;margin-top:16px;font-weight:700;cursor:pointe
 <div class="row"><div><label for="lower">Dolna granica P (%)</label><input id="lower" type="number" min="0" max="100" step=".1" placeholder="np. 60"></div><div><label for="tax">Podatek od stawki (%)</label><input id="tax" type="number" min="0" max="99" step=".1" value="12"></div></div>
 <label for="timestamp">Czas pobrania kursu (z offsetem, ISO 8601)</label><input id="timestamp" placeholder="2026-11-01T14:00:00+01:00">
 <label for="version">Wersja modelu</label><input id="version" placeholder="np. calibrated-2026-11">
-<label><input id="calibrated" type="checkbox" style="width:auto"> Model zweryfikowany i skalibrowany dla tego rynku</label>
+<p class="muted">Status kalibracji: NIEZWERYFIKOWANY. Ręczny formularz nie może sam potwierdzać jakości modelu. Status VALUE wymaga audytu zewnętrznego.</p>
 <button id="calculate">Oceń kurs</button>
 </div>
 <div class="panel"><div id="output" class="result" role="status" aria-live="polite">Uzupełnij pola. Bez zweryfikowanej kalibracji wynik otrzyma status NO_EDGE.</div></div>
@@ -34,13 +34,13 @@ document.getElementById("calculate").addEventListener("click",function(){
  const input={matchId:val("match").trim(),marketId:val("market"),odds:num("odds"),
  probability:num("prob")/100,lowerProbability:num("lower")/100,taxRate:num("tax")/100,
  oddsTimestamp:val("timestamp").trim(),evaluatedAt:now,modelVersion:val("version").trim(),
- calibrated:document.getElementById("calibrated").checked};
+ calibrated:false,calibrationEvidence:null};
  const out=document.getElementById("output");
  if(!window.EdgeValueEngine){out.textContent="Błąd: silnik VALUE nie został załadowany.";return;}
  const result=window.EdgeValueEngine.evaluate(input);
  if(result.reasons.includes("invalid_probability")||result.reasons.includes("invalid_lower_bound")||result.reasons.includes("invalid_odds")){out.className="result bad";out.textContent="Nieprawidłowe dane liczbowe. Sprawdź kurs i prawdopodobieństwa.";return;}
  out.className="result "+(result.status==="VALUE_CANDIDATE"?"good":"bad");
- if(result.expectedRoi===undefined){out.textContent="NO_EDGE — "+result.reasons.join(", ");return;}
+ if(result.expectedRoi===undefined){const odds=input.odds,p=input.probability,lo=input.lowerProbability,t=input.taxRate;const valid=[odds,p,lo,t].every(Number.isFinite)&&odds>1&&p>=0&&p<=1&&lo>=0&&lo<=p&&t>=0&&t<1;if(valid){out.textContent="TYLKO SYMULACJA — BRAK POTWIERDZONEJ KALIBRACJI\\nPróg rentowności: "+(100/(odds*(1-t))).toFixed(2)+"%\\nEV przy wpisanej prognozie: "+(100*(p*odds*(1-t)-1)).toFixed(2)+"%\\nOstrożny EV: "+(100*(lo*odds*(1-t)-1)).toFixed(2)+"%\\nBrak rekomendacji: "+result.reasons.join(", ");}else out.textContent="NO_EDGE — "+result.reasons.join(", ");return;}
  out.textContent=result.status+"\nPróg rentowności: "+(result.breakEvenProbability*100).toFixed(2)+"%\nEV netto: "+(result.expectedRoi*100).toFixed(2)+"%\nOstrożny EV: "+(result.conservativeRoi*100).toFixed(2)+"%\n"+(result.reasons.length?"Powód: "+result.reasons.join(", "):"Wyłącznie kandydat do dalszej analizy — nie gwarancja zysku.");
 });
 </script></body></html>
