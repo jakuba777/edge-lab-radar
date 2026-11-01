@@ -1,0 +1,11 @@
+const fs=require("node:fs");
+const vm=require("node:vm");
+const assert=require("node:assert/strict");
+const html=fs.readFileSync("dual-lab.html","utf8");
+const tag="<script>",endTag="</script>";
+const start=html.indexOf(tag),end=html.indexOf(endTag,start+tag.length);
+assert.ok(start>=0&&end>start,"inline script missing");
+new vm.Script(html.slice(start+tag.length,end),{filename:"dual-lab.html"});
+assert.ok(html.includes('src/dual-engine.js'),"dual engine not linked");
+assert.ok(html.includes("DEMO-NOT-VALIDATED"),"demo disclaimer missing");
+console.log("DUAL LAB HTML: syntax and dependencies OK");
