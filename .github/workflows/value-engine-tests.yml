@@ -21,6 +21,8 @@ on:
       - 'tests/multi-market.test.cjs'
       - 'multi-market-lab.html'
       - 'tests/multi-market-html.test.cjs'
+      - 'src/quote-snapshots.js'
+      - 'tests/quote-snapshots.test.cjs'
       - '.github/workflows/value-engine-tests.yml'
   workflow_dispatch:
 jobs:
@@ -43,3 +45,4 @@ jobs:
           node tests/prediction-ledger.test.cjs
           node tests/multi-market.test.cjs
           node tests/multi-market-html.test.cjs
+          node tests/quote-snapshots.test.cjs
