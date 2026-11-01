@@ -13,6 +13,8 @@ on:
       - 'tests/dual-engine.test.cjs'
       - 'dual-lab.html'
       - 'tests/dual-lab-html.test.cjs'
+      - 'src/backtest-audit.js'
+      - 'tests/backtest-audit.test.cjs'
       - '.github/workflows/value-engine-tests.yml'
   workflow_dispatch:
 jobs:
@@ -31,3 +33,4 @@ jobs:
           node tests/value-lab-html.test.cjs
           node tests/dual-engine.test.cjs
           node tests/dual-lab-html.test.cjs
+          node tests/backtest-audit.test.cjs
