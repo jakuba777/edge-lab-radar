@@ -37,3 +37,4 @@ jobs:
           node tests/dual-lab-html.test.cjs
           node tests/backtest-audit.test.cjs
           node tests/prediction-ledger.test.cjs
+          node tests/multi-market.test.cjs
