@@ -1,0 +1,10 @@
+const fs=require("node:fs");
+const vm=require("node:vm");
+const assert=require("node:assert/strict");
+const html=fs.readFileSync("value-lab.html","utf8");
+const scripts=[...html.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/g)].map(x=>x[1]).filter(x=>x.trim());
+assert.ok(scripts.length>0,"missing inline script");
+for(const script of scripts)new vm.Script(script,{filename:"value-lab.html"});
+assert.ok(html.includes("src/value-engine-v2.js"),"missing value engine dependency");
+assert.ok(html.includes("calibrationEvidence:null"),"manual calibration bypass detected");
+console.log("VALUE LAB HTML: inline JavaScript syntax and calibration gate OK");
