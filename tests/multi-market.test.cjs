@@ -1,0 +1,14 @@
+const assert=require("node:assert/strict");const {screen,combine}=require("../src/multi-market.js");
+const now="2026-11-01T19:00:00Z",base={source:"manual-superbet",oddsAt:now,marketStatus:"open",probability:.7,lowerProbability:.65,calibrationVerified:true};
+const q=(id,odds)=>({...base,quoteId:id,matchId:id,marketId:"over25",odds});
+assert.equal(screen(q("a",2.1),{now}).status,"VALUE_CANDIDATE");
+assert.equal(screen({...q("a",2.1),oddsAt:"2026-11-01T18:00:00Z"},{now}).status,"REJECTED");
+assert.equal(screen({...q("a",2.1),marketStatus:"closed"},{now}).status,"REJECTED");
+assert.equal(screen({...q("a",2.1),calibrationVerified:false},{now}).status,"UNVERIFIED");
+assert.equal(screen({...q("a",2.1),isBuilder:true,builderLegs:["BTTS","over25"]},{now}).status,"REJECTED");
+assert.equal(screen({...q("a",2.1),isBuilder:true,builderLegs:["BTTS","over25"],bookmakerCombinedQuote:true},{now}).status,"VALUE_CANDIDATE");
+const cs=combine([q("a",2.1),q("b",2),q("c",2.05)],{now,minLegs:3,maxLegs:3});
+assert.equal(cs.length,1);assert.ok(Math.abs(cs[0].odds-8.61)<1e-8);assert.equal(cs[0].expectedRoi,null);
+assert.equal(combine([q("a",2.1),{...q("b",2),matchId:"a"},q("c",2.05)],{now,minLegs:3,maxLegs:3}).length,0);
+assert.equal(combine([q("a",2.1),q("b",2),{...q("c",2.05),calibrationVerified:false}],{now,minLegs:3,maxLegs:3}).length,0);
+console.log("MULTI MARKET: assertions passed");
