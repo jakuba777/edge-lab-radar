@@ -11,14 +11,14 @@ const val=s=>s===null||s===undefined||s===''?null:Number.isFinite(Number(s))?Num
 const pct=n=>`${(100*n).toFixed(1).replace('.',',')}%`;
 const num=n=>Number(n).toFixed(2).replace('.',',');
 const marketDefs=[
- {id:'o15',label:'Powyżej 1,5 gola',hit:(h,a)=>h+a>=2},
- {id:'o25',label:'Powyżej 2,5 gola',hit:(h,a)=>h+a>=3},
- {id:'u35',label:'Poniżej 3,5 gola',hit:(h,a)=>h+a<=3},
- {id:'btts',label:'Obie strzelą',hit:(h,a)=>h>0&&a>0},
- {id:'hg',label:'Gospodarze strzelą',hit:(h,a)=>h>0},
- {id:'ag',label:'Goście strzelą',hit:(h,a)=>a>0},
- {id:'h2',label:'Gospodarze min. 2 gole',hit:(h,a)=>h>=2},
- {id:'x',label:'Remis',hit:(h,a)=>h===a}];
+ {id:'o15',label:'Suma goli — Powyżej 1,5',hit:(h,a)=>h+a>=2},
+ {id:'o25',label:'Suma goli — Powyżej 2,5',hit:(h,a)=>h+a>=3},
+ {id:'u35',label:'Suma goli — Poniżej 3,5',hit:(h,a)=>h+a<=3},
+ {id:'btts',label:'Obie drużyny strzelą gola — Tak',hit:(h,a)=>h>0&&a>0},
+ {id:'hg',label:'Gole gospodarzy — Powyżej 0,5',hit:(h,a)=>h>0},
+ {id:'ag',label:'Gole gości — Powyżej 0,5',hit:(h,a)=>a>0},
+ {id:'h2',label:'Gole gospodarzy — Powyżej 1,5',hit:(h,a)=>h>=2},
+ {id:'x',label:'Wynik meczu — X',hit:(h,a)=>h===a}];
 function parseCSV(text){
  const out=[];let row=[],buf='',inQuotes=false;
  text=String(text??'').replace(/^\uFEFF/,'');
