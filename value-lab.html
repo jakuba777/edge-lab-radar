@@ -40,7 +40,26 @@ document.getElementById("calculate").addEventListener("click",function(){
  const result=window.EdgeValueEngine.evaluate(input);
  if(result.reasons.includes("invalid_probability")||result.reasons.includes("invalid_lower_bound")||result.reasons.includes("invalid_odds")){out.className="result bad";out.textContent="Nieprawidłowe dane liczbowe. Sprawdź kurs i prawdopodobieństwa.";return;}
  out.className="result "+(result.status==="VALUE_CANDIDATE"?"good":"bad");
- if(result.expectedRoi===undefined){const odds=input.odds,p=input.probability,lo=input.lowerProbability,t=input.taxRate;const valid=[odds,p,lo,t].every(Number.isFinite)&&odds>1&&p>=0&&p<=1&&lo>=0&&lo<=p&&t>=0&&t<1;if(valid){out.textContent="TYLKO SYMULACJA — BRAK POTWIERDZONEJ KALIBRACJI\nPróg rentowności: "+(100/(odds*(1-t))).toFixed(2)+"%\nEV przy wpisanej prognozie: "+(100*(p*odds*(1-t)-1)).toFixed(2)+"%\nOstrożny EV: "+(100*(lo*odds*(1-t)-1)).toFixed(2)+"%\nBrak rekomendacji: "+result.reasons.join(", ");}else out.textContent="NO_EDGE — "+result.reasons.join(", ");return;}
- out.textContent=result.status+"\nPróg rentowności: "+(result.breakEvenProbability*100).toFixed(2)+"%\nEV netto: "+(result.expectedRoi*100).toFixed(2)+"%\nOstrożny EV: "+(result.conservativeRoi*100).toFixed(2)+"%\n"+(result.reasons.length?"Powód: "+result.reasons.join(", "):"Wyłącznie kandydat do dalszej analizy — nie gwarancja zysku.");
+ if(result.expectedRoi===undefined){
+  const odds=input.odds,p=input.probability,lo=input.lowerProbability,t=input.taxRate;
+  const valid=[odds,p,lo,t].every(Number.isFinite)&&odds>1&&p>=0&&p<=1&&lo>=0&&lo<=p&&t>=0&&t<1;
+  if(valid){
+    out.textContent=[
+      "TYLKO SYMULACJA — BRAK POTWIERDZONEJ KALIBRACJI",
+      "Próg rentowności: "+(100/(odds*(1-t))).toFixed(2)+"%",
+      "EV przy wpisanej prognozie: "+(100*(p*odds*(1-t)-1)).toFixed(2)+"%",
+      "Ostrożny EV: "+(100*(lo*odds*(1-t)-1)).toFixed(2)+"%",
+      "Brak rekomendacji: "+result.reasons.join(", ")
+    ].join(String.fromCharCode(10));
+  } else out.textContent="NO_EDGE — "+result.reasons.join(", ");
+  return;
+}
+out.textContent=[
+  result.status,
+  "Próg rentowności: "+(result.breakEvenProbability*100).toFixed(2)+"%",
+  "EV netto: "+(result.expectedRoi*100).toFixed(2)+"%",
+  "Ostrożny EV: "+(result.conservativeRoi*100).toFixed(2)+"%",
+  result.reasons.length?"Powód: "+result.reasons.join(", "):"Wyłącznie kandydat do dalszej analizy — nie gwarancja zysku."
+].join(String.fromCharCode(10));
 });
 </script></body></html>
