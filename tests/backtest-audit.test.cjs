@@ -1,0 +1,16 @@
+const assert=require("node:assert/strict");
+const {audit}=require("../src/backtest-audit.js");
+const base={predictedAt:"2026-10-01T12:00:00Z",startsAt:"2026-10-01T14:00:00Z",oddsAt:"2026-10-01T11:59:00Z",odds:2,marketStatus:"open"};
+const result=audit([{...base,id:"1",won:true},{...base,id:"2",won:false}],{stake:10,taxRate:.12});
+assert.equal(result.count,2);
+assert.equal(result.wins,1);
+assert.ok(Math.abs(result.netProfit+2.4)<1e-9);
+assert.ok(Math.abs(result.roi+0.12)<1e-9);
+assert.equal(result.maxDrawdownUnits,10);
+assert.equal(audit([{...base,id:"1",won:true},{...base,id:"1",won:true}]).rejected,1);
+assert.equal(audit([{...base,id:"future",predictedAt:"2026-10-01T15:00:00Z",won:true}]).count,0);
+assert.equal(audit([{...base,id:"future-odds",oddsAt:"2026-10-01T12:30:00Z",won:true}]).count,0);
+assert.equal(audit([{...base,id:"closed",marketStatus:"closed",won:true}]).count,0);
+assert.equal(audit([]).status,"INSUFFICIENT_DATA");
+assert.throws(()=>audit([],{taxRate:-1}),/invalid_config/);
+console.log("BACKTEST AUDIT: assertions passed");
