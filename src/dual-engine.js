@@ -5,9 +5,9 @@
 })(typeof globalThis!=="undefined"?globalThis:this,function(engine){
  "use strict";
  function buildDual(inputs,options={}){
-  const ranked=engine.rankCandidates(inputs||[]);
-  const stable=ranked.filter(x=>x.input.track==="A"&&x.input.probability>=0.65);
-  const high=ranked.filter(x=>x.input.track==="B"&&x.input.odds>=1.8);
+  const ranked=engine.rankCandidates(inputs||[]).filter(x => !String(x.input.modelVersion||'').startsWith('DEMO-')).slice(0,24);
+  const stable=ranked.filter(x=>x.input.track==="A"&&x.input.lowerProbability>=0.65).slice(0,12);
+  const high=ranked.filter(x=>x.input.track==="B"&&x.input.odds>=1.8).slice(0,12);
   function combos(items,min,max,range){
    const out=[];
    function walk(start,picks){
