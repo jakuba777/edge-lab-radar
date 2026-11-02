@@ -19,3 +19,15 @@
 .lab .match,.lab .match strong,.lab .market strong,.lab .pane h2,.lab .pane h3{color:#172922!important}
 .lab .muted,.lab .pane small{color:#52695b!important}
 @media(forced-colors:active){.coupon-shell .coupon-evening-card,.coupon-shell .coupon-card{forced-color-adjust:auto}}
+
+/* Exact components from current coupon markup */
+.coupon-evening-card .coupon-evening-head strong,.coupon-evening-card .coupon-evening-head strong *,.coupon-evening-card .coupon-pill,.coupon-evening-card .coupon-evening-probs small,.coupon-evening-card .coupon-evening-copy{color:#e7f6f4!important}
+.coupon-evening-card .coupon-evening-head small{color:#b9cdd5!important}
+.coupon-evening-card .coupon-evening-probs strong{color:#b5f2e6!important}
+.coupon-evening-card .coupon-evening-copy{border-color:#7caab0!important}
+.coupon-shell .coupon-card,.coupon-shell .coupon-leg,.coupon-shell .coupon-metric,.coupon-shell .coupon-nothing,.coupon-shell .coupon-research-link{color:#f3f8fa!important}
+.coupon-shell .coupon-card h3,.coupon-shell .coupon-leg .teams,.coupon-shell .coupon-leg .market,.coupon-shell .coupon-metric strong,.coupon-shell .coupon-research-link strong{color:#f3f8fa!important}
+.coupon-shell .coupon-leg .minor,.coupon-shell .coupon-metric small,.coupon-shell .coupon-truth,.coupon-shell .coupon-research-link small{color:#b8cbd2!important}
+.coupon-shell .coupon-leg .prob,.coupon-shell .coupon-metric .light{color:#b5f2e6!important}
+.coupon-shell .coupon-check summary,.coupon-shell .coupon-check p,.coupon-shell .coupon-method p{color:#d8e9e7!important}
+.coupon-shell .coupon-evening-lab .coupon-evening-disclaimer{color:#52695b!important;border-color:#dce5dd!important}
