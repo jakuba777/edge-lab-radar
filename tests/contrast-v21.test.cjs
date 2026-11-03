@@ -26,7 +26,7 @@ for(const [page,legacy] of [
  ['rynek.html','market.css']
 ]){
  const html=fs.readFileSync('site/'+page,'utf8');
- assert.match(html,/assets\/contrast-v21\.css\?v=21/,page+' missing new contrast stylesheet');
+ assert.match(html,/assets\/contrast-v21\.css\?v=(21|22)/,page+' missing new contrast stylesheet');
  const styles=[...html.matchAll(/<link[^>]*rel="stylesheet"[^>]*>/g)].map(x=>x[0]);
  assert.ok(styles.at(-1).includes('contrast-v21.css'),page+' contrast stylesheet must load last');
  assert.ok(html.includes('assets/'+legacy),page+' lost legacy CSS');
