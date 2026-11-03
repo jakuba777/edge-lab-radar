@@ -1,0 +1,445 @@
+{
+  "schema": 1,
+  "snapshot_date": "2026-11-03",
+  "match_date": "2026-11-04",
+  "time_zone": "Europe/Warsaw",
+  "snapshot_kind": "verified_fixture_and_prior_results_not_live",
+  "sources": {
+    "uefa": {
+      "label": "UEFA – oficjalny terminarz i wyniki 3 kolejek",
+      "url": "https://www.uefa.com/uefachampionsleague/news/02a8-2174c9e9019d-f909a77bd77a-1000--2026-27-uefa-champions-league-all-the-league-phase-fix/"
+    },
+    "efl": {
+      "label": "English Football League – terminarz Championship",
+      "url": "https://www.efl.com/competitions/efl-championship/"
+    },
+    "statcaddie": {
+      "label": "StatCaddie – próbka Wrexham / Middlesbrough (nieoficjalne)",
+      "url": "https://statcaddie.co.uk/matches/wrexham-vs-middlesbrough-04-nov-2026"
+    },
+    "sportsmole": {
+      "label": "Sports Mole – Cardiff / West Ham, zapowiedź 02.11.2026",
+      "url": "https://www.sportsmole.co.uk/football/cardiff-city/preview/cardiff-vs-west-ham-prediction-team-news-lineups_608265.html"
+    },
+    "wolves": {
+      "label": "Wolverhampton Wanderers – oficjalna zapowiedź 03.11.2026",
+      "url": "https://www.wolves.co.uk/news/features/20261103-the-preview-bristol-city-vs-wolves/"
+    }
+  },
+  "methodology": "Dla meczów UEFA pokazujemy wyłącznie częstotliwości zdarzeń z trzech poprzednich meczów każdej drużyny w Lidze Mistrzów 2026/27. Nie są to prognozy prawdopodobieństwa ani kursy. Dla Championship źródła i liczebność próby są oznaczone osobno. Dane i terminarze trzeba zweryfikować przed rozpoczęciem; model EDGE LAB dla lig krajowych nie prognozuje automatycznie spotkań Ligi Mistrzów.",
+  "matches": [
+    {
+      "id": "ucl-aek-real",
+      "competition": "Liga Mistrzów UEFA",
+      "time": "18:45",
+      "home": "AEK Ateny",
+      "away": "Real Madryt",
+      "market": "a2",
+      "alt": "Wynik meczu — 2",
+      "tier": "B",
+      "homeRecent": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          1,
+          5
+        ]
+      ],
+      "awayRecent": [
+        [
+          2,
+          1
+        ],
+        [
+          4,
+          3
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "why": "Real strzelał co najmniej 2 gole we wszystkich trzech meczach UEFA; AEK tracił co najmniej 3 gole w dwóch ostatnich. Rozważ porównanie ceny 2+ goli Realu zamiast samego 1X2.",
+      "risk": "Niewielka próba i nieporównywalni rywale. Kurs na 2+ gole nie jest znany.",
+      "source": "uefa"
+    },
+    {
+      "id": "ucl-fener-liverpool",
+      "competition": "Liga Mistrzów UEFA",
+      "time": "18:45",
+      "home": "Fenerbahçe",
+      "away": "Liverpool",
+      "market": "btts",
+      "alt": "Suma goli — Powyżej 2,5",
+      "tier": "A",
+      "homeRecent": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          6
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "awayRecent": [
+        [
+          2,
+          1
+        ],
+        [
+          6,
+          3
+        ],
+        [
+          4,
+          3
+        ]
+      ],
+      "why": "Liverpool notował BTTS w trzech meczach UEFA z rzędu, Fenerbahçe w dwóch z trzech. Weryfikuj ceny BTTS i over 2,5 osobno, bez ich automatycznego łączenia.",
+      "risk": "Fenerbahçe nie zdobył gola z Aston Villą (0:6), a wyjazd do Stambułu jest odmiennym kontekstem. Sam wynik 3 kolejek nie wystarcza do prognozy.",
+      "source": "uefa"
+    },
+    {
+      "id": "ucl-dortmund-betis",
+      "competition": "Liga Mistrzów UEFA",
+      "time": "21:00",
+      "home": "Borussia Dortmund",
+      "away": "Real Betis",
+      "market": "btts",
+      "alt": "Suma goli — Powyżej 2,5",
+      "tier": "B",
+      "homeRecent": [
+        [
+          3,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "awayRecent": [
+        [
+          3,
+          2
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "why": "Obie drużyny notowały BTTS w dwóch z trzech wcześniejszych meczów UEFA. Porównaj rynki BTTS oraz over 2,5.",
+      "risk": "Dortmund przegrał do zera z Bodø/Glimt, a Betis wygrał 1:0 z Feyenoordem. Mało obserwacji.",
+      "source": "uefa"
+    },
+    {
+      "id": "ucl-porto-napoli",
+      "competition": "Liga Mistrzów UEFA",
+      "time": "21:00",
+      "home": "Porto",
+      "away": "Napoli",
+      "market": "o15",
+      "alt": "Suma goli — Poniżej 3,5",
+      "tier": "C",
+      "homeRecent": [
+        [
+          0,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "awayRecent": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          4,
+          3
+        ]
+      ],
+      "why": "W obu zespołach suma przekraczała 1,5 gola w dwóch z trzech spotkań UEFA. Rynek do porównania, nie do automatycznej selekcji.",
+      "risk": "Porto nie zdobyło gola w dwóch z trzech meczów, a Napoli ma dużą zmienność; zbyt niejednorodne dane.",
+      "source": "uefa"
+    },
+    {
+      "id": "ucl-psv-brugge",
+      "competition": "Liga Mistrzów UEFA",
+      "time": "21:00",
+      "home": "PSV Eindhoven",
+      "away": "Club Brugge",
+      "market": "o25",
+      "alt": "Obie drużyny strzelą gola — Tak",
+      "tier": "C",
+      "homeRecent": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "awayRecent": [
+        [
+          2,
+          3
+        ],
+        [
+          4,
+          3
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "why": "Przykład sprzecznych profili: wszystkie trzy spotkania PSV skończyły się poniżej 2,5 gola, a wszystkie trzy Club Brugge powyżej 2,5. Nie uzasadnia to silnego typu.",
+      "risk": "Konflikt małej próbki. Priorytet: pominąć mecz do czasu uzyskania szerszych danych i składów.",
+      "source": "uefa"
+    },
+    {
+      "id": "ucl-leipzig-city",
+      "competition": "Liga Mistrzów UEFA",
+      "time": "21:00",
+      "home": "RB Lipsk",
+      "away": "Manchester City",
+      "market": "o25",
+      "alt": "Gole Manchester City — Powyżej 1,5",
+      "tier": "B",
+      "homeRecent": [
+        [
+          1,
+          4
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      "awayRecent": [
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          5,
+          1
+        ]
+      ],
+      "why": "W dwóch z trzech meczów każdej drużyny w UEFA padło co najmniej 3 gole. City strzelił 9 goli łącznie, Leipzig stracił 8.",
+      "risk": "To łącznie sześć obserwacji z różnych przeciwnikami, nie model wyceny; możliwy mecz zamknięty taktycznie.",
+      "source": "uefa"
+    },
+    {
+      "id": "ucl-lens-como",
+      "competition": "Liga Mistrzów UEFA",
+      "time": "21:00",
+      "home": "Lens",
+      "away": "Como",
+      "market": "ag",
+      "alt": "Gole Como — Powyżej 1,5",
+      "tier": "A",
+      "homeRecent": [
+        [
+          3,
+          2
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ]
+      ],
+      "awayRecent": [
+        [
+          4,
+          1
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "why": "Como zdobywał bramkę w każdym z trzech meczów, Lens w każdym tracił co najmniej dwa gole. Porównaj gole Como 0,5 oraz trudniejszy rynek 1,5.",
+      "risk": "Statystyka dotyczy innych rywali; wyjazd do Lens i zmiany składów mogą wpłynąć na skuteczność.",
+      "source": "uefa"
+    },
+    {
+      "id": "ucl-slavia-arsenal",
+      "competition": "Liga Mistrzów UEFA",
+      "time": "21:00",
+      "home": "Slavia Praga",
+      "away": "Arsenal",
+      "market": "ag",
+      "alt": "Gole Arsenal — Powyżej 1,5",
+      "tier": "B",
+      "homeRecent": [
+        [
+          2,
+          3
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "awayRecent": [
+        [
+          1,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "why": "Arsenal trafiał do siatki w trzech meczach UEFA, a Slavia traciła gola w każdym. Podwyższony kurs wymagałby sprawdzenia 2+ goli Arsenalu.",
+      "risk": "Wyjazd i możliwa rotacja; pierwszy rynek może mieć niski kurs, a alternatywa istotnie większe ryzyko.",
+      "source": "uefa"
+    },
+    {
+      "id": "ucl-viking-sabah",
+      "competition": "Liga Mistrzów UEFA",
+      "time": "21:00",
+      "home": "Viking",
+      "away": "Sabah",
+      "market": "o25",
+      "alt": "Obie drużyny strzelą gola — Tak",
+      "tier": "B",
+      "homeRecent": [
+        [
+          1,
+          3
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          1,
+          3
+        ]
+      ],
+      "awayRecent": [
+        [
+          0,
+          4
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "why": "Viking miał ponad 2,5 gola we wszystkich trzech spotkaniach UEFA, Sabah w dwóch. Rozważ porównanie over 2,5 z BTTS.",
+      "risk": "Sabah nie strzelił w jednym z trzech meczów. Szczególnie niska jakość małej próbki w typie BTTS.",
+      "source": "uefa"
+    },
+    {
+      "id": "efl-wrexham-boro",
+      "competition": "Championship",
+      "time": "20:45",
+      "home": "Wrexham",
+      "away": "Middlesbrough",
+      "market": "btts",
+      "alt": "Suma goli — Powyżej 2,5",
+      "tier": "A",
+      "source": "statcaddie",
+      "observed": {
+        "hits": 11,
+        "sample": 12,
+        "label": "BTTS w 6 domowych Wrexham i 6 wyjazdowych Middlesbrough"
+      },
+      "why": "W niezależnym zestawieniu sześciu występów domowych Wrexham i sześciu wyjazdowych Middlesbrough odnotowano 11/12 meczów z bramką obu drużyn. Warto porównać kurs BTTS z over 2,5.",
+      "risk": "To częstość w 12 rozegranych spotkaniach, nie prognoza 92% dla tego konkretnego meczu. Źródło nieoficjalne; zweryfikuj daty, składy i ceny."
+    },
+    {
+      "id": "efl-cardiff-westham",
+      "competition": "Championship",
+      "time": "20:45",
+      "home": "Cardiff",
+      "away": "West Ham",
+      "market": "none",
+      "alt": "Suma goli — Powyżej 1,5",
+      "tier": "C",
+      "source": "sportsmole",
+      "why": "Zapowiedź z 2 listopada wskazuje Cardiff na 17. pozycji, West Ham na ósmej oraz serię dwóch porażek West Hamu. To sygnał do dalszego sprawdzenia, a nie gotowa selekcja.",
+      "risk": "Brak weryfikacji statystyk dom/wyjazd w jednolitym źródle; nie przypisujemy modelowego prawdopodobieństwa."
+    },
+    {
+      "id": "efl-bristol-wolves",
+      "competition": "Championship",
+      "time": "21:00",
+      "home": "Bristol City",
+      "away": "Wolves",
+      "market": "none",
+      "alt": "Gole Wolves — Powyżej 0,5",
+      "tier": "C",
+      "source": "wolves",
+      "why": "W oficjalnej zapowiedzi Wolves podano trzy zwycięstwa w czterech ostatnich występach oraz wygraną 3:0 nad Cardiff; Bristol City wygrał 3:2 z Boltonem. Spotkanie warte obserwacji.",
+      "risk": "Forma z czterech meczów nie wystarcza do precyzyjnej wyceny; oficjalna zapowiedź klubowa też może być stronnicza."
+    }
+  ]
+}
