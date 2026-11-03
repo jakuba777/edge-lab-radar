@@ -3,11 +3,12 @@
 (function(){
  const C=window.EDGECOUPONS;
  const W=window.EDGEWINDOW;
- if(!C||!W)throw Error('Coupon or Warsaw-time guard missing');
+ const P=window.EDGEPRICE;
+ if(!C||!W||!P)throw Error('Coupon, price-lab or Warsaw-time module missing');
  const $=id=>document.getElementById(id);
  const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const today=()=>new Intl.DateTimeFormat('sv-SE',{year:'numeric',month:'2-digit',day:'2-digit',timeZone:'Europe/Warsaw'}).format(new Date());
- const state={matches:[],leagues:[],coupons:[],loaded:false,profile:'selective',stale:true,sourceUTC:null};
+ const state={matches:[],leagues:[],coupons:[],loaded:false,profile:'selective',stale:true,sourceUTC:null,priceEntries:[],priceQuotes:new Map(),overlaps:[]};
  const sourceAge=()=>state.sourceUTC?(Date.now()-Date.parse(state.sourceUTC))/3600000:Infinity;
  const kickoff=m=>{const t=String(m.time||'').trim().match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/);const n=t&&+t[1]<24&&+t[2]<60?+t[1]*60+(+t[2]):1440;return m.date+' '+String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0');};
  const chronological=(a,b)=>W.sortKey(a).localeCompare(W.sortKey(b));
@@ -96,6 +97,7 @@
    $('coupon-day').disabled=true;
    $('coupon-evening-count').textContent='—';
    $('coupon-evening').textContent='Brak wiarygodnych danych do dzisiejszych badań.';
+   $('price-lab-count').textContent='Brak danych';$('price-lab-results').textContent='Nie wyświetlamy wycen bez aktualnych danych sportowych.';
   }finally{$('coupon-reload').disabled=false;}
  }
  function fixtureWindow(){
@@ -203,6 +205,52 @@
   try{await navigator.clipboard.writeText(note);button.textContent='Skopiowano';}
   catch(_){button.textContent='Kopiowanie niedostępne';}
  }
+
+ function priceKey(item){return item.match.id+'|'+item.marketId;}
+ function renderPriceLab(eligible){
+  const root=$('price-lab-results');
+  const raw=$('price-band').value.split('-').map(Number);
+  const min=raw[0],max=raw[1];
+  state.priceEntries=P.discover(eligible,C.MARKETS,{min,max,limit:12});
+  const chosenDay=$('coupon-day').value;
+  $('price-lab-day').textContent=chosenDay==='all'?'Wszystkie wybrane dni':chosenDay||'Brak dnia';
+  $('price-lab-count').textContent=state.priceEntries.length+' alternatyw modelowych';
+  if(!state.priceEntries.length){
+   root.innerHTML='<p class="price-lab-empty">Brak rynków w tym przedziale dla wybranego dnia z wystarczającą próbką (min. 6 meczów domowych i 6 wyjazdowych). Możesz zmienić zakres lub dzień. Nie dopisujemy fikcyjnych kursów.</p>';
+   return;
+  }
+  root.innerHTML=state.priceEntries.map((item,i)=>{
+   const m=item.match, key=priceKey(item), prior=state.priceQuotes.get(key)||'';
+   const alt=item.alternate?'<span class="price-lab-alt">Alternatywny rynek</span>':'';
+   return '<article class="price-lab-item"><div class="price-lab-item-top"><div><small>'+escape(m.league)+' · '+escape(m.date)+(m.time?' · '+escape(m.time):'')+'</small>'+
+    '<h3>'+escape(m.home)+' – '+escape(m.away)+'</h3></div>'+alt+'</div>'+
+    '<div class="price-lab-market">'+escape(item.label)+'</div>'+
+    '<div class="price-lab-metrics"><div><span>Prawdopodobieństwo modelu</span><strong>'+C.fmtP(item.p)+'</strong></div>'+
+    '<div><span>Kurs modelowy (1/P)</span><strong>'+C.fmt(item.fairOdds)+'</strong></div>'+
+    '<div><span>Próg modelu po 12% podatku</span><strong>'+C.fmt(item.modelBreakEvenOdds)+'</strong></div></div>'+
+    '<label for="price-quote-'+i+'">Kurs widoczny u bukmachera (wpisz ręcznie)</label>'+
+    '<input type="text" class="field" id="price-quote-'+i+'" data-price-quote="'+i+'" inputmode="decimal" autocomplete="off" placeholder="np. 2,10" value="'+escape(prior)+'">'+
+    '<p id="price-feedback-'+i+'" class="price-lab-feedback">To wycena teoretyczna, nie oferta Superbet ani potwierdzona przewaga.</p>'+
+    '<small class="price-lab-sample">Dane historyczne: '+item.sampleMin+' meczów na stronę (minimum); model nie jest skalibrowany.</small></article>';
+  }).join('');
+  state.priceEntries.forEach((item,i)=>{
+   const v=state.priceQuotes.get(priceKey(item));
+   if(v)quotePrice(i,v);
+  });
+ }
+ function quotePrice(i,raw){
+  const item=state.priceEntries[i],node=$('price-feedback-'+i);
+  if(!item||!node)return;
+  const str=String(raw??'').trim();
+  if(!str){node.textContent='Wpisz kurs z rzeczywistej oferty, aby porównać próg rentowności. Model nie jest skalibrowany.';return;}
+  const compared=P.compareQuote(item.p,str);
+  if(!compared){node.textContent='Niepoprawny kurs. Wpisz liczbę większą niż 1 (np. 2,10).';return;}
+  const delta=(compared.modelDifference*100).toFixed(1).replace('.',',');
+  node.textContent='Przy kursie '+C.fmt(compared.actualOdds)+' próg rentowności po 12% podatku wynosi '+C.fmtP(compared.impliedBreakEvenP)+
+   '. Szacunek modelu: '+C.fmtP(item.p)+' (różnica '+(compared.modelDifference>=0?'+':'')+delta+
+   ' pkt proc.). To NIE dowód wartości: model nie jest skalibrowany.';
+ }
+
  function profileName(type,count){return type==='single'?'1 zdarzenie / badanie':type==='builder'?'Scenariusz jednego meczu':count+' mecze / '+profileLabels[type];}
  function renderCard(c,i){
   const multi=c.type==='separate';
@@ -216,7 +264,9 @@
   }).join('');
   const math=c.type==='single'?'Jedno zdarzenie bez łączenia wyników wielu spotkań.':multi?'Iloczyn szacunków dla różnych spotkań (przybliżenie niezależności).':
    'Wspólne prawdopodobieństwo dwóch zdarzeń wyliczone łącznie, z korelacją.';
+  const shared=state.overlaps[i]?.count||0;
   return '<article class="coupon-card">'+
+   (shared?'<p class="coupon-overlap">Powtarza się '+shared+' zdarzenie/z ryzykiem współdzielonym w innych symulacjach tego widoku. To nie są niezależne kupony.</p>':'')+
    '<div class="coupon-cardhead"><div><div class="eyebrow">WARIANT '+String(i+1).padStart(2,'0')+' · '+escape(profileLabels[c.profile])+'</div>'+
    '<h3>'+escape(profileName(c.profile,c.legs.length))+'</h3></div><span class="coupon-pill">HIPOTEZA</span></div>'+
    '<div class="coupon-leglist">'+legs+'</div>'+
@@ -267,6 +317,7 @@
   if(!state.loaded||state.stale)return;
   const profile=state.profile;
   const eligible=matchFilter();
+  renderPriceLab(eligible);
   const count=Number($('coupon-count').value)||2;
   const threshold=Number($('coupon-high-min').value)||5;
   const candidates=C.createCoupons(eligible,profile,count,6,{minThreshold:threshold})
@@ -274,6 +325,7 @@
   state.coupons=profile==='high_odds'?
     candidates.sort((a,b)=>Math.abs(Math.log(a.requiredOdds/threshold))-Math.abs(Math.log(b.requiredOdds/threshold))||b.score-a.score):
     candidates.sort((a,b)=>chronological(a.legs[0].match,b.legs[0].match)||b.score-a.score);
+  state.overlaps=P.overlaps(state.coupons);
   $('coupon-list-title').textContent='Warianty: '+profileLabels[profile]+
     (profile==='high_odds'?' · próg od '+C.fmt(threshold):'');
   $('coupon-number').textContent=state.coupons.length+' hipotez';
@@ -311,9 +363,15 @@
   }));
   $('coupon-day').addEventListener('change',()=>{updateDayOptions();render();});
   $('coupon-high-min').addEventListener('change',render);
+  $('price-band').addEventListener('change',render);
   $('coupon-build').addEventListener('click',render);
   $('coupon-reload').addEventListener('click',()=>{load();loadDailyAudit();});
   $('coupon-evening').addEventListener('click',e=>{const button=e.target.closest('[data-evening-copy]');if(button)copyTodayResearch(button.dataset.eveningCopy,button);});
+  $('price-lab-results').addEventListener('input',e=>{
+   const el=e.target.closest('[data-price-quote]');if(!el)return;
+   const i=Number(el.dataset.priceQuote),item=state.priceEntries[i];if(!item)return;
+   state.priceQuotes.set(priceKey(item),el.value);quotePrice(i,el.value);
+  });
   $('coupon-cards').addEventListener('input',e=>{
    if(e.target?.matches('[data-coupon-quote]'))quote(Number(e.target.dataset.couponQuote),e.target.value);
   });
