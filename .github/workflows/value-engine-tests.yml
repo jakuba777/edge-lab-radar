@@ -40,6 +40,11 @@ on:
       - 'tests/price-lab.test.cjs'
       - 'site/assets/app.js'
       - 'site/kupony.html'
+      - 'site/jutro.html'
+      - 'site/data/verified_2026-11-04.json'
+      - 'site/assets/verified-watchlist.js'
+      - 'site/assets/watchlist.css'
+      - 'tests/verified-watchlist.test.cjs'
       - 'site/skutecznosc.html'
       - 'tests/editorial-ui.test.cjs'
       - 'site/index.html'
@@ -72,3 +77,4 @@ jobs:
           node tests/editorial-ui.test.cjs
           node tests/price-lab.test.cjs
           node tests/contrast-v21.test.cjs
+          node tests/verified-watchlist.test.cjs

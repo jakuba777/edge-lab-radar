@@ -1,0 +1,65 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const data=require('../site/data/verified_2026-11-04.json');
+const W=require('../site/assets/verified-watchlist.js');
+assert.equal(data.schema,1);
+assert.equal(data.snapshot_date,'2026-11-03');
+assert.equal(data.match_date,'2026-11-04');
+assert.equal(data.time_zone,'Europe/Warsaw');
+assert.equal(data.matches.length,12);
+assert.equal(new Set(data.matches.map(m=>m.id)).size,12);
+assert.equal(data.matches.filter(m=>m.competition==='Liga Mistrzów UEFA').length,9);
+assert.equal(data.matches.filter(m=>m.competition==='Championship').length,3);
+for(const m of data.matches){
+ assert.match(m.time,/^([01]\d|2[0-3]):[0-5]\d$/);
+ assert.ok(['A','B','C'].includes(m.tier));
+ assert.ok(data.sources[m.source]&&data.sources[m.source].url.startsWith('https://'));
+ assert.ok(m.why&&m.why.length>60);
+ assert.ok(m.risk&&m.risk.length>40);
+ assert.ok(!Object.hasOwn(m,'probability')&&!Object.hasOwn(m,'odds'),'no misleading odds/probability');
+ assert.doesNotMatch(m.why,/\bpewniak|gwarantowany|pewna wygrana\b/i);
+ if(m.competition==='Liga Mistrzów UEFA'){
+  assert.equal(m.homeRecent.length,3);assert.equal(m.awayRecent.length,3);
+  for(const score of [...m.homeRecent,...m.awayRecent])assert.ok(score.length===2&&score.every(x=>Number.isInteger(x)&&x>=0&&x<=15));
+  assert.ok(W.explainObserved(m));
+ }
+}
+const get=id=>data.matches.find(m=>m.id===id);
+assert.deepEqual([W.explainObserved(get('ucl-aek-real')).home.hits,W.explainObserved(get('ucl-aek-real')).away.hits],[2,3]);
+assert.deepEqual([W.explainObserved(get('ucl-fener-liverpool')).home.hits,W.explainObserved(get('ucl-fener-liverpool')).away.hits],[2,3]);
+assert.deepEqual([W.explainObserved(get('ucl-lens-como')).home.hits,W.explainObserved(get('ucl-lens-como')).away.hits],[3,3]);
+assert.deepEqual([W.explainObserved(get('ucl-psv-brugge')).home.hits,W.explainObserved(get('ucl-psv-brugge')).away.hits],[0,3]);
+assert.equal(get('ucl-psv-brugge').tier,'C','contradictory observed goals cannot be ranked as strong');
+assert.equal(get('efl-wrexham-boro').observed.hits,11);
+assert.equal(get('efl-wrexham-boro').observed.sample,12);
+assert.ok(get('efl-wrexham-boro').extra_sources.includes('portfoliosports'));
+const optaMatches=data.matches.filter(m=>m.external_1x2);
+assert.equal(optaMatches.length,6);
+for(const m of optaMatches){
+ assert.ok(m.external_1x2.percent>0&&m.external_1x2.percent<100);
+ assert.equal(m.external_1x2.source,'opta');
+ assert.ok(m.extra_sources.includes('opta'));
+ assert.ok(m.market!=='none','Opta 1X2 remains separate from the researched goal market');
+}
+
+assert.equal(W.scoreObserved([[0,0],[1,1],[1,2]],'btts','home').hits,2);
+assert.equal(W.scoreObserved([[1,3],[2,0],[1,4]],'o25','home').hits,2);
+assert.equal(W.scoreObserved([[0,0],[1,1],[1,2]],'a2','home').hits,1);
+assert.equal(W.scoreObserved([[0,0],[1,1],[1,2]],'ag','away').hits,3-1);
+assert.equal(W.scoreObserved([[0,0],[1,1],[1,2]],'invalid','home'),null);
+assert.match(W.dateStatus('2026-11-04','2026-11-03'),/Nadchodzące/);
+assert.match(W.dateStatus('2026-11-04','2026-11-04'),/Dzisiaj/);
+assert.match(W.dateStatus('2026-11-04','2026-11-05'),/ARCHIWUM/);
+const html=fs.readFileSync('site/jutro.html','utf8');
+assert.match(html,/verified-watchlist\.js/);assert.match(html,/watchlist\.css/);
+for(const id of ['v-filters','v-count','v-list','v-sources','verified-date-state'])assert.ok(html.includes('id="'+id+'"'),id);
+const js=fs.readFileSync('site/assets/verified-watchlist.js','utf8');
+assert.match(js,/fetch\('\.\/data\/verified_2026-11-04\.json'/);
+assert.match(js,/cache:'no-store'/);
+assert.match(js,/aria-pressed/);
+assert.match(js,/Źródło danych/);
+const main=fs.readFileSync('site/index.html','utf8'),coupons=fs.readFileSync('site/kupony.html','utf8');
+assert.ok(main.includes('./jutro.html')&&coupons.includes('./jutro.html'));
+assert.ok(!JSON.stringify(data).includes('892I-112Q7L'),'no private ticket IDs in public research');
+console.log('Verified fixture watchlist: 12 matches, evidence, samples, archives and privacy verified');
