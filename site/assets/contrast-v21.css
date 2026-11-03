@@ -1,10 +1,14 @@
 /* EDGE LAB readability v21 — loaded AFTER legacy and editorial styles.
    Light canvas: dark text; dark modules: light text. Avoid global forced inheritance. */
 :root{--edge-ink:#172922;--edge-secondary:#52695b;--edge-on-dark:#f3f8fa;--edge-secondary-dark:#b8cbd2;--edge-forest:#245d4e}
-body:has(.editorial-nav) .muted:not(.chip):not(.track-stat),
+/* Limit light helper colors to light surfaces; never recolor text inside dark cards. */
 body:has(.editorial-nav) .hint,
-body:has(.editorial-nav) .caption:not(.coupon-card .caption):not(.coupon-evening-card .caption),
-body:has(.editorial-nav) .subtitle{color:#52695b!important;background:transparent}
+body:has(.editorial-nav) .subtitle,
+body:has(.editorial-nav) .panel>.caption,
+body:has(.editorial-nav) .pane>.muted:not(.chip),
+body:has(.editorial-nav) .source-panel .caption,
+body:has(.editorial-nav) .coupon-status .caption,
+body:has(.editorial-nav) .coupon-daily-audit>.caption{color:#52695b!important;background:transparent!important}
 body:has(.editorial-nav) .chip.muted{color:#405b4b!important;background:#e8f0e9!important}
 body:has(.editorial-nav) :is(a,button,input,select,summary):focus-visible,
 .market-shell :is(a,button,input,select,summary):focus-visible{outline:3px solid #2c7860!important;outline-offset:3px}
