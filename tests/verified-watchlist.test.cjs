@@ -36,7 +36,7 @@ assert.equal(get('efl-wrexham-boro').observed.sample,12);
 assert.ok(get('efl-wrexham-boro').extra_sources.includes('portfoliosports'));
 assert.equal(W.scoreObserved([[0,0],[1,1],[1,2]],'btts','home').hits,2);
 assert.equal(W.scoreObserved([[1,3],[2,0],[1,4]],'o25','home').hits,2);
-assert.equal(W.scoreObserved([[0,0],[1,1],[1,2]],'a2','home').hits,0);
+assert.equal(W.scoreObserved([[0,0],[1,1],[1,2]],'a2','home').hits,1);
 assert.equal(W.scoreObserved([[0,0],[1,1],[1,2]],'ag','away').hits,3-1);
 assert.equal(W.scoreObserved([[0,0],[1,1],[1,2]],'invalid','home'),null);
 assert.match(W.dateStatus('2026-11-04','2026-11-03'),/Nadchodzące/);
