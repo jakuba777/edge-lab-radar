@@ -13,6 +13,7 @@
 <link rel="stylesheet" href="./assets/editorial.css">
 <script defer src="./assets/time-window.js"></script>
 <script defer src="./assets/coupon-core.js"></script>
+<script defer src="./assets/price-lab.js"></script>
 <script defer src="./assets/kupony.js"></script>
 </head>
 <body>
@@ -40,6 +41,23 @@
  <p id="coupon-daily-note" class="caption">Korzystamy wyłącznie z wcześniejszych archiwalnych prognoz, nie z prywatnego kuponu.</p>
  <a href="./skutecznosc.html" class="coupon-audit-link">Szczegóły trafień i pomyłek</a>
 </section>
+<section class="panel price-lab" id="price-lab" aria-labelledby="price-lab-title">
+ <div class="price-lab-head"><div><div class="kicker">NOWOŚĆ · SKANER WYCEN MODELOWYCH</div>
+  <h2 id="price-lab-title">Szukaj wyższych kursów</h2>
+  <p>Porównuj także alternatywne rynki jednego spotkania, zamiast dodawać kolejne mecze do kuponu.</p></div><span class="price-lab-tag">MODEL · NIE LIVE</span></div>
+ <label for="price-day">Dzień</label>
+ <select id="price-day" class="field"><option value="all">Najbliższe 14 dni</option></select>
+ <label for="price-band">Przedział kursu sprawiedliwego według modelu (1 / P)</label>
+ <select id="price-band" class="field">
+  <option value="1.5-2.5" selected>1,50–2,50 · średnie kursy</option>
+  <option value="2.5-4">2,50–4,00 · podwyższone</option>
+  <option value="4-8">4,00–8,00 · wysokie ryzyko</option>
+  <option value="8-20">8,00–20,00 · bardzo wysokie ryzyko</option>
+ </select>
+ <p class="price-lab-caveat">Pokazujemy kurs wynikający z niekalibrowanego modelu, a nie aktualną cenę Superbet. Rzeczywisty kurs wpiszesz ręcznie. Zdarzenia z tego samego meczu są alternatywami, nie niezależnymi typami.</p>
+ <div class="price-lab-bar"><strong id="price-lab-count">Sprawdzam modele…</strong><span id="price-lab-day">Najbliższe 14 dni</span></div>
+ <div id="price-lab-results" class="price-lab-results" aria-live="polite"><p>Wczytywanie danych…</p></div>
+</section>
 <section class="panel coupon-evening-lab" aria-live="polite">
  <div class="between top-gap"><div>
   <div class="kicker">NOWOŚĆ · TEST JESZCZE DZIŚ</div>
@@ -55,7 +73,7 @@
  <button type="button" class="coupon-profile" data-profile="balanced" aria-pressed="false"><strong>Balans</strong><small>Różne rynki i kombinacje</small></button>
  <button type="button" class="coupon-profile" data-profile="contrarian" aria-pressed="false"><strong>Kontrariański</strong><small>Odchylenia od częstości ligi</small></button>
  <button type="button" class="coupon-profile" data-profile="single" aria-pressed="false"><strong>Pojedyncze</strong><small>Jeden mecz, bez ryzyka kumulacji</small></button>
- <button type="button" class="coupon-profile coupon-profile-high" data-profile="high_odds" aria-pressed="false"><strong>Wyższe kursy</strong><small>Wysoki próg modelowy i większe ryzyko</small></button>
+ <button type="button" class="coupon-profile coupon-profile-high" data-profile="high_odds" aria-pressed="false"><strong>Wyższe kursy</strong><small>Krótsze zestawienia i różne rynki</small></button>
  <button type="button" class="coupon-profile" data-profile="builder" aria-pressed="false"><strong>Bet Builder</strong><small>Wspólne zdarzenia jednego meczu</small></button>
 </div>
 <section class="panel coupon-controls">

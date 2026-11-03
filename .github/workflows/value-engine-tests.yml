@@ -31,6 +31,10 @@ on:
       - 'site/assets/edge-feature.css'
       - 'site/assets/editorial.css'
       - 'site/assets/coupon-core.js'
+      - 'site/assets/price-lab.js'
+      - 'site/assets/kupony.js'
+      - 'site/assets/kupony.css'
+      - 'tests/price-lab.test.cjs'
       - 'site/assets/app.js'
       - 'site/kupony.html'
       - 'site/skutecznosc.html'
@@ -63,3 +67,4 @@ jobs:
           node tests/market-labels.test.cjs
           node tests/mobile-analysis.test.cjs
           node tests/editorial-ui.test.cjs
+          node tests/price-lab.test.cjs
