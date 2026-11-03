@@ -66,6 +66,11 @@
   }else{
    card.append(el('p','Brak wystarczającej zweryfikowanej próby do wyceny.','verified-observed weak'));
   }
+  if(match.external_1x2&&Number.isFinite(match.external_1x2.percent)){
+   const x=match.external_1x2;
+   card.append(el('p','Kontrola zewnętrzna Opta: '+x.team+' — '+x.percent.toFixed(1).replace('.',',')+
+    '% w symulacjach zwycięstwa 1X2 (nie dotyczy wybranego rynku goli).','verified-external'));
+  }
   const explain=el('details',undefined,'verified-reasons');
   explain.append(el('summary','Argumenty ZA / PRZECIW'));
   explain.append(el('p','ZA — '+match.why));
@@ -76,7 +81,7 @@
    if(!sources[id])continue;
    const link=el('a','Źródło danych · '+sources[id].label);
    const url=String(sources[id].url);
-   const allowed=/^https:\/\/(www\.uefa\.com|www\.efl\.com|statcaddie\.co\.uk|www\.sportsmole\.co\.uk|www\.wolves\.co\.uk|www\.portfoliosports\.com)\//;
+   const allowed=/^https:\/\/(www\.uefa\.com|www\.efl\.com|statcaddie\.co\.uk|www\.sportsmole\.co\.uk|www\.wolves\.co\.uk|www\.portfoliosports\.com|theanalyst\.com)\//;
    if(allowed.test(url)){link.href=url;link.target='_blank';link.rel='noopener noreferrer';card.append(link);}
   }
   return card;
