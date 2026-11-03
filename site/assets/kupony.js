@@ -240,6 +240,7 @@
   }
   root.innerHTML=state.priceEntries.map((item,i)=>{
    const m=item.match, key=priceKey(item), prior=state.priceQuotes.get(key)||'';
+   const rationale=P.explainCandidate(item);
    const alt=item.alternate?'<span class="price-lab-alt">Alternatywny rynek</span>':'';
    return '<article class="price-lab-item"><div class="price-lab-item-top"><div><small>'+escape(m.league)+' · '+escape(m.date)+(m.time?' · '+escape(m.time):'')+'</small>'+
     '<h3>'+escape(m.home)+' – '+escape(m.away)+'</h3></div>'+alt+'</div>'+
@@ -247,6 +248,11 @@
     '<div class="price-lab-metrics"><div><span>Prawdopodobieństwo modelu</span><strong>'+C.fmtP(item.p)+'</strong></div>'+
     '<div><span>Kurs modelowy (1/P)</span><strong>'+C.fmt(item.fairOdds)+'</strong></div>'+
     '<div><span>Próg modelu po 12% podatku</span><strong>'+C.fmt(item.modelBreakEvenOdds)+'</strong></div></div>'+
+    '<div class="price-lab-reason"><strong>Dlaczego ten rynek?</strong><p>'+escape(rationale?.why||'Brak zweryfikowanego uzasadnienia')+'</p></div>'+ 
+    '<div class="price-lab-risk">Modelowe ryzyko nietrafienia: <strong>'+C.fmtP(1-item.p)+'</strong></div>'+ 
+    '<details class="price-lab-evidence"><summary>Argumenty ZA / PRZECIW i ograniczenia</summary>'+ 
+    '<p><strong>ZA — dane modelowe:</strong> '+escape(rationale?.supporting||'Brak danych')+'</p>'+ 
+    '<p><strong>PRZECIW:</strong> '+escape(rationale?.against||'Brak danych')+'</p></details>'+ 
     '<label for="price-quote-'+i+'">Kurs widoczny u bukmachera (wpisz ręcznie)</label>'+
     '<input type="text" class="field" id="price-quote-'+i+'" data-price-quote="'+i+'" inputmode="decimal" autocomplete="off" placeholder="np. 2,10" value="'+escape(prior)+'">'+
     '<p id="price-feedback-'+i+'" class="price-lab-feedback">To wycena teoretyczna, nie oferta Superbet ani potwierdzona przewaga.</p>'+
@@ -276,9 +282,11 @@
   const legs=c.legs.map((x,j)=>{
    const match=x.match;
    const contrast=c.profile==='contrarian'?'<div class="minor">Różnica wobec częstości ligi: '+(x.diff>0?'+':'')+((x.diff||0)*100).toFixed(1).replace('.',',')+' pkt proc.</div>':'';
+   const evidence=c.profile==='high_odds'?P.explainCandidate({...x,marketId:x.id}):null;
+   const rationale=evidence?'<div class="coupon-leg-rationale"><strong>Dlaczego?</strong> '+escape(evidence.why)+'<details><summary>Argumenty i ryzyka</summary><p><strong>ZA:</strong> '+escape(evidence.supporting)+'</p><p><strong>PRZECIW:</strong> '+escape(evidence.against)+'</p></details></div>':'';
    return '<div class="coupon-leg"><div><div class="minor">ZDARZENIE '+(j+1)+' · '+escape(match.league)+' · '+escape(match.date)+(match.time?' · '+escape(match.time):'')+'</div>'+
     '<div class="teams">'+escape(match.home)+' – '+escape(match.away)+'</div><div class="market">'+escape(x.label)+'</div>'+
-    '<div class="minor">Próba: '+match.model.nH+' dom / '+match.model.nA+' wyjazd</div>'+contrast+'</div>'+
+    '<div class="minor">Próba: '+match.model.nH+' dom / '+match.model.nA+' wyjazd</div>'+contrast+rationale+'</div>'+
     '<div class="prob">'+C.fmtP(x.p)+'</div></div>';
   }).join('');
   const math=c.type==='single'?'Jedno zdarzenie bez łączenia wyników wielu spotkań.':multi?'Iloczyn szacunków dla różnych spotkań (przybliżenie niezależności).':
