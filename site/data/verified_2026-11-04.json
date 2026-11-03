@@ -28,9 +28,13 @@
     "portfoliosports": {
       "label": "PortfolioSports – 6 domowych / 6 wyjazdowych i BTTS (dodatkowa kontrola)",
       "url": "https://www.portfoliosports.com/football/championship/2026-11-04/wrexham-v-middlesbrough/"
+    },
+    "opta": {
+      "label": "Opta Analyst — model wyników 1X2 przed 4. kolejką (02.11.2026)",
+      "url": "https://theanalyst.com/articles/uefa-champions-league-match-predictions-2026-27"
     }
   },
-  "methodology": "Dla meczów UEFA pokazujemy wyłącznie częstotliwości zdarzeń z trzech poprzednich meczów każdej drużyny w Lidze Mistrzów 2026/27. Nie są to prognozy prawdopodobieństwa ani kursy. Dla Championship źródła i liczebność próby są oznaczone osobno. Dane i terminarze trzeba zweryfikować przed rozpoczęciem; model EDGE LAB dla lig krajowych nie prognozuje automatycznie spotkań Ligi Mistrzów.",
+  "methodology": "Dla meczów UEFA pokazujemy wyłącznie częstotliwości zdarzeń z trzech poprzednich meczów każdej drużyny w Lidze Mistrzów 2026/27. Nie są to prognozy prawdopodobieństwa ani kursy. Dla Championship źródła i liczebność próby są oznaczone osobno. Dane i terminarze trzeba zweryfikować przed rozpoczęciem; model EDGE LAB dla lig krajowych nie prognozuje automatycznie spotkań Ligi Mistrzów. Dodatkowe odsetki Opta (jeśli pokazane) dotyczą wyłącznie zwycięstwa jednej drużyny w rynku 1X2 i są odrębnymi szacunkami zewnętrznymi, których nie wolno utożsamiać z częstością BTTS lub over.",
   "matches": [
     {
       "id": "ucl-aek-real",
@@ -111,8 +115,17 @@
         ]
       ],
       "why": "Liverpool notował BTTS w trzech meczach UEFA z rzędu, Fenerbahçe w dwóch z trzech. Weryfikuj ceny BTTS i over 2,5 osobno, bez ich automatycznego łączenia.",
-      "risk": "Fenerbahçe nie zdobył gola z Aston Villą (0:6), a wyjazd do Stambułu jest odmiennym kontekstem. Sam wynik 3 kolejek nie wystarcza do prognozy.",
-      "source": "uefa"
+      "risk": "Fenerbahçe nie strzelił z Aston Villą (0:6). Liverpool od lat nie wygrał wyjazdowego meczu UEFA w Turcji, a w ostatnim ligowym spotkaniu z Arsenalem nie oddał celnego strzału. Opta ocenia 1X2, nie BTTS.",
+      "source": "uefa",
+      "external_1x2": {
+        "team": "Liverpool",
+        "percent": 57.8,
+        "market": "Wygrana drużyny (1X2)",
+        "source": "opta"
+      },
+      "extra_sources": [
+        "opta"
+      ]
     },
     {
       "id": "ucl-dortmund-betis",
@@ -153,7 +166,16 @@
       ],
       "why": "Obie drużyny notowały BTTS w dwóch z trzech wcześniejszych meczów UEFA. Porównaj rynki BTTS oraz over 2,5.",
       "risk": "Dortmund przegrał do zera z Bodø/Glimt, a Betis wygrał 1:0 z Feyenoordem. Mało obserwacji.",
-      "source": "uefa"
+      "source": "uefa",
+      "external_1x2": {
+        "team": "Borussia Dortmund",
+        "percent": 53.7,
+        "market": "Wygrana drużyny (1X2)",
+        "source": "opta"
+      },
+      "extra_sources": [
+        "opta"
+      ]
     },
     {
       "id": "ucl-porto-napoli",
@@ -235,7 +257,16 @@
       ],
       "why": "Przykład sprzecznych profili: wszystkie trzy spotkania PSV skończyły się poniżej 2,5 gola, a wszystkie trzy Club Brugge powyżej 2,5. Nie uzasadnia to silnego typu.",
       "risk": "Konflikt małej próbki. Priorytet: pominąć mecz do czasu uzyskania szerszych danych i składów.",
-      "source": "uefa"
+      "source": "uefa",
+      "external_1x2": {
+        "team": "PSV Eindhoven",
+        "percent": 44.4,
+        "market": "Wygrana drużyny (1X2)",
+        "source": "opta"
+      },
+      "extra_sources": [
+        "opta"
+      ]
     },
     {
       "id": "ucl-leipzig-city",
@@ -276,7 +307,16 @@
       ],
       "why": "W dwóch z trzech meczów każdej drużyny w UEFA padło co najmniej 3 gole. City strzelił 9 goli łącznie, Leipzig stracił 8.",
       "risk": "To łącznie sześć obserwacji z różnych przeciwnikami, nie model wyceny; możliwy mecz zamknięty taktycznie.",
-      "source": "uefa"
+      "source": "uefa",
+      "external_1x2": {
+        "team": "Manchester City",
+        "percent": 57.7,
+        "market": "Wygrana drużyny (1X2)",
+        "source": "opta"
+      },
+      "extra_sources": [
+        "opta"
+      ]
     },
     {
       "id": "ucl-lens-como",
@@ -317,7 +357,16 @@
       ],
       "why": "Como zdobywał bramkę w każdym z trzech meczów, Lens w każdym tracił co najmniej dwa gole. Porównaj gole Como 0,5 oraz trudniejszy rynek 1,5.",
       "risk": "Statystyka dotyczy innych rywali; wyjazd do Lens i zmiany składów mogą wpłynąć na skuteczność.",
-      "source": "uefa"
+      "source": "uefa",
+      "external_1x2": {
+        "team": "Como",
+        "percent": 43.1,
+        "market": "Wygrana drużyny (1X2)",
+        "source": "opta"
+      },
+      "extra_sources": [
+        "opta"
+      ]
     },
     {
       "id": "ucl-slavia-arsenal",
@@ -399,7 +448,16 @@
       ],
       "why": "Viking miał ponad 2,5 gola we wszystkich trzech spotkaniach UEFA, Sabah w dwóch. Rozważ porównanie over 2,5 z BTTS.",
       "risk": "Sabah nie strzelił w jednym z trzech meczów. Szczególnie niska jakość małej próbki w typie BTTS.",
-      "source": "uefa"
+      "source": "uefa",
+      "external_1x2": {
+        "team": "Viking",
+        "percent": 60.9,
+        "market": "Wygrana drużyny (1X2)",
+        "source": "opta"
+      },
+      "extra_sources": [
+        "opta"
+      ]
     },
     {
       "id": "efl-wrexham-boro",
