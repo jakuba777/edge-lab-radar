@@ -71,11 +71,12 @@
   explain.append(el('p','ZA — '+match.why));
   explain.append(el('p','PRZECIW — '+match.risk,'verified-con'));
   card.append(explain);
-  const key=match.source;
-  if(sources[key]){
-   const link=el('a','Źródło danych · '+sources[key].label);
-   const url=String(sources[key].url);
-   const allowed=/^https:\/\/(www\.uefa\.com|www\.efl\.com|statcaddie\.co\.uk|www\.sportsmole\.co\.uk|www\.wolves\.co\.uk)\//;
+  const sourceIds=[match.source,...(Array.isArray(match.extra_sources)?match.extra_sources:[])];
+  for(const id of sourceIds){
+   if(!sources[id])continue;
+   const link=el('a','Źródło danych · '+sources[id].label);
+   const url=String(sources[id].url);
+   const allowed=/^https:\/\/(www\.uefa\.com|www\.efl\.com|statcaddie\.co\.uk|www\.sportsmole\.co\.uk|www\.wolves\.co\.uk|www\.portfoliosports\.com)\//;
    if(allowed.test(url)){link.href=url;link.target='_blank';link.rel='noopener noreferrer';card.append(link);}
   }
   return card;
@@ -96,7 +97,7 @@
    const sources=$('v-sources');
    sources.replaceChildren();
    for(const [id,source] of Object.entries(data.sources)){
-    if(!data.matches.some(m=>m.source===id))continue;
+    if(!data.matches.some(m=>m.source===id||m.extra_sources?.includes(id)))continue;
     const link=el('a',source.label,'verified-source');
     const url=String(source.url||'');
     if(/^https:\/\//.test(url)){link.href=url;link.target='_blank';link.rel='noopener noreferrer';sources.append(link);}
