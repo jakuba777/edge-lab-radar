@@ -8,12 +8,16 @@
   {id:'ag',label:'Gole gości — Powyżej 0,5',fn:(h,a)=>a>0},
   {id:'o15',label:'Suma goli — Powyżej 1,5',fn:(h,a)=>h+a>=2},
   {id:'o25',label:'Suma goli — Powyżej 2,5',fn:(h,a)=>h+a>=3},
+  {id:'o35',label:'Suma goli — Powyżej 3,5',fn:(h,a)=>h+a>=4},
+  {id:'u25',label:'Suma goli — Poniżej 2,5',fn:(h,a)=>h+a<=2},
   {id:'u35',label:'Suma goli — Poniżej 3,5',fn:(h,a)=>h+a<=3},
   {id:'btts',label:'Obie drużyny strzelą gola — Tak',fn:(h,a)=>h>0&&a>0},
+  {id:'bttsNo',label:'Obie drużyny strzelą gola — Nie',fn:(h,a)=>h===0||a===0},
   {id:'h2',label:'Gole gospodarzy — Powyżej 1,5',fn:(h,a)=>h>=2},
   {id:'a2',label:'Gole gości — Powyżej 1,5',fn:(h,a)=>a>=2},
   {id:'oneX',label:'Podwójna szansa — 1X',fn:(h,a)=>h>=a},
   {id:'x2',label:'Podwójna szansa — X2',fn:(h,a)=>a>=h},
+  {id:'x',label:'Wynik meczu — X',fn:(h,a)=>h===a},
   {id:'home',label:'Wynik meczu — 1',fn:(h,a)=>h>a},
   {id:'away',label:'Wynik meczu — 2',fn:(h,a)=>a>h}
  ];
@@ -82,9 +86,9 @@
   const ps=match.model.ps,base=match.model.base;
   let ids;
   if(profile==='selective')ids=['hg','ag','o15','u35','oneX','x2'];
-  else if(profile==='balanced')ids=['hg','ag','o15','o25','u35','btts','oneX','x2'];
-  else if(profile==='high_odds')ids=['o25','btts','home','away','h2','a2','oneX','x2','hg','ag','u35'];
-  else ids=['hg','ag','o25','u35','btts','home','away','h2','a2'];
+  else if(profile==='balanced')ids=['hg','ag','o15','o25','u25','u35','btts','bttsNo','oneX','x2'];
+  else if(profile==='high_odds')ids=['o25','u25','o35','btts','bttsNo','home','x','away','h2','a2','oneX','x2','hg','ag','u35'];
+  else ids=['hg','ag','o25','u25','o35','u35','btts','bttsNo','home','x','away','h2','a2'];
   return ids.map(id=>{
     const p=ps[id],diff=p-base[id];
     const eligible=profile==='selective'?p>=.69&&p<=.90:
