@@ -24,6 +24,10 @@
     "wolves": {
       "label": "Wolverhampton Wanderers – oficjalna zapowiedź 03.11.2026",
       "url": "https://www.wolves.co.uk/news/features/20261103-the-preview-bristol-city-vs-wolves/"
+    },
+    "portfoliosports": {
+      "label": "PortfolioSports – 6 domowych / 6 wyjazdowych i BTTS (dodatkowa kontrola)",
+      "url": "https://www.portfoliosports.com/football/championship/2026-11-04/wrexham-v-middlesbrough/"
     }
   },
   "methodology": "Dla meczów UEFA pokazujemy wyłącznie częstotliwości zdarzeń z trzech poprzednich meczów każdej drużyny w Lidze Mistrzów 2026/27. Nie są to prognozy prawdopodobieństwa ani kursy. Dla Championship źródła i liczebność próby są oznaczone osobno. Dane i terminarze trzeba zweryfikować przed rozpoczęciem; model EDGE LAB dla lig krajowych nie prognozuje automatycznie spotkań Ligi Mistrzów.",
@@ -412,8 +416,11 @@
         "sample": 12,
         "label": "BTTS w 6 domowych Wrexham i 6 wyjazdowych Middlesbrough"
       },
-      "why": "W niezależnym zestawieniu sześciu występów domowych Wrexham i sześciu wyjazdowych Middlesbrough odnotowano 11/12 meczów z bramką obu drużyn. Warto porównać kurs BTTS z over 2,5.",
-      "risk": "To częstość w 12 rozegranych spotkaniach, nie prognoza 92% dla tego konkretnego meczu. Źródło nieoficjalne; zweryfikuj daty, składy i ceny."
+      "why": "W dwóch niezależnych zestawieniach dom/wyjazd: Wrexham miało BTTS w 6/6 meczów u siebie, a Middlesbrough w 5/6 na wyjazdach. To obserwacje z 12 rozegranych spotkań, nie 92% prawdopodobieństwa na ten mecz. Porównaj BTTS z over 2,5.",
+      "risk": "To częstość w 12 rozegranych spotkaniach, nie prognoza 92% dla tego konkretnego meczu. Źródło nieoficjalne; zweryfikuj daty, składy i ceny.",
+      "extra_sources": [
+        "portfoliosports"
+      ]
     },
     {
       "id": "efl-cardiff-westham",
