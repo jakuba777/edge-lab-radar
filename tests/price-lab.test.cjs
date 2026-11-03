@@ -28,6 +28,19 @@ assert.ok(results.length>0,'must discover actual modeled markets');
 assert.ok(results.every(x=>x.fairOdds>=1.5&&x.fairOdds<=2.5));
 assert.ok(results.every(x=>!['low','exploratory'].includes(x.match.id)));
 assert.ok(results.every(x=>x.label&&x.sampleMin>=6));
+for(const item of results){
+ const explanation=P.explainCandidate(item);
+ assert.ok(explanation&&explanation.why.includes('Zdarzenie mieści się'),'must explain selection reason');
+ assert.ok(explanation.supporting.includes('Liga historycznie'),'must state baseline comparison');
+ assert.ok(explanation.against.includes('ryzyko nietrafienia'),'must explain risk');
+ assert.match(explanation.against,/nie jest skalibrowany/i);
+ close(explanation.lossProbability+explanation.probability,1);
+ assert.doesNotMatch(explanation.why,/potwierdzon(a|y) przewag|pewniak|gwarantowany/i);
+}
+assert.equal(P.explainCandidate(null),null);
+const contextual=P.explainCandidate({...results[0],marketId:'o35',match:{...results[0].match,model:{...results[0].match.model,lh:1.9,la:1.2}}});
+assert.match(contextual.supporting,/oczekiwane gole łącznie/);
+
 assert.equal(new Set(results.map(x=>x.match.id+':'+x.marketId)).size,results.length);
 assert.equal(P.discover(matches,C.MARKETS,{min:10,max:3}).length,0);
 const leg={match:{id:'one'},id:'o25'};
@@ -38,5 +51,5 @@ const html=fs.readFileSync('site/kupony.html','utf8');
 assert.match(html,/id="price-lab"/);assert.match(html,/id="price-band"/);
 assert.ok(html.indexOf('assets/price-lab.js')<html.indexOf('assets/kupony.js'),'price-lab module must precede UI');
 const js=fs.readFileSync('site/assets/kupony.js','utf8');
-assert.match(js,/P\.discover/);assert.match(js,/P\.compareQuote/);assert.match(js,/P\.overlaps/);
+assert.match(js,/P\.discover/);assert.match(js,/P\.compareQuote/);assert.match(js,/P\.overlaps/);assert.match(js,/P\.explainCandidate/);assert.match(js,/price-lab-reason/);assert.match(js,/coupon-leg-rationale/);
 console.log('Price band scan, odds distinction, complement markets and overlap tests passed');

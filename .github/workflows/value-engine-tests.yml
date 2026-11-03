@@ -30,6 +30,9 @@ on:
       - 'site/assets/analiza.css'
       - 'site/assets/edge-feature.css'
       - 'site/assets/editorial.css'
+      - 'site/assets/contrast-v21.css'
+      - 'site/rynek.html'
+      - 'tests/contrast-v21.test.cjs'
       - 'site/assets/coupon-core.js'
       - 'site/assets/price-lab.js'
       - 'site/assets/kupony.js'
@@ -68,3 +71,4 @@ jobs:
           node tests/mobile-analysis.test.cjs
           node tests/editorial-ui.test.cjs
           node tests/price-lab.test.cjs
+          node tests/contrast-v21.test.cjs

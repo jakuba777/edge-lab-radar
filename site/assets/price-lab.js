@@ -57,6 +57,50 @@
   }
   return found;
  }
+
+ /* Explain every researched market in terms of observed inputs, not betting advice.
+    All percentages refer to an uncalibrated Poisson model, not market edge. */
+ function explainCandidate(item){
+  if(!item||!item.match?.model||!Number.isFinite(item.p))return null;
+  const m=item.match.model;
+  const fmtP=v=>(100*v).toFixed(1).replace('.',',')+'%';
+  const fmtG=v=>Number(v).toFixed(2).replace('.',',');
+  const p=item.p,loss=1-p,sample=Math.min(m.nH,m.nA);
+  const total=Number.isFinite(m.lh)&&Number.isFinite(m.la)?m.lh+m.la:null;
+  let context;
+  switch(item.marketId){
+   case 'o15':case 'o25':case 'o35':case 'u25':case 'u35':
+    context=total!==null?'Modelowe oczekiwane gole łącznie: '+fmtG(total)+'.':'Brak rozbicia oczekiwanych goli.';
+    break;
+   case 'btts':case 'bttsNo':
+    context=Number.isFinite(m.lh)&&Number.isFinite(m.la)?
+     'Modelowe oczekiwane gole: gospodarze '+fmtG(m.lh)+', goście '+fmtG(m.la)+'.':
+     'Ocena wynika ze wspólnej siatki możliwych wyników.';
+    break;
+   default:
+    context=Number.isFinite(m.lh)&&Number.isFinite(m.la)?
+     'Modelowe oczekiwane gole: '+fmtG(m.lh)+' do '+fmtG(m.la)+'.':
+     'Ocena wynika z rozkładu możliwych wyników.';
+  }
+  const baseline=Number(m.base?.[item.marketId]);
+  const baselineOK=m.base?.[item.marketId]!==undefined&&Number.isFinite(baseline)&&baseline>=0&&baseline<=1;
+  const diff=baselineOK?(p-baseline)*100:null;
+  const baseNote=diff===null?
+   'Brak porównania z ligową częstością historyczną.':
+   'Liga historycznie: '+fmtP(baseline)+'; różnica modelu: '+(diff>=0?'+':'')+
+    diff.toFixed(1).replace('.',',')+' pkt proc. Ta różnica nie jest przewagą nad kursem.';
+  const why='Zdarzenie mieści się w wybranym przedziale kursu teoretycznego. '+
+   'Model szacuje prawdopodobieństwo '+fmtP(p)+', na podstawie '+m.nH+
+   ' wcześniejszych meczów domowych i '+m.nA+' wyjazdowych ('+m.nLeague+
+   ' wcześniejszych wyników ligowych).';
+  const supporting=context+' '+baseNote;
+  const against='Modelowe ryzyko nietrafienia: '+fmtP(loss)+
+   '. '+(sample<8?'Bardzo ograniczona próba drużynowa. ':'')+
+   'Model Poissona nie uwzględnia aktualnych składów, czerwonych kartek ani motywacji. '+
+   'Nie jest skalibrowany; kurs bukmachera nie jest automatycznie dostępny.';
+  return {why,supporting,against,probability:p,lossProbability:loss};
+ }
+
  function overlaps(coupons){
   const counts=new Map();
   for(const c of coupons||[]){
@@ -68,7 +112,7 @@
    return {count:shared.length,keys:shared.map(l=>l.match.id+':'+l.id)};
   });
  }
- const api={fairOdds,breakEvenOdds,compareQuote,discover,overlaps};
+ const api={fairOdds,breakEvenOdds,compareQuote,discover,explainCandidate,overlaps};
  if(typeof module!=='undefined'&&module.exports)module.exports=api;
  if(root)root.EDGEPRICE=api;
 })(typeof window!=='undefined'?window:null);

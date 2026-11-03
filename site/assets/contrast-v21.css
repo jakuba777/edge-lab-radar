@@ -1,0 +1,106 @@
+/* EDGE LAB readability v21 — loaded AFTER legacy and editorial styles.
+   Light canvas: dark text; dark modules: light text. Avoid global forced inheritance. */
+:root{--edge-ink:#172922;--edge-secondary:#52695b;--edge-on-dark:#f3f8fa;--edge-secondary-dark:#b8cbd2;--edge-forest:#245d4e}
+/* Limit light helper colors to light surfaces; never recolor text inside dark cards. */
+body:has(.editorial-nav) .hint,
+body:has(.editorial-nav) .subtitle,
+body:has(.editorial-nav) .panel>.caption,
+body:has(.editorial-nav) .pane>.muted:not(.chip),
+body:has(.editorial-nav) .source-panel .caption,
+body:has(.editorial-nav) .coupon-status .caption,
+body:has(.editorial-nav) .coupon-daily-audit>.caption{color:#52695b!important;background:transparent!important}
+body:has(.editorial-nav) .chip.muted{color:#405b4b!important;background:#e8f0e9!important}
+body:has(.editorial-nav) :is(a,button,input,select,summary):focus-visible,
+.market-shell :is(a,button,input,select,summary):focus-visible{outline:3px solid #2c7860!important;outline-offset:3px}
+body:has(.editorial-nav) label{line-height:1.45}
+/* Coupons: white source cards, notes and help were using pale dark-theme text. */
+.coupon-shell .coupon-warning,.coupon-shell .coupon-method,.coupon-shell .coupon-status,
+.coupon-shell .coupon-daily-audit,.coupon-shell .coupon-evening-lab,
+.coupon-shell .coupon-controls{color:#172922!important}
+.coupon-shell .coupon-warning :is(a,strong),.coupon-shell .coupon-audit-link,
+.coupon-shell .coupon-method :is(p,strong,a),.coupon-shell .coupon-today-toggle,
+.coupon-shell .coupon-controls :is(.caption,label),.coupon-shell .coupon-explain,
+.coupon-shell .coupon-footer{color:#42594b!important}
+.coupon-shell .coupon-warning a,.coupon-shell .coupon-audit-link,
+.coupon-shell .coupon-method a{color:#245d4e!important;text-decoration:underline;text-underline-offset:3px;font-weight:700}
+.coupon-shell .coupon-evening-lab>.between .caption,
+.coupon-shell .coupon-evening-disclaimer,.coupon-shell .coupon-daily-audit>.caption{color:#52695b!important}
+/* Dark coupon cards need white headings, white form labels and bright accents. */
+.coupon-shell .coupon-card,.coupon-shell .coupon-card .coupon-cardhead,
+.coupon-shell .coupon-leg,.coupon-shell .coupon-metric,.coupon-shell .coupon-profile,
+.coupon-shell .coupon-day-picker,.coupon-shell .coupon-high-controls,
+.coupon-shell .coupon-model-odds,.coupon-shell .coupon-research-link,
+.coupon-shell .coupon-evening-card{color:#f3f8fa!important}
+.coupon-shell .coupon-card :is(h3,h4,.eyebrow,label,.teams),
+.coupon-shell .coupon-leg .teams,.coupon-shell .coupon-metric strong:not(.light),
+.coupon-shell .coupon-evening-card :is(h3,.coupon-evening-head strong),
+.coupon-shell .coupon-profile strong,.coupon-shell .coupon-research-link strong,
+.coupon-shell .coupon-day-picker label,.coupon-shell .coupon-high-controls label{color:#f3f8fa!important}
+.coupon-shell .coupon-card :is(.minor,.coupon-truth,.coupon-course-result),
+.coupon-shell .coupon-leg .minor,.coupon-shell .coupon-metric small,
+.coupon-shell .coupon-evening-card :is(small,p,.caption),
+.coupon-shell .coupon-profile small,.coupon-shell .coupon-research-link small,
+.coupon-shell .coupon-day-picker .caption,.coupon-shell .coupon-high-controls .caption{color:#b8cbd2!important}
+.coupon-shell .coupon-card .coupon-leg .market,
+.coupon-shell .coupon-card .coupon-leg .prob,
+.coupon-shell .coupon-evening-probs strong,.coupon-shell .coupon-metric strong.light{color:#b5f2e6!important}
+.coupon-shell .coupon-card .coupon-real label,.coupon-shell .coupon-card .coupon-check summary{color:#e7f6f4!important;font-weight:750}
+.coupon-shell .coupon-card .coupon-check p,.coupon-shell .coupon-card .coupon-check strong{color:#e8f2f2!important}
+.coupon-shell .coupon-card .coupon-check p.danger{color:#ffd2c8!important}
+.coupon-shell .coupon-card .field{background:#fff!important;color:#172922!important;border-color:#a6c4b0!important;min-height:47px}
+.coupon-shell .coupon-evening-card .coupon-evening-copy{color:#edf9f6!important;min-height:44px;font-size:12px}
+.coupon-shell .coupon-evening-card .coupon-evening-probs small{color:#c7d8df!important}
+/* High-price explanations: keep actionable evidence visible even in dark coupons. */
+.coupon-shell .price-lab .price-lab-reason{padding:12px;background:#e9f3ec;border:1px solid #d0e3d5;border-radius:10px;color:#1d4030}
+.coupon-shell .price-lab .price-lab-reason strong{color:#20543c!important;font-size:13px}
+.coupon-shell .price-lab .price-lab-reason p{color:#304c3b!important;font-size:13px;line-height:1.62;margin-top:5px}
+.coupon-shell .price-lab .price-lab-risk{background:#fbf0dd;color:#664a22!important;padding:10px 12px;border-radius:9px;font-size:13px}
+.coupon-shell .price-lab .price-lab-risk strong{color:#684321!important}
+.coupon-shell .price-lab .price-lab-evidence{padding:9px 12px;border:1px solid #d5e4d9;border-radius:10px;background:#fff}
+.coupon-shell .price-lab .price-lab-evidence summary{color:#245d4e!important;font-size:13px;font-weight:750;min-height:44px;display:flex;align-items:center;cursor:pointer}
+.coupon-shell .price-lab .price-lab-evidence p{color:#425b4b!important;font-size:13px;line-height:1.6;margin:8px 0}
+.coupon-shell .price-lab .price-lab-evidence strong{color:#245d4e!important}
+.coupon-shell .coupon-card .coupon-leg-rationale{margin-top:8px;padding:10px;background:#253a46;border-left:3px solid #8dd4c3;border-radius:7px;color:#e8f6f4!important;font-size:12px;line-height:1.6}
+.coupon-shell .coupon-card .coupon-leg-rationale strong,.coupon-shell .coupon-card .coupon-leg-rationale summary{color:#b5f2e6!important}
+.coupon-shell .coupon-card .coupon-leg-rationale summary{cursor:pointer;min-height:36px;padding-top:7px}
+.coupon-shell .coupon-card .coupon-leg-rationale p{color:#e5f0ee!important;margin-top:8px;font-size:12px}
+.coupon-shell .coupon-card .coupon-leg-rationale details strong{color:#b5f2e6!important}
+/* Results: dark result tiles had inherited ink-colored titles; light section headings were too faint. */
+.track-shell .track-header>span,.track-shell .track-header .track-version,
+.track-shell .track-daily-label,.track-shell .track-history-group,
+.track-shell .track-foot,.track-shell .track-explainer p{color:#445f50!important}
+.track-shell .track-table .track-heading{color:#52695b!important}
+.track-shell .track-table .track-line{border-color:#dce5dd}
+.track-shell .track-entry,.track-shell .track-stat,.track-shell .track-leg{color:#f3f8fa!important}
+.track-shell .track-entry :is(h3,strong,.score),.track-shell .track-stat strong:not(.good):not(.muted),
+.track-shell .track-leg strong{color:#f3f8fa!important}
+.track-shell .track-entry :is(.sub,.market),.track-shell .track-entry small,
+.track-shell .track-stat :is(small,p),.track-shell .track-leg small{color:#b8cbd2!important}
+.track-shell .track-stat strong.good,.track-shell .track-state.hit{color:#a7eed8!important}
+.track-shell .track-stat strong.muted{background:transparent!important;color:#d7e4ec!important}
+.track-shell .track-daily-insight{background:#14363c!important;color:#d6f3ec!important}
+.track-shell .track-daily-warning{color:#ffdad4!important}
+.track-shell .track-note a{color:#245d4e!important}
+/* Analysis and radar: neutral helper text should not have dark badge backgrounds. */
+.lab .muted:not(.chip){background:transparent!important;color:#52695b!important}
+.lab .pane .warning{background:#fff3e1!important;color:#644b23!important}
+.lab .pane .warning strong{color:#644b23!important}
+.lab .tabs button[aria-pressed="false"]{color:#375847!important}
+.lab .market strong{color:#172922!important}
+#detail-dialog .data-row span:first-child{color:#294b36!important}
+#detail-dialog .data-row span:last-child{color:#245d4e!important}
+/* Market intelligence: extend the same light UI to this connected subpage. */
+.market-shell .market-output{background:#edf3ee!important;color:#172922!important}
+.market-shell .market-output .snapshot>div{background:#fff!important;border-color:#cdded2!important;color:#172922!important}
+.market-shell .market-output .snapshot small{color:#52695b!important}
+.market-shell .market-output .snapshot strong{color:#20543c!important}
+.market-shell .market-output .market-source{background:#e3eee5!important;color:#294d3b!important}
+.market-shell .market-output .market-source b{color:#245d4e!important}
+.market-shell .market-output .market-disclaimer{color:#465c4d!important}
+.market-shell .market-error{color:#a3382f!important}
+.market-shell .market-match{background:#fff!important;color:#172922!important;border-color:#ccddd0!important}
+.market-shell .market-match small{color:#52695b!important}
+.market-shell .market-copy{background:#e6f0e9!important;color:#20543c!important;border-color:#b6d3bf!important;min-height:44px}
+.market-shell .expert-panel summary{color:#245d4e!important}
+@media(max-width:390px){.coupon-shell .price-lab .price-lab-reason p,.coupon-shell .price-lab .price-lab-evidence p{font-size:13px}}
+@media(prefers-reduced-motion:reduce){.price-lab *,.coupon-card *{scroll-behavior:auto!important;transition:none!important}}
