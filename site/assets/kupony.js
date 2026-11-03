@@ -84,7 +84,7 @@
    select.innerHTML='<option value="all">Wszystkie dostępne</option>'+state.leagues.map(l=>
      '<option value="'+escape(l.id)+'">'+escape(l.name)+'</option>').join('');
    if([...select.options].some(x=>x.value===prior))select.value=prior;
-   updateDayOptions();render();renderTodayExplorer();
+   updateDayOptions();updatePriceDays();render();renderTodayExplorer();
   }catch(e){
    $('coupon-state').textContent='Źródła niedostępne';
    setFailure(String(e?.message||e));
@@ -206,14 +206,33 @@
   catch(_){button.textContent='Kopiowanie niedostępne';}
  }
 
+ function scannerFixtures(){
+  if(!state.loaded||state.stale)return [];
+  const now=today(),age=sourceAge(),current=new Date();
+  return state.matches.filter(m=>m.model&&!m.model.exploratory&&
+   C.daysBetween(m.date,now)>=0&&C.daysBetween(m.date,now)<=14&&
+   W.eligible(m,current,age)).sort(chronological);
+ }
+ function updatePriceDays(){
+  const sel=$('price-day'),old=sel.value,events=scannerFixtures();
+  const days=[...new Set(events.map(m=>m.date))].sort();
+  sel.replaceChildren(new Option('Najbliższe 14 dni','all'));
+  for(const day of days){
+   const count=events.filter(x=>x.date===day).length;
+   sel.appendChild(new Option((day===today()?'Dzisiaj · ':'')+formatDay(day)+' · '+count+' meczów',day));
+  }
+  if([...sel.options].some(o=>o.value===old))sel.value=old;
+  else if(days.includes(today()))sel.value=today();
+ }
  function priceKey(item){return item.match.id+'|'+item.marketId;}
- function renderPriceLab(eligible){
+ function renderPriceLab(){
   const root=$('price-lab-results');
   const raw=$('price-band').value.split('-').map(Number);
   const min=raw[0],max=raw[1];
+  const chosenDay=$('price-day').value;
+  const eligible=scannerFixtures().filter(m=>chosenDay==='all'||m.date===chosenDay);
   state.priceEntries=P.discover(eligible,C.MARKETS,{min,max,limit:12});
-  const chosenDay=$('coupon-day').value;
-  $('price-lab-day').textContent=chosenDay==='all'?'Wszystkie wybrane dni':chosenDay||'Brak dnia';
+  $('price-lab-day').textContent=chosenDay==='all'?'Najbliższe 14 dni':chosenDay||'Brak dnia';
   $('price-lab-count').textContent=state.priceEntries.length+' alternatyw modelowych';
   if(!state.priceEntries.length){
    root.innerHTML='<p class="price-lab-empty">Brak rynków w tym przedziale dla wybranego dnia z wystarczającą próbką (min. 6 meczów domowych i 6 wyjazdowych). Możesz zmienić zakres lub dzień. Nie dopisujemy fikcyjnych kursów.</p>';
@@ -317,7 +336,7 @@
   if(!state.loaded||state.stale)return;
   const profile=state.profile;
   const eligible=matchFilter();
-  renderPriceLab(eligible);
+  renderPriceLab();
   const count=Number($('coupon-count').value)||2;
   const threshold=Number($('coupon-high-min').value)||5;
   const candidates=C.createCoupons(eligible,profile,count,6,{minThreshold:threshold})
@@ -363,7 +382,8 @@
   }));
   $('coupon-day').addEventListener('change',()=>{updateDayOptions();render();});
   $('coupon-high-min').addEventListener('change',render);
-  $('price-band').addEventListener('change',render);
+  $('price-band').addEventListener('change',renderPriceLab);
+  $('price-day').addEventListener('change',renderPriceLab);
   $('coupon-build').addEventListener('click',render);
   $('coupon-reload').addEventListener('click',()=>{load();loadDailyAudit();});
   $('coupon-evening').addEventListener('click',e=>{const button=e.target.closest('[data-evening-copy]');if(button)copyTodayResearch(button.dataset.eveningCopy,button);});
