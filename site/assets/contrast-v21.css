@@ -104,3 +104,10 @@ body:has(.editorial-nav) label{line-height:1.45}
 .market-shell .expert-panel summary{color:#245d4e!important}
 @media(max-width:390px){.coupon-shell .price-lab .price-lab-reason p,.coupon-shell .price-lab .price-lab-evidence p{font-size:13px}}
 @media(prefers-reduced-motion:reduce){.price-lab *,.coupon-card *{scroll-behavior:auto!important;transition:none!important}}
+
+/* Dated verified-match research link on Today and Coupons. */
+.verified-banner{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#e4efe6!important;color:#1e4933!important;border:1px solid #bdd7c5;border-radius:14px;padding:17px;margin:12px 0 18px}
+.verified-banner strong{font-size:16px;font-weight:850;color:#164632!important}
+.verified-banner p{font-size:13px;line-height:1.6;color:#355b42!important;margin-top:5px}
+.verified-banner a{display:inline-flex;align-items:center;justify-content:center;text-align:center;background:#245d4e!important;color:#fff!important;font-size:13px;font-weight:800;text-decoration:none;min-height:48px;padding:11px 13px;border-radius:11px;flex:0 0 120px}
+@media(max-width:430px){.verified-banner{flex-direction:column;align-items:stretch}.verified-banner a{flex-basis:auto;width:100%}}
