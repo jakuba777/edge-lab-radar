@@ -26,7 +26,7 @@
    const optionsForMatch=[];
    for(const market of markets){
     const p=normalize(model.ps[market.id]),fair=fairOdds(p);
-    if(!Number.isFinite(fair)||fair<min||fair>max||p<.12||p>.85)continue;
+    if(!Number.isFinite(fair)||fair<min||fair>max||p<.05||p>.85)continue;
     const base=normalize(model.base?.[market.id]);
     const diff=Number.isFinite(base)?Math.abs(p-base):null;
     // Large model-vs-league disagreement should not be promoted as a 'value' signal.
