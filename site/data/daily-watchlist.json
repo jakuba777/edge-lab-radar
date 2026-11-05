@@ -1,78 +1,1414 @@
 {
+  "schema": 2,
   "date": "2026-11-05",
   "timezone": "Europe/Warsaw",
-  "kind": "research_candidates_not_predictions",
-  "source": "UEFA schedules; verification of individual fixtures and odds required",
+  "generated_for": "pre_match",
+  "kind": "experimental_model_not_verified_betting_edge",
+  "methodology": "Independent Poisson goals model; 2–3 prior matches per team in the same UEFA competition, venue pooled. Smoothed team attack and concession means with six pseudo-matches at 1.45/1.30 home/away priors, sqrt attack*opponent defense. Not calibrated, no odds or confirmed EV. All 35 UEFA fixtures. Do not interpret as betting recommendations.",
+  "sources": {
+    "EL": "https://www.uefa.com/uefaeuropaleague/news/02a8-2174cafa5bb6-82bbc20c9b92-1000--2026-27-europa-league-all-the-league-phase-fixtures-and-re/",
+    "CL": "https://www.uefa.com/uefaconferenceleague/news/02a8-2174cb200f25-b94693ddff4e-1000--2026-27-conference-league-all-the-league-phase-fixtures-a/"
+  },
   "matches": [
     {
-      "time": "18:45",
-      "home": "Midtjylland",
-      "away": "Ajax",
-      "market": "BTTS / over 2,5",
-      "status": "requires_independent_verification"
-    },
-    {
-      "time": "18:45",
-      "home": "Atalanta",
-      "away": "Kairat Almaty",
-      "market": "Gole gospodarzy",
-      "status": "requires_independent_verification"
-    },
-    {
-      "time": "18:45",
-      "home": "Trabzonspor",
-      "away": "Freiburg",
-      "market": "Gol w drugiej połowie",
-      "status": "requires_independent_verification"
-    },
-    {
-      "time": "18:45",
-      "home": "Sparta Praga",
-      "away": "Bournemouth",
-      "market": "BTTS / over 1,5",
-      "status": "requires_independent_verification"
-    },
-    {
+      "id": "EL-2026-11-05-crystal-palace-hoffenheim",
+      "competition": "EL",
+      "date": "2026-11-05",
       "time": "18:45",
       "home": "Crystal Palace",
       "away": "Hoffenheim",
-      "market": "BTTS / over 2,5",
-      "status": "requires_independent_verification"
+      "home_sample": {
+        "n": 3,
+        "scored": 8,
+        "conceded": 5,
+        "btts": 2,
+        "over": 3
+      },
+      "away_sample": {
+        "n": 3,
+        "scored": 5,
+        "conceded": 5,
+        "btts": 1,
+        "over": 2
+      },
+      "lambda_home": 1.681,
+      "lambda_away": 1.422,
+      "probabilities": {
+        "home": 0.4377,
+        "draw": 0.2363,
+        "away": 0.326,
+        "o15": 0.8157,
+        "o25": 0.5995,
+        "u35": 0.6242,
+        "btts": 0.6175,
+        "h2": 0.5007,
+        "a2": 0.4158
+      },
+      "top_market": {
+        "market": "o15",
+        "p": 0.8157
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
     },
     {
+      "id": "CL-2026-11-05-trabzonspor-freiburg",
+      "competition": "CL",
+      "date": "2026-11-05",
+      "time": "18:45",
+      "home": "Trabzonspor",
+      "away": "Freiburg",
+      "home_sample": {
+        "n": 2,
+        "scored": 6,
+        "conceded": 2,
+        "btts": 1,
+        "over": 1
+      },
+      "away_sample": {
+        "n": 2,
+        "scored": 3,
+        "conceded": 5,
+        "btts": 1,
+        "over": 2
+      },
+      "lambda_home": 1.774,
+      "lambda_away": 1.286,
+      "probabilities": {
+        "home": 0.489,
+        "draw": 0.2328,
+        "away": 0.2782,
+        "o15": 0.8096,
+        "o25": 0.5901,
+        "u35": 0.6338,
+        "btts": 0.6008,
+        "h2": 0.5294,
+        "a2": 0.3682
+      },
+      "top_market": {
+        "market": "o15",
+        "p": 0.8096
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
+    },
+    {
+      "id": "EL-2026-11-05-real-sociedad-lyon",
+      "competition": "EL",
+      "date": "2026-11-05",
+      "time": "18:45",
+      "home": "Real Sociedad",
+      "away": "Lyon",
+      "home_sample": {
+        "n": 3,
+        "scored": 8,
+        "conceded": 3,
+        "btts": 2,
+        "over": 2
+      },
+      "away_sample": {
+        "n": 3,
+        "scored": 5,
+        "conceded": 6,
+        "btts": 2,
+        "over": 3
+      },
+      "lambda_home": 1.741,
+      "lambda_away": 1.306,
+      "probabilities": {
+        "home": 0.4768,
+        "draw": 0.2348,
+        "away": 0.2884,
+        "o15": 0.8078,
+        "o25": 0.5873,
+        "u35": 0.6366,
+        "btts": 0.6013,
+        "h2": 0.5193,
+        "a2": 0.3754
+      },
+      "top_market": {
+        "market": "o15",
+        "p": 0.8078
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
+    },
+    {
+      "id": "EL-2026-11-05-nec-nijmegen-omonia",
+      "competition": "EL",
+      "date": "2026-11-05",
+      "time": "18:45",
+      "home": "NEC Nijmegen",
+      "away": "Omonia",
+      "home_sample": {
+        "n": 3,
+        "scored": 5,
+        "conceded": 8,
+        "btts": 2,
+        "over": 2
+      },
+      "away_sample": {
+        "n": 3,
+        "scored": 5,
+        "conceded": 4,
+        "btts": 1,
+        "over": 2
+      },
+      "lambda_home": 1.466,
+      "lambda_away": 1.58,
+      "probabilities": {
+        "home": 0.3548,
+        "draw": 0.2405,
+        "away": 0.4048,
+        "o15": 0.8076,
+        "o25": 0.587,
+        "u35": 0.637,
+        "btts": 0.6107,
+        "h2": 0.4306,
+        "a2": 0.4686
+      },
+      "top_market": {
+        "market": "o15",
+        "p": 0.8076
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
+    },
+    {
+      "id": "EL-2026-11-05-milan-ferencv-ros",
+      "competition": "EL",
+      "date": "2026-11-05",
+      "time": "18:45",
+      "home": "Milan",
+      "away": "Ferencváros",
+      "home_sample": {
+        "n": 3,
+        "scored": 4,
+        "conceded": 5,
+        "btts": 0,
+        "over": 2
+      },
+      "away_sample": {
+        "n": 3,
+        "scored": 9,
+        "conceded": 3,
+        "btts": 3,
+        "over": 3
+      },
+      "lambda_home": 1.354,
+      "lambda_away": 1.629,
+      "probabilities": {
+        "home": 0.3189,
+        "draw": 0.2413,
+        "away": 0.4398,
+        "o15": 0.7984,
+        "o25": 0.5732,
+        "u35": 0.6509,
+        "btts": 0.5964,
+        "h2": 0.3923,
+        "a2": 0.4845
+      },
+      "top_market": {
+        "market": "o15",
+        "p": 0.7984
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
+    },
+    {
+      "id": "CL-2026-11-05-crvena-zvezda-inter-escaldes",
+      "competition": "CL",
+      "date": "2026-11-05",
+      "time": "18:45",
+      "home": "Crvena Zvezda",
+      "away": "Inter Escaldes",
+      "home_sample": {
+        "n": 2,
+        "scored": 4,
+        "conceded": 5,
+        "btts": 2,
+        "over": 2
+      },
+      "away_sample": {
+        "n": 2,
+        "scored": 1,
+        "conceded": 5,
+        "btts": 1,
+        "over": 1
+      },
+      "lambda_home": 1.649,
+      "lambda_away": 1.327,
+      "probabilities": {
+        "home": 0.4505,
+        "draw": 0.2407,
+        "away": 0.3088,
+        "o15": 0.7972,
+        "o25": 0.5713,
+        "u35": 0.6527,
+        "btts": 0.5934,
+        "h2": 0.4907,
+        "a2": 0.3826
+      },
+      "top_market": {
+        "market": "o15",
+        "p": 0.7972
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
+    },
+    {
+      "id": "CL-2026-11-05-atalanta-kairat-almaty",
+      "competition": "CL",
+      "date": "2026-11-05",
+      "time": "18:45",
+      "home": "Atalanta",
+      "away": "Kairat Almaty",
+      "home_sample": {
+        "n": 2,
+        "scored": 3,
+        "conceded": 3,
+        "btts": 1,
+        "over": 1
+      },
+      "away_sample": {
+        "n": 2,
+        "scored": 2,
+        "conceded": 6,
+        "btts": 2,
+        "over": 1
+      },
+      "lambda_home": 1.639,
+      "lambda_away": 1.286,
+      "probabilities": {
+        "home": 0.457,
+        "draw": 0.2423,
+        "away": 0.3006,
+        "o15": 0.7894,
+        "o25": 0.5599,
+        "u35": 0.664,
+        "btts": 0.5832,
+        "h2": 0.4877,
+        "a2": 0.3682
+      },
+      "top_market": {
+        "market": "o15",
+        "p": 0.7894
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
+    },
+    {
+      "id": "EL-2026-11-05-lillestr-m-viktoria-plze-",
+      "competition": "EL",
+      "date": "2026-11-05",
+      "time": "18:45",
+      "home": "Lillestrøm",
+      "away": "Viktoria Plzeň",
+      "home_sample": {
+        "n": 3,
+        "scored": 2,
+        "conceded": 9,
+        "btts": 2,
+        "over": 2
+      },
+      "away_sample": {
+        "n": 3,
+        "scored": 2,
+        "conceded": 7,
+        "btts": 2,
+        "over": 3
+      },
+      "lambda_home": 1.44,
+      "lambda_away": 1.426,
+      "probabilities": {
+        "home": 0.3785,
+        "draw": 0.2494,
+        "away": 0.372,
+        "o15": 0.7799,
+        "o25": 0.5461,
+        "u35": 0.6773,
+        "btts": 0.5797,
+        "h2": 0.4219,
+        "a2": 0.417
+      },
+      "top_market": {
+        "market": "o15",
+        "p": 0.7799
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
+    },
+    {
+      "id": "CL-2026-11-05-thun-hearts",
+      "competition": "CL",
+      "date": "2026-11-05",
+      "time": "18:45",
+      "home": "Thun",
+      "away": "Hearts",
+      "home_sample": {
+        "n": 2,
+        "scored": 0,
+        "conceded": 2,
+        "btts": 0,
+        "over": 0
+      },
+      "away_sample": {
+        "n": 2,
+        "scored": 1,
+        "conceded": 3,
+        "btts": 1,
+        "over": 0
+      },
+      "lambda_home": 1.261,
+      "lambda_away": 1.161,
+      "probabilities": {
+        "home": 0.3869,
+        "draw": 0.2747,
+        "away": 0.3384,
+        "o15": 0.6963,
+        "o25": 0.436,
+        "u35": 0.7741,
+        "btts": 0.4922,
+        "h2": 0.3593,
+        "a2": 0.3232
+      },
+      "top_market": {
+        "market": "u35",
+        "p": 0.7741
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
+    },
+    {
+      "id": "CL-2026-11-05-lincoln-red-imps-hajduk-split",
+      "competition": "CL",
+      "date": "2026-11-05",
+      "time": "18:45",
+      "home": "Lincoln Red Imps",
+      "away": "Hajduk Split",
+      "home_sample": {
+        "n": 2,
+        "scored": 2,
+        "conceded": 6,
+        "btts": 2,
+        "over": 2
+      },
+      "away_sample": {
+        "n": 2,
+        "scored": 3,
+        "conceded": 1,
+        "btts": 1,
+        "over": 1
+      },
+      "lambda_home": 1.273,
+      "lambda_away": 1.526,
+      "probabilities": {
+        "home": 0.3176,
+        "draw": 0.2506,
+        "away": 0.4319,
+        "o15": 0.7688,
+        "o25": 0.5304,
+        "u35": 0.6921,
+        "btts": 0.5636,
+        "h2": 0.3637,
+        "a2": 0.4508
+      },
+      "top_market": {
+        "market": "o15",
+        "p": 0.7688
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
+    },
+    {
+      "id": "EL-2026-11-05-sparta-praha-bournemouth",
+      "competition": "EL",
+      "date": "2026-11-05",
+      "time": "18:45",
+      "home": "Sparta Praha",
+      "away": "Bournemouth",
+      "home_sample": {
+        "n": 3,
+        "scored": 5,
+        "conceded": 3,
+        "btts": 2,
+        "over": 1
+      },
+      "away_sample": {
+        "n": 3,
+        "scored": 8,
+        "conceded": 1,
+        "btts": 1,
+        "over": 3
+      },
+      "lambda_home": 1.281,
+      "lambda_away": 1.451,
+      "probabilities": {
+        "home": 0.3333,
+        "draw": 0.2553,
+        "away": 0.4114,
+        "o15": 0.7571,
+        "o25": 0.5143,
+        "u35": 0.707,
+        "btts": 0.553,
+        "h2": 0.3664,
+        "a2": 0.4258
+      },
+      "top_market": {
+        "market": "o15",
+        "p": 0.7571
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
+    },
+    {
+      "id": "EL-2026-11-05-anderlecht-salzburg",
+      "competition": "EL",
+      "date": "2026-11-05",
+      "time": "18:45",
+      "home": "Anderlecht",
+      "away": "Salzburg",
+      "home_sample": {
+        "n": 3,
+        "scored": 4,
+        "conceded": 3,
+        "btts": 1,
+        "over": 2
+      },
+      "away_sample": {
+        "n": 3,
+        "scored": 3,
+        "conceded": 6,
+        "btts": 1,
+        "over": 2
+      },
+      "lambda_home": 1.518,
+      "lambda_away": 1.2,
+      "probabilities": {
+        "home": 0.4461,
+        "draw": 0.2534,
+        "away": 0.3005,
+        "o15": 0.7546,
+        "o25": 0.5108,
+        "u35": 0.7101,
+        "btts": 0.5457,
+        "h2": 0.4482,
+        "a2": 0.3374
+      },
+      "top_market": {
+        "market": "o15",
+        "p": 0.7546
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
+    },
+    {
+      "id": "CL-2026-11-05-kups-kuopio-gent",
+      "competition": "CL",
+      "date": "2026-11-05",
+      "time": "18:45",
+      "home": "KuPS Kuopio",
+      "away": "Gent",
+      "home_sample": {
+        "n": 2,
+        "scored": 2,
+        "conceded": 6,
+        "btts": 1,
+        "over": 1
+      },
+      "away_sample": {
+        "n": 2,
+        "scored": 1,
+        "conceded": 2,
+        "btts": 0,
+        "over": 0
+      },
+      "lambda_home": 1.337,
+      "lambda_away": 1.377,
+      "probabilities": {
+        "home": 0.3622,
+        "draw": 0.2573,
+        "away": 0.3805,
+        "o15": 0.754,
+        "o25": 0.51,
+        "u35": 0.7108,
+        "btts": 0.5515,
+        "h2": 0.3864,
+        "a2": 0.4004
+      },
+      "top_market": {
+        "market": "o15",
+        "p": 0.754
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
+    },
+    {
+      "id": "EL-2026-11-05-levski-sofia-jagiellonia",
+      "competition": "EL",
+      "date": "2026-11-05",
+      "time": "18:45",
+      "home": "Levski Sofia",
+      "away": "Jagiellonia",
+      "home_sample": {
+        "n": 3,
+        "scored": 3,
+        "conceded": 3,
+        "btts": 2,
+        "over": 1
+      },
+      "away_sample": {
+        "n": 3,
+        "scored": 4,
+        "conceded": 6,
+        "btts": 2,
+        "over": 3
+      },
+      "lambda_home": 1.457,
+      "lambda_away": 1.254,
+      "probabilities": {
+        "home": 0.4186,
+        "draw": 0.256,
+        "away": 0.3254,
+        "o15": 0.7534,
+        "o25": 0.5092,
+        "u35": 0.7116,
+        "btts": 0.5483,
+        "h2": 0.4277,
+        "a2": 0.3569
+      },
+      "top_market": {
+        "market": "o15",
+        "p": 0.7534
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
+    },
+    {
+      "id": "CL-2026-11-05-aarhus-braga",
+      "competition": "CL",
+      "date": "2026-11-05",
+      "time": "18:45",
+      "home": "Aarhus",
+      "away": "Braga",
+      "home_sample": {
+        "n": 2,
+        "scored": 1,
+        "conceded": 2,
+        "btts": 1,
+        "over": 0
+      },
+      "away_sample": {
+        "n": 2,
+        "scored": 2,
+        "conceded": 3,
+        "btts": 0,
+        "over": 1
+      },
+      "lambda_home": 1.332,
+      "lambda_away": 1.225,
+      "probabilities": {
+        "home": 0.3921,
+        "draw": 0.2661,
+        "away": 0.3418,
+        "o15": 0.7241,
+        "o25": 0.4706,
+        "u35": 0.7454,
+        "btts": 0.5198,
+        "h2": 0.3843,
+        "a2": 0.3464
+      },
+      "top_market": {
+        "market": "u35",
+        "p": 0.7454
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
+    },
+    {
+      "id": "CL-2026-11-05-midtjylland-ajax",
+      "competition": "CL",
+      "date": "2026-11-05",
+      "time": "18:45",
+      "home": "Midtjylland",
+      "away": "Ajax",
+      "home_sample": {
+        "n": 2,
+        "scored": 1,
+        "conceded": 2,
+        "btts": 1,
+        "over": 0
+      },
+      "away_sample": {
+        "n": 2,
+        "scored": 3,
+        "conceded": 2,
+        "btts": 1,
+        "over": 1
+      },
+      "lambda_home": 1.273,
+      "lambda_away": 1.286,
+      "probabilities": {
+        "home": 0.3639,
+        "draw": 0.2663,
+        "away": 0.3698,
+        "o15": 0.7247,
+        "o25": 0.4713,
+        "u35": 0.7448,
+        "btts": 0.5211,
+        "h2": 0.3637,
+        "a2": 0.3682
+      },
+      "top_market": {
+        "market": "u35",
+        "p": 0.7448
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
+    },
+    {
+      "id": "CL-2026-11-05-mj-llby-borac",
+      "competition": "CL",
+      "date": "2026-11-05",
+      "time": "18:45",
+      "home": "Mjällby",
+      "away": "Borac",
+      "home_sample": {
+        "n": 2,
+        "scored": 3,
+        "conceded": 1,
+        "btts": 1,
+        "over": 0
+      },
+      "away_sample": {
+        "n": 2,
+        "scored": 3,
+        "conceded": 2,
+        "btts": 1,
+        "over": 1
+      },
+      "lambda_home": 1.399,
+      "lambda_away": 1.219,
+      "probabilities": {
+        "home": 0.4112,
+        "draw": 0.2616,
+        "away": 0.3272,
+        "o15": 0.7359,
+        "o25": 0.4859,
+        "u35": 0.7323,
+        "btts": 0.5304,
+        "h2": 0.4077,
+        "a2": 0.3441
+      },
+      "top_market": {
+        "market": "o15",
+        "p": 0.7359
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
+    },
+    {
+      "id": "CL-2026-11-05-lugano-kauno-algiris",
+      "competition": "CL",
+      "date": "2026-11-05",
       "time": "21:00",
-      "home": "Benfica",
-      "away": "Lech Poznań",
-      "market": "Gole gospodarzy",
-      "status": "requires_independent_verification"
+      "home": "Lugano",
+      "away": "Kauno Žalgiris",
+      "home_sample": {
+        "n": 2,
+        "scored": 8,
+        "conceded": 4,
+        "btts": 2,
+        "over": 2
+      },
+      "away_sample": {
+        "n": 2,
+        "scored": 1,
+        "conceded": 8,
+        "btts": 1,
+        "over": 2
+      },
+      "lambda_home": 2.087,
+      "lambda_away": 1.274,
+      "probabilities": {
+        "home": 0.5611,
+        "draw": 0.2097,
+        "away": 0.2291,
+        "o15": 0.8487,
+        "o25": 0.6527,
+        "u35": 0.5668,
+        "btts": 0.6309,
+        "h2": 0.6172,
+        "a2": 0.3639
+      },
+      "top_market": {
+        "market": "o15",
+        "p": 0.8487
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
     },
     {
+      "id": "EL-2026-11-05-celtic-be-ikta-",
+      "competition": "EL",
+      "date": "2026-11-05",
       "time": "21:00",
       "home": "Celtic",
       "away": "Beşiktaş",
-      "market": "BTTS",
-      "status": "requires_independent_verification"
+      "home_sample": {
+        "n": 3,
+        "scored": 3,
+        "conceded": 9,
+        "btts": 3,
+        "over": 3
+      },
+      "away_sample": {
+        "n": 3,
+        "scored": 9,
+        "conceded": 5,
+        "btts": 3,
+        "over": 3
+      },
+      "lambda_home": 1.407,
+      "lambda_away": 1.867,
+      "probabilities": {
+        "home": 0.2909,
+        "draw": 0.2252,
+        "away": 0.4839,
+        "o15": 0.8381,
+        "o25": 0.6352,
+        "u35": 0.5862,
+        "btts": 0.6383,
+        "h2": 0.4105,
+        "a2": 0.5567
+      },
+      "top_market": {
+        "market": "o15",
+        "p": 0.8381
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
     },
     {
+      "id": "EL-2026-11-05-torreense-ararat-armenia",
+      "competition": "EL",
+      "date": "2026-11-05",
       "time": "21:00",
-      "home": "Leverkusen",
-      "away": "Marseille",
-      "market": "Over 2,5",
-      "status": "requires_independent_verification"
+      "home": "Torreense",
+      "away": "Ararat-Armenia",
+      "home_sample": {
+        "n": 3,
+        "scored": 4,
+        "conceded": 7,
+        "btts": 3,
+        "over": 3
+      },
+      "away_sample": {
+        "n": 3,
+        "scored": 2,
+        "conceded": 11,
+        "btts": 2,
+        "over": 3
+      },
+      "lambda_home": 1.757,
+      "lambda_away": 1.338,
+      "probabilities": {
+        "home": 0.4737,
+        "draw": 0.2332,
+        "away": 0.2931,
+        "o15": 0.8147,
+        "o25": 0.5979,
+        "u35": 0.6258,
+        "btts": 0.6104,
+        "h2": 0.5244,
+        "a2": 0.3866
+      },
+      "top_market": {
+        "market": "o15",
+        "p": 0.8147
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
     },
     {
+      "id": "EL-2026-11-05-benfica-lech-pozna-",
+      "competition": "EL",
+      "date": "2026-11-05",
       "time": "21:00",
-      "home": "Getafe",
-      "away": "Brighton",
-      "market": "Under 3,5",
-      "status": "requires_independent_verification"
+      "home": "Benfica",
+      "away": "Lech Poznań",
+      "home_sample": {
+        "n": 3,
+        "scored": 10,
+        "conceded": 2,
+        "btts": 2,
+        "over": 2
+      },
+      "away_sample": {
+        "n": 3,
+        "scored": 1,
+        "conceded": 9,
+        "btts": 1,
+        "over": 2
+      },
+      "lambda_home": 2.021,
+      "lambda_away": 1.032,
+      "probabilities": {
+        "home": 0.6027,
+        "draw": 0.2106,
+        "away": 0.1867,
+        "o15": 0.8087,
+        "o25": 0.5886,
+        "u35": 0.6353,
+        "btts": 0.5584,
+        "h2": 0.5998,
+        "a2": 0.276
+      },
+      "top_market": {
+        "market": "o15",
+        "p": 0.8087
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
     },
     {
+      "id": "CL-2026-11-05-panathinaikos-cska-sofia",
+      "competition": "CL",
+      "date": "2026-11-05",
+      "time": "21:00",
+      "home": "Panathinaikos",
+      "away": "CSKA Sofia",
+      "home_sample": {
+        "n": 2,
+        "scored": 7,
+        "conceded": 2,
+        "btts": 2,
+        "over": 2
+      },
+      "away_sample": {
+        "n": 2,
+        "scored": 3,
+        "conceded": 4,
+        "btts": 2,
+        "over": 2
+      },
+      "lambda_home": 1.765,
+      "lambda_away": 1.286,
+      "probabilities": {
+        "home": 0.4869,
+        "draw": 0.2334,
+        "away": 0.2797,
+        "o15": 0.8083,
+        "o25": 0.5881,
+        "u35": 0.6358,
+        "btts": 0.5998,
+        "h2": 0.5267,
+        "a2": 0.3682
+      },
+      "top_market": {
+        "market": "o15",
+        "p": 0.8083
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
+    },
+    {
+      "id": "EL-2026-11-05-az-alkmaar-juventus",
+      "competition": "EL",
+      "date": "2026-11-05",
       "time": "21:00",
       "home": "AZ Alkmaar",
       "away": "Juventus",
-      "market": "Gol w drugiej połowie",
-      "status": "requires_independent_verification"
+      "home_sample": {
+        "n": 3,
+        "scored": 6,
+        "conceded": 2,
+        "btts": 1,
+        "over": 2
+      },
+      "away_sample": {
+        "n": 3,
+        "scored": 9,
+        "conceded": 3,
+        "btts": 2,
+        "over": 3
+      },
+      "lambda_home": 1.457,
+      "lambda_away": 1.426,
+      "probabilities": {
+        "home": 0.3828,
+        "draw": 0.2486,
+        "away": 0.3687,
+        "o15": 0.7827,
+        "o25": 0.5501,
+        "u35": 0.6735,
+        "btts": 0.5827,
+        "h2": 0.4277,
+        "a2": 0.417
+      },
+      "top_market": {
+        "market": "o15",
+        "p": 0.7827
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
+    },
+    {
+      "id": "CL-2026-11-05-getafe-brighton",
+      "competition": "CL",
+      "date": "2026-11-05",
+      "time": "21:00",
+      "home": "Getafe",
+      "away": "Brighton",
+      "home_sample": {
+        "n": 2,
+        "scored": 3,
+        "conceded": 6,
+        "btts": 2,
+        "over": 1
+      },
+      "away_sample": {
+        "n": 2,
+        "scored": 4,
+        "conceded": 0,
+        "btts": 0,
+        "over": 1
+      },
+      "lambda_home": 1.261,
+      "lambda_away": 1.595,
+      "probabilities": {
+        "home": 0.3022,
+        "draw": 0.2461,
+        "away": 0.4517,
+        "o15": 0.7783,
+        "o25": 0.5438,
+        "u35": 0.6794,
+        "btts": 0.5713,
+        "h2": 0.3593,
+        "a2": 0.4735
+      },
+      "top_market": {
+        "market": "o15",
+        "p": 0.7783
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
+    },
+    {
+      "id": "CL-2026-11-05-twente-pafos",
+      "competition": "CL",
+      "date": "2026-11-05",
+      "time": "21:00",
+      "home": "Twente",
+      "away": "Pafos",
+      "home_sample": {
+        "n": 2,
+        "scored": 5,
+        "conceded": 1,
+        "btts": 1,
+        "over": 1
+      },
+      "away_sample": {
+        "n": 2,
+        "scored": 2,
+        "conceded": 4,
+        "btts": 2,
+        "over": 1
+      },
+      "lambda_home": 1.649,
+      "lambda_away": 1.161,
+      "probabilities": {
+        "home": 0.4875,
+        "draw": 0.2439,
+        "away": 0.2686,
+        "o15": 0.7706,
+        "o25": 0.5328,
+        "u35": 0.6898,
+        "btts": 0.5547,
+        "h2": 0.4907,
+        "a2": 0.3232
+      },
+      "top_market": {
+        "market": "o15",
+        "p": 0.7706
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
+    },
+    {
+      "id": "CL-2026-11-05-monaco-nordsj-lland",
+      "competition": "CL",
+      "date": "2026-11-05",
+      "time": "21:00",
+      "home": "Monaco",
+      "away": "Nordsjælland",
+      "home_sample": {
+        "n": 2,
+        "scored": 5,
+        "conceded": 1,
+        "btts": 1,
+        "over": 2
+      },
+      "away_sample": {
+        "n": 2,
+        "scored": 3,
+        "conceded": 3,
+        "btts": 2,
+        "over": 1
+      },
+      "lambda_home": 1.583,
+      "lambda_away": 1.219,
+      "probabilities": {
+        "home": 0.4581,
+        "draw": 0.248,
+        "away": 0.2939,
+        "o15": 0.7691,
+        "o25": 0.5308,
+        "u35": 0.6917,
+        "btts": 0.5597,
+        "h2": 0.4694,
+        "a2": 0.3441
+      },
+      "top_market": {
+        "market": "o15",
+        "p": 0.7691
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
+    },
+    {
+      "id": "CL-2026-11-05-copenhagen-iberia-tbilisi",
+      "competition": "CL",
+      "date": "2026-11-05",
+      "time": "21:00",
+      "home": "Copenhagen",
+      "away": "Iberia Tbilisi",
+      "home_sample": {
+        "n": 2,
+        "scored": 5,
+        "conceded": 2,
+        "btts": 1,
+        "over": 2
+      },
+      "away_sample": {
+        "n": 2,
+        "scored": 1,
+        "conceded": 3,
+        "btts": 1,
+        "over": 0
+      },
+      "lambda_home": 1.583,
+      "lambda_away": 1.161,
+      "probabilities": {
+        "home": 0.4711,
+        "draw": 0.2493,
+        "away": 0.2795,
+        "o15": 0.7591,
+        "o25": 0.5169,
+        "u35": 0.7045,
+        "btts": 0.5457,
+        "h2": 0.4694,
+        "a2": 0.3232
+      },
+      "top_market": {
+        "market": "o15",
+        "p": 0.7591
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
+    },
+    {
+      "id": "EL-2026-11-05-sturm-graz-celje",
+      "competition": "EL",
+      "date": "2026-11-05",
+      "time": "21:00",
+      "home": "Sturm Graz",
+      "away": "Celje",
+      "home_sample": {
+        "n": 3,
+        "scored": 1,
+        "conceded": 3,
+        "btts": 0,
+        "over": 1
+      },
+      "away_sample": {
+        "n": 3,
+        "scored": 2,
+        "conceded": 7,
+        "btts": 1,
+        "over": 2
+      },
+      "lambda_home": 1.371,
+      "lambda_away": 1.143,
+      "probabilities": {
+        "home": 0.4206,
+        "draw": 0.267,
+        "away": 0.3124,
+        "o15": 0.7156,
+        "o25": 0.4598,
+        "u35": 0.7545,
+        "btts": 0.5083,
+        "h2": 0.3982,
+        "a2": 0.3167
+      },
+      "top_market": {
+        "market": "u35",
+        "p": 0.7545
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
+    },
+    {
+      "id": "EL-2026-11-05-celta-union-sg",
+      "competition": "EL",
+      "date": "2026-11-05",
+      "time": "21:00",
+      "home": "Celta",
+      "away": "Union SG",
+      "home_sample": {
+        "n": 3,
+        "scored": 3,
+        "conceded": 4,
+        "btts": 2,
+        "over": 2
+      },
+      "away_sample": {
+        "n": 3,
+        "scored": 8,
+        "conceded": 1,
+        "btts": 1,
+        "over": 2
+      },
+      "lambda_home": 1.184,
+      "lambda_away": 1.517,
+      "probabilities": {
+        "home": 0.2965,
+        "draw": 0.254,
+        "away": 0.4495,
+        "o15": 0.7515,
+        "o25": 0.5066,
+        "u35": 0.7139,
+        "btts": 0.5417,
+        "h2": 0.3315,
+        "a2": 0.4479
+      },
+      "top_market": {
+        "market": "o15",
+        "p": 0.7515
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
+    },
+    {
+      "id": "CL-2026-11-05-sint-truidense-brann",
+      "competition": "CL",
+      "date": "2026-11-05",
+      "time": "21:00",
+      "home": "Sint-Truidense",
+      "away": "Brann",
+      "home_sample": {
+        "n": 2,
+        "scored": 3,
+        "conceded": 0,
+        "btts": 0,
+        "over": 0
+      },
+      "away_sample": {
+        "n": 2,
+        "scored": 6,
+        "conceded": 2,
+        "btts": 2,
+        "over": 2
+      },
+      "lambda_home": 1.399,
+      "lambda_away": 1.297,
+      "probabilities": {
+        "home": 0.3944,
+        "draw": 0.258,
+        "away": 0.3475,
+        "o15": 0.7505,
+        "o25": 0.5053,
+        "u35": 0.7151,
+        "btts": 0.5472,
+        "h2": 0.4077,
+        "a2": 0.3721
+      },
+      "top_market": {
+        "market": "o15",
+        "p": 0.7505
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
+    },
+    {
+      "id": "CL-2026-11-05-universitatea-craiova-egnatia",
+      "competition": "CL",
+      "date": "2026-11-05",
+      "time": "21:00",
+      "home": "Universitatea Craiova",
+      "away": "Egnatia",
+      "home_sample": {
+        "n": 2,
+        "scored": 4,
+        "conceded": 2,
+        "btts": 2,
+        "over": 1
+      },
+      "away_sample": {
+        "n": 2,
+        "scored": 2,
+        "conceded": 2,
+        "btts": 2,
+        "over": 0
+      },
+      "lambda_home": 1.457,
+      "lambda_away": 1.225,
+      "probabilities": {
+        "home": 0.425,
+        "draw": 0.2571,
+        "away": 0.3179,
+        "o15": 0.7481,
+        "o25": 0.502,
+        "u35": 0.718,
+        "btts": 0.5418,
+        "h2": 0.4277,
+        "a2": 0.3464
+      },
+      "top_market": {
+        "market": "o15",
+        "p": 0.7481
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
+    },
+    {
+      "id": "EL-2026-11-05-sunderland-gnk-dinamo",
+      "competition": "EL",
+      "date": "2026-11-05",
+      "time": "21:00",
+      "home": "Sunderland",
+      "away": "GNK Dinamo",
+      "home_sample": {
+        "n": 3,
+        "scored": 4,
+        "conceded": 2,
+        "btts": 2,
+        "over": 1
+      },
+      "away_sample": {
+        "n": 3,
+        "scored": 3,
+        "conceded": 4,
+        "btts": 1,
+        "over": 1
+      },
+      "lambda_home": 1.411,
+      "lambda_away": 1.143,
+      "probabilities": {
+        "home": 0.4312,
+        "draw": 0.2638,
+        "away": 0.305,
+        "o15": 0.7236,
+        "o25": 0.47,
+        "u35": 0.7459,
+        "btts": 0.5151,
+        "h2": 0.412,
+        "a2": 0.3167
+      },
+      "top_market": {
+        "market": "u35",
+        "p": 0.7459
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
+    },
+    {
+      "id": "EL-2026-11-05-leverkusen-marseille",
+      "competition": "EL",
+      "date": "2026-11-05",
+      "time": "21:00",
+      "home": "Leverkusen",
+      "away": "Marseille",
+      "home_sample": {
+        "n": 3,
+        "scored": 8,
+        "conceded": 0,
+        "btts": 0,
+        "over": 1
+      },
+      "away_sample": {
+        "n": 3,
+        "scored": 1,
+        "conceded": 6,
+        "btts": 1,
+        "over": 1
+      },
+      "lambda_home": 1.741,
+      "lambda_away": 0.921,
+      "probabilities": {
+        "home": 0.5672,
+        "draw": 0.2355,
+        "away": 0.1973,
+        "o15": 0.7443,
+        "o25": 0.4969,
+        "u35": 0.7226,
+        "btts": 0.4962,
+        "h2": 0.5193,
+        "a2": 0.235
+      },
+      "top_market": {
+        "market": "o15",
+        "p": 0.7443
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
+    },
+    {
+      "id": "EL-2026-11-05-hapoel-beer-sheva-ofi-crete",
+      "competition": "EL",
+      "date": "2026-11-05",
+      "time": "21:00",
+      "home": "Hapoel Beer-Sheva",
+      "away": "OFI Crete",
+      "home_sample": {
+        "n": 3,
+        "scored": 1,
+        "conceded": 6,
+        "btts": 1,
+        "over": 2
+      },
+      "away_sample": {
+        "n": 3,
+        "scored": 3,
+        "conceded": 4,
+        "btts": 1,
+        "over": 1
+      },
+      "lambda_home": 1.233,
+      "lambda_away": 1.356,
+      "probabilities": {
+        "home": 0.3391,
+        "draw": 0.2639,
+        "away": 0.3969,
+        "o15": 0.7306,
+        "o25": 0.479,
+        "u35": 0.7382,
+        "btts": 0.5261,
+        "h2": 0.3493,
+        "a2": 0.393
+      },
+      "top_market": {
+        "market": "u35",
+        "p": 0.7382
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
+    },
+    {
+      "id": "CL-2026-11-05-riga-jablonec",
+      "competition": "CL",
+      "date": "2026-11-05",
+      "time": "21:00",
+      "home": "Riga",
+      "away": "Jablonec",
+      "home_sample": {
+        "n": 2,
+        "scored": 2,
+        "conceded": 2,
+        "btts": 2,
+        "over": 0
+      },
+      "away_sample": {
+        "n": 2,
+        "scored": 2,
+        "conceded": 3,
+        "btts": 1,
+        "over": 1
+      },
+      "lambda_home": 1.399,
+      "lambda_away": 1.225,
+      "probabilities": {
+        "home": 0.4098,
+        "draw": 0.2614,
+        "away": 0.3289,
+        "o15": 0.7371,
+        "o25": 0.4875,
+        "u35": 0.7309,
+        "btts": 0.5318,
+        "h2": 0.4077,
+        "a2": 0.3464
+      },
+      "top_market": {
+        "market": "o15",
+        "p": 0.7371
+      },
+      "sample_quality": "LOW — 2–3 UEFA matches per club; shrinkage prior 6; no calibrated accuracy"
     }
   ]
 }
