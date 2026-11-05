@@ -1,0 +1,78 @@
+{
+  "date": "2026-11-05",
+  "timezone": "Europe/Warsaw",
+  "kind": "research_candidates_not_predictions",
+  "source": "UEFA schedules; verification of individual fixtures and odds required",
+  "matches": [
+    {
+      "time": "18:45",
+      "home": "Midtjylland",
+      "away": "Ajax",
+      "market": "BTTS / over 2,5",
+      "status": "requires_independent_verification"
+    },
+    {
+      "time": "18:45",
+      "home": "Atalanta",
+      "away": "Kairat Almaty",
+      "market": "Gole gospodarzy",
+      "status": "requires_independent_verification"
+    },
+    {
+      "time": "18:45",
+      "home": "Trabzonspor",
+      "away": "Freiburg",
+      "market": "Gol w drugiej połowie",
+      "status": "requires_independent_verification"
+    },
+    {
+      "time": "18:45",
+      "home": "Sparta Praga",
+      "away": "Bournemouth",
+      "market": "BTTS / over 1,5",
+      "status": "requires_independent_verification"
+    },
+    {
+      "time": "18:45",
+      "home": "Crystal Palace",
+      "away": "Hoffenheim",
+      "market": "BTTS / over 2,5",
+      "status": "requires_independent_verification"
+    },
+    {
+      "time": "21:00",
+      "home": "Benfica",
+      "away": "Lech Poznań",
+      "market": "Gole gospodarzy",
+      "status": "requires_independent_verification"
+    },
+    {
+      "time": "21:00",
+      "home": "Celtic",
+      "away": "Beşiktaş",
+      "market": "BTTS",
+      "status": "requires_independent_verification"
+    },
+    {
+      "time": "21:00",
+      "home": "Leverkusen",
+      "away": "Marseille",
+      "market": "Over 2,5",
+      "status": "requires_independent_verification"
+    },
+    {
+      "time": "21:00",
+      "home": "Getafe",
+      "away": "Brighton",
+      "market": "Under 3,5",
+      "status": "requires_independent_verification"
+    },
+    {
+      "time": "21:00",
+      "home": "AZ Alkmaar",
+      "away": "Juventus",
+      "market": "Gol w drugiej połowie",
+      "status": "requires_independent_verification"
+    }
+  ]
+}
