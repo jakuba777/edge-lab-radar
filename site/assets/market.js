@@ -117,23 +117,34 @@
       'Próba: ' + match.model.nH + ' meczów domowych / ' + match.model.nA + ' wyjazdowych. ' +
       'Bez rzeczywistych kursów historycznych nie można wyciągać wniosków o rentowności.',
       'market-disclaimer'));
-    // Conservative uncertainty gate: not a betting signal. The model has not
-    // been calibrated against independent historical odds or outcomes.
-    const stressP = Math.max(0, result.model - 0.10);
-    const stressEV = .88 * result.odds * stressP - 1;
-    const baselineEV = .88 * result.odds * result.base - 1;
-    const nominalEV = .88 * result.odds * result.model - 1;
+    // Sensitivity analysis only: these shifts are scenarios, not confidence bounds.
+    // No recommendation is emitted without independent calibration and odds history.
     const gate = el('div', undefined, 'market-disclaimer');
-    gate.appendChild(el('strong', 'DECYZJA AUDYTOWA: OBSERWUJ / BRAK POTWIERDZONEGO SYGNAŁU'));
-    gate.appendChild(el('p', 'EV modelu (hipotetyczne): ' + (nominalEV*100).toFixed(1).replace('.', ',') +
-      '%. EV po obniżeniu szacunku o 10 pp: ' + (stressEV*100).toFixed(1).replace('.', ',') +
-      '%. EV dla prostej bazy ligowej: ' + (baselineEV*100).toFixed(1).replace('.', ',') +
-      '%. Wszystkie wartości uwzględniają założenie 12% podatku od stawki.', 'caption'));
+    gate.appendChild(el('strong', 'AUDYT RYZYKA · BRAK POTWIERDZONEJ PRZEWAGI'));
+    const ev = p => .88 * result.odds * p - 1;
+    const signed = v => (v >= 0 ? '+' : '') + (v * 100).toFixed(1).replace('.', ',') + '%';
+    const cases = [
+      ['Model (hipoteza)', result.model],
+      ['Baza ligowa', result.base],
+      ['Model −5 pp', Math.max(0, result.model - .05)],
+      ['Model −10 pp', Math.max(0, result.model - .10)],
+      ['Model −15 pp', Math.max(0, result.model - .15)]
+    ];
+    const grid = el('div', undefined, 'snapshot');
+    for (const [name, p] of cases) {
+      appendMetric(grid, name + ' · ' + percent(p), signed(ev(p)));
+    }
+    gate.appendChild(grid);
+    const margin = (result.model - result.threshold) * 100;
+    gate.appendChild(el('p', 'Minimalne prawdopodobieństwo rentowności przy tym kursie i założonym podatku: ' +
+      percent(result.threshold) + '. Margines modelu do progu: ' +
+      (margin >= 0 ? '+' : '') + margin.toFixed(1).replace('.', ',') + ' pp.', 'caption'));
     const reasons = [];
-    if (result.threshold >= 1) reasons.push('Kurs nie osiąga matematycznego progu nawet przy prawdopodobieństwie 100%.');
-    if (stressEV <= 0) reasons.push('Przewaga znika przy konserwatywnym teście niepewności (−10 pp).');
-    if (baselineEV <= 0) reasons.push('Prosta baza ligowa nie potwierdza dodatniej wartości.');
-    reasons.push('Brak niezależnej kalibracji, archiwum historycznych kursów i walidacji ROI.');
+    if (result.threshold >= 1) reasons.push('Ten kurs nie pozwala osiągnąć dodatniego EV nawet przy prawdopodobieństwie 100%.');
+    if (ev(result.model) <= 0) reasons.push('Nominalne oszacowanie nie przekracza progu rentowności.');
+    if (ev(Math.max(0, result.model - .05)) <= 0) reasons.push('Wystarczy obniżenie oszacowania o 5 pp, aby EV nie było dodatnie.');
+    if (ev(result.base) <= 0) reasons.push('Baza ligowa nie potwierdza dodatniego EV.');
+    reasons.push('Zmiany −5/−10/−15 pp są testami wrażliwości, NIE przedziałami ufności. Nie ma walidacji ROI na historycznych kursach.');
     gate.appendChild(el('p', reasons.join(' '), 'caption'));
     output.appendChild(gate);
     renderExperts(match, market, result);
