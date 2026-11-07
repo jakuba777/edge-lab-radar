@@ -166,3 +166,11 @@ Odjęcie 10 punktów procentowych jest arbitralnym **testem wrażliwości**, a n
 3. Walk-forward bez przecieku przyszłych danych; osobno pre-match i LIVE.
 4. Raport Brier, log-loss, kalibracji, ROI po podatku, CLV i maksymalnego drawdown; bez wyciągania wniosków z małych prób.
 5. LIVE wymaga licencjonowanego źródła aktualnych statystyk i kursów oraz weryfikacji opóźnień. Aktualny LIVE LAB to wyłącznie replay.
+
+## Zmiana selekcji 7 listopada 2026 — etap walidacji
+
+- Coupon Core: selekcja symulacji bazuje teraz na `model.base` (częstości ligowej ze wcześniejszych dni), a nie `model.ps`, ponieważ publiczny audyt 4537 meczów nie wykazał poprawy głównego modelu nad bazą. `rawP` zachowuje pierwotną prognozę diagnostycznie.
+- Ta zmiana dotyczy generatora kuponów i jego nowych migawek, a nie automatycznie wszystkich modułów radaru ani zapisanych wcześniej prognoz. Historia pozostaje przypisana do wersji użytej przy utworzeniu.
+- Grader rozpoznaje wszystkie 16 rynków Coupon Core; dodano test regresyjny `tests/test_settlement_markets.py`.
+- Strona Kupony nie przedstawia już nieaktualnego terminarza 4 XI jako aktualnego.
+- **Status:** zmiany kodu zapisane, lecz uruchomienie testów, pipeline i ponowne rozliczenie wyników nie zostały potwierdzone. Nie ma zweryfikowanego nowego ROI ani dowodu poprawy trafności.
