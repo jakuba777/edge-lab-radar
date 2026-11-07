@@ -148,3 +148,21 @@ Testy: python -m unittest discover -s tests -v.
 Replay: python scripts/live_replay08.py po pobraniu danych.
 
 **Aplikacja nie posiada potwierdzonej przewagi finansowej nad rynkiem.**
+
+## Audyt decyzji rynkowych — 7 listopada 2026
+
+W `site/assets/market.js` wdrożono konserwatywny filtr informacyjny:
+
+- nominalne EV: `0.88 × kurs × p_model − 1`;
+- stres-test EV: `0.88 × kurs × max(0, p_model − 0.10) − 1`;
+- kontrola bazowa EV: `0.88 × kurs × p_liga − 1`.
+
+Odjęcie 10 punktów procentowych jest arbitralnym **testem wrażliwości**, a nie empirycznie oszacowanym przedziałem ufności. Wszystkie porównania są hipotezami badawczymi. Decyzja audytowa pozostaje „OBSERWUJ / BRAK POTWIERDZONEGO SYGNAŁU” nawet przy dodatnim EV, ponieważ brak kalibracji, historycznych kursów i walidacji na niezależnym zbiorze. Nie stosować do automatycznego obstawiania.
+
+### Kolejne warunki przed uznaniem skuteczności
+
+1. Prospektywny, niezmienny zapis: ID meczu, rynek, UTC, kurs, źródło kursu, prawdopodobieństwo, wersja modelu i status.
+2. Rozliczenie wyłącznie zdarzeń zarchiwizowanych przed rozpoczęciem, osobno dla symulacji i rzeczywistych zakładów.
+3. Walk-forward bez przecieku przyszłych danych; osobno pre-match i LIVE.
+4. Raport Brier, log-loss, kalibracji, ROI po podatku, CLV i maksymalnego drawdown; bez wyciągania wniosków z małych prób.
+5. LIVE wymaga licencjonowanego źródła aktualnych statystyk i kursów oraz weryfikacji opóźnień. Aktualny LIVE LAB to wyłącznie replay.
