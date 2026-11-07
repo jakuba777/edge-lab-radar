@@ -18,6 +18,9 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -25,3 +28,7 @@ jobs:
         run: python -m unittest discover -s tests -p 'test_settlement_markets.py' -v
       - name: Check grader syntax
         run: python -m py_compile scripts/grade_forecasts.py
+      - name: Run coupon model regression tests
+        run: node --test tests/test_coupon_core.cjs
+      - name: Check coupon browser code syntax
+        run: node --check site/assets/coupon-core.js
