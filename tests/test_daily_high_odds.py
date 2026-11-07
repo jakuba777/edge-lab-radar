@@ -15,7 +15,7 @@ const matches=[];
 for(let i=0;i<12;i++){
  const p=.45;
  const ps=Object.fromEntries(C.MARKETS.map(x=>[x.id,p]));
- const base=Object.fromEntries(C.MARKETS.map(x=>[x.id,.46]));
+ const base=Object.fromEntries(C.MARKETS.map(x=>[x.id,.45]));
  const date=i<7?'2026-11-02':'2026-11-03';
  matches.push({id:'M'+i,date,home:'H'+i,away:'A'+i,
   leagueId:'L'+(i%4),league:'Liga '+(i%4),
