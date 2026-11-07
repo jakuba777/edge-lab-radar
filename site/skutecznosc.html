@@ -8,7 +8,9 @@
 <link rel="stylesheet" href="./assets/track.css">
 <link rel="stylesheet" href="./assets/editorial.css">
 <link rel="stylesheet" href="./assets/contrast-v21.css?v=21"/>
-<script src="./assets/track.js" defer></script>
+<script src="./assets/track.js?v=30" defer></script>
+<script src="./assets/results-dashboard.js?v=1" defer></script>
+<link rel="stylesheet" href="./assets/results-dashboard.css?v=1">
 </head><body><main class="shell track-shell">
 <header class="track-header"><a href="./">‹ RADAR</a><span>EDGE LAB AI / HISTORIA</span><span class="track-version">0.9 LAB</span></header>
 <section class="track-hero"><div class="eyebrow">WYNIKI BEZ DOPISYWANIA TYPOW PO FAKCIE</div><h1>Wyniki analiz</h1>
@@ -19,6 +21,24 @@
 <p id="track-date" class="caption">Aktualizacje przy wykonywaniu GitHub Actions; tylko zakończone poprzednie dni.</p>
 <div class="metrics"><div><span>Archiwa sprawdzone</span><strong id="track-archives">—</strong></div><div><span>Prognozy przed meczami</span><strong id="track-total">—</strong></div><div><span>Potwierdzone wyniki</span><strong id="track-scored">—</strong></div></div>
 <p id="track-error" class="error-box hidden" role="alert"></p>
+</section>
+<section class="panel" id="track-dashboard" aria-label="Centrum wyników i porównań">
+ <div class="kicker">CENTRUM WYNIKÓW · JEDEN WIDOK</div>
+ <h2>Porównaj skuteczność typów</h2>
+ <p class="caption">Dzień poprzedni i ostatnie 7 zakończonych dni według czasu polskiego. Liczby z zapisanych przed meczami prognoz, nie z rzeczywistych zakładów.</p>
+ <div class="track-dash-controls">
+  <label>Zakres <select id="dash-range" class="field"><option value="yesterday">Wczoraj</option><option value="week">Ostatnie 7 dni</option><option value="archive">Całe dostępne archiwum</option></select></label>
+  <label>Typ analizy <select id="dash-kind" class="field"><option value="main">Główne typy</option><option value="single">Pojedyncze</option><option value="coupons">Kupony (całe)</option><option value="ht">HT/FT</option></select></label>
+ </div>
+ <div id="dash-summary" class="track-dash-summary" aria-live="polite">Wczytywanie porównania…</div>
+ <h3>Porównanie dzień po dniu</h3>
+ <div id="dash-days" class="track-dash-days">Wczytywanie…</div>
+ <h3>Typy i wyniki z wybranego okresu</h3>
+ <div class="track-dash-controls"><label>Status <select id="dash-status" class="field"><option value="all">Wszystkie</option><option value="hit">Trafione</option><option value="miss">Nietrafione</option><option value="pending">Oczekujące</option></select></label>
+ <label>Szukaj meczu <input id="dash-search" class="field" type="search" placeholder="Drużyna, liga lub rynek"></label>
+ <button type="button" id="dash-export" class="action">Eksport CSV</button></div>
+ <p id="dash-coverage" class="caption"></p>
+ <div id="dash-results" class="vstack"></div>
 </section>
 <div class="section-head"><div class="kicker">PRZEGLĄD OSTATNIEGO ROZLICZONEGO DNIA</div><h2>Co zadziałało, a co zawiodło?</h2></div>
 <section class="panel track-daily" id="track-daily" aria-live="polite"><p class="caption">Analizuję wyniki zapisane przed spotkaniami…</p></section>
