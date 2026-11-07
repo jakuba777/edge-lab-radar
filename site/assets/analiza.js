@@ -59,7 +59,7 @@
   root.append(text('p','Szkic działa w bieżącej sesji strony; nie zapisuje rzeczywistego kuponu Superbet ani stawki.','muted tiny'));
  }
  function choose(m){
-  state.selected=m;state.legs=[];renderHub(m);$('detail').classList.remove('hide');document.querySelectorAll('[data-tab]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.tab==='analysis')));for(const tab of ['analysis','markets','builder'])$(tab).classList.toggle('hide',tab!=='analysis');$('fixture').textContent=m.home+' — '+m.away;
+  state.selected=m;state.legs=[];$('detail').classList.remove('hide');renderHub(m);document.querySelectorAll('[data-tab]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.tab==='analysis')));for(const tab of ['analysis','markets','builder'])$(tab).classList.toggle('hide',tab!=='analysis');$('fixture').textContent=m.home+' — '+m.away;
   $('context').textContent=fmt(m);
   const a=$('analysis');a.replaceChildren();
   if(!m.model){a.append(text('p','Za mało danych do analizy tego spotkania.','warning'));$('markets').replaceChildren();$('builder').replaceChildren();$('detail').scrollIntoView({block:'start'});return;}
