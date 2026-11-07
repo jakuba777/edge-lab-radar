@@ -5,6 +5,8 @@ on:
     paths:
       - 'scripts/grade_forecasts.py'
       - 'site/assets/coupon-core.js'
+      - 'site/assets/results-dashboard.js'
+      - 'site/skutecznosc.html'
       - 'tests/**'
       - '.github/workflows/quality-gate.yml'
   workflow_dispatch:
@@ -29,6 +31,6 @@ jobs:
       - name: Check grader syntax
         run: python -m py_compile scripts/grade_forecasts.py
       - name: Run coupon model regression tests
-        run: node --test tests/test_coupon_core.cjs
+        run: node --test tests/test_coupon_core.cjs tests/test_results_dashboard.cjs
       - name: Check coupon browser code syntax
-        run: node --check site/assets/coupon-core.js
+        run: node --check site/assets/coupon-core.js && node --check site/assets/results-dashboard.js
