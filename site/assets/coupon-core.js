@@ -90,7 +90,11 @@
   else if(profile==='high_odds')ids=['o25','u25','o35','btts','bttsNo','home','x','away','h2','a2','oneX','x2','hg','ag','u35'];
   else ids=['hg','ag','o25','u25','o35','u35','btts','bttsNo','home','x','away','h2','a2'];
   return ids.map(id=>{
-    const p=ps[id],diff=p-base[id];
+    // Conservative ranking probability: the published walk-forward audit reports
+    // worse Brier than the league baseline for the primary model. Until a new
+    // out-of-sample audit demonstrates improvement, anchor the exploratory
+    // selection to the historical league rate, not the uncalibrated model.
+    const rawP=ps[id],p=base[id],diff=rawP-base[id];
     const eligible=profile==='selective'?p>=.69&&p<=.90:
       profile==='balanced'?p>=.49&&p<=.82:
       profile==='high_odds'?p>=.30&&p<=.74&&Math.abs(diff)<=.20&&match.model.nLeague>=55:
@@ -103,7 +107,7 @@
      profile==='high_odds'?(evidence*.48 + (1-Math.abs(p-.53))*.27 +
       (1-Math.min(1,Math.abs(diff)*3))*.25):
      (.5*Math.abs(diff)+.3*evidence+.2*(1-Math.abs(p-.5)));
-    return {match,id,p,diff,score,label:map.get(id).label};
+    return {match,id,p,diff,rawP,score,label:map.get(id).label};
   }).filter(Boolean).sort((a,b)=>b.score-a.score).slice(0,4);
  };
  // Research-first: one event per match, before combining independent failures.
