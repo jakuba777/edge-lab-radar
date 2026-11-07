@@ -9,7 +9,7 @@
  const sumDays=(days)=>{let hit=0,miss=0,pending=0;for(const x of days){hit+=x.hit||0;miss+=x.miss||0;pending+=x.pending||0;}const scored=hit+miss;return {hit,miss,pending,scored,hit_rate:scored?hit/scored:null};};
  function periodDates(today,range,allDays){
   if(range==='archive')return allDays.filter(d=>d<today).sort().reverse();
-  const start=dateOffset(today,range==='yesterday'?-1:-7);
+  const start=dateOffset(today,range==='yesterday'?-1:range==='fortnight'?-14:range==='month'?-30:-7);
   return allDays.filter(d=>d>=start&&d<today).sort().reverse();
  }
  function element(tag,text,cls){const n=document.createElement(tag);if(text!==undefined)n.textContent=String(text);if(cls)n.className=cls;return n;}
@@ -28,7 +28,7 @@
    }
    const dayRoot=$('dash-days');dayRoot.replaceChildren();
    if(!dates.length)dayRoot.appendChild(element('p','Brak zapisanych prognoz w tym okresie.','caption'));
-   for(const day of dates.slice(0,range==='archive'?45:7)){
+   for(const day of dates.slice(0,range==='archive'?45:range==='month'?30:range==='fortnight'?14:7)){
     const d=daily[kind][day],row=element('div',undefined,'track-dash-day');
     const left=element('div');left.append(element('strong',day),element('small',(d.hit||0)+' trafień / '+(d.miss||0)+' pomyłek · '+(d.pending||0)+' oczekuje'));
     const right=element('strong',pct(d.hit_rate));row.append(left,right);dayRoot.appendChild(row);
