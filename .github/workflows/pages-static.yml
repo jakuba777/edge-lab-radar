@@ -1,15 +1,10 @@
 name: EDGE LAB — awaryjna publikacja strony
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'site/**'
-      - '.github/workflows/pages-static.yml'
   workflow_dispatch:
 permissions:
   contents: read
 concurrency:
-  group: edge-lab-pages
+  group: edge-lab-pages-emergency
   cancel-in-progress: false
 jobs:
   publish:
