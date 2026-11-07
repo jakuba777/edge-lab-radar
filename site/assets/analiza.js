@@ -7,8 +7,59 @@
  const text=(tag,content,cls)=>{const el=document.createElement(tag);el.textContent=content;if(cls)el.className=cls;return el;};
  const fmt=m=>m.date+' · '+(m.time||'godzina nieznana')+' · '+m.league;
  async function fetchFile(path,kind){const r=await fetch(path,{cache:'no-store',credentials:'omit',mode:'same-origin'});if(!r.ok)throw Error(path+' HTTP '+r.status);return kind==='json'?r.json():r.text();}
+ const htInfo=(m)=>{
+  const rows=m.htHistory||[];
+  if(rows.length<40)return {count:rows.length,ready:false};
+  const h21=rows.filter(x=>x.hh<x.ha&&x.hs>x.as).length;
+  const h12=rows.filter(x=>x.hh>x.ha&&x.hs<x.as).length;
+  return {count:rows.length,ready:true,h21,h12};
+ };
+ const selectedMarkets=new Map();
+ function renderHub(m){
+  const root=$('match-hub');root.replaceChildren();
+  if(!m.model){root.append(text('p','Brak wystarczających danych dla tego meczu.','muted'));return;}
+  const heading=text('div','SZYBKI PODGLĄD · WSZYSTKIE RYNKI','hub-kicker');root.append(heading);
+  root.append(text('p','Historyczna częstość ligowa (baza) i model Poissona — nie są kursami ani potwierdzoną przewagą.','muted tiny'));
+  const top=document.createElement('div');top.className='hub-top';
+  const items=C.MARKETS.map(def=>({id:def.id,label:def.label,base:m.model.base[def.id],p:m.model.ps[def.id]}))
+   .filter(x=>Number.isFinite(x.base)).sort((a,b)=>b.base-a.base);
+  for(const item of items.slice(0,4)){
+   const card=text('div','','hub-metric');card.append(text('small',item.label),text('strong',pct(item.base)),text('small','Model: '+pct(item.p)));top.append(card);
+  }root.append(top);
+  const ht=htInfo(m),htBox=text('section','','hub-ht');
+  htBox.append(text('strong','ŁAMAKI HT/FT · 2/1 i 1/2'));
+  if(ht.ready){
+   htBox.append(text('p','Historycznie w lidze: 2/1 '+ht.h21+' / '+ht.count+' ('+pct(ht.h21/ht.count)+'); 1/2 '+ht.h12+' / '+ht.count+' ('+pct(ht.h12/ht.count)+').','hub-ht-stats'));
+   htBox.append(text('small','Częstość ligowa, NIE prognoza łamaka dla tego spotkania. Brak wiarygodnego sygnału meczowego.','muted'));
+  }else htBox.append(text('p','Brak wiarygodnej próby HT/FT ('+ht.count+'/40). Nie wyświetlamy sztucznego sygnału łamaka.','muted'));
+  root.append(htBox);
+  const line=document.createElement('div');line.className='hub-head';
+  line.append(text('strong','Wszystkie 16 rynków'),text('small','Dotknij typu, aby dodać do szkicu kuponu'));
+  root.append(line);
+  const list=document.createElement('div');list.className='hub-market-grid';
+  for(const item of items){
+   const btn=text('button','','hub-market');btn.type='button';
+   btn.setAttribute('aria-pressed',String(selectedMarkets.has(m.id+'|'+item.id)));
+   btn.append(text('span',item.label),text('strong',pct(item.base)));
+   btn.addEventListener('click',()=>{
+    const key=m.id+'|'+item.id;
+    if(selectedMarkets.has(key))selectedMarkets.delete(key);
+    else selectedMarkets.set(key,{matchId:m.id,date:m.date,league:m.league,home:m.home,away:m.away,market:item.id,label:item.label,baseline:item.base});
+    renderHub(m);
+   });list.append(btn);
+  }root.append(list);
+  const bar=text('div','','hub-selection');bar.append(text('strong','Szkic: '+selectedMarkets.size+' zdarzeń'));
+  const copy=text('button','Kopiuj zestawienie');copy.type='button';copy.disabled=!selectedMarkets.size;
+  copy.addEventListener('click',async()=>{
+   const value=[...selectedMarkets.values()].map(x=>x.date+' · '+x.home+' – '+x.away+' · '+x.label).join('\\n');
+   try{await navigator.clipboard.writeText(value);copy.textContent='Skopiowano';}catch(e){copy.textContent='Kopiowanie niedostępne';}
+  });bar.append(copy);
+  const clear=text('button','Wyczyść');clear.type='button';clear.disabled=!selectedMarkets.size;
+  clear.addEventListener('click',()=>{selectedMarkets.clear();renderHub(m);});bar.append(clear);root.append(bar);
+  root.append(text('p','Szkic działa w bieżącej sesji strony; nie zapisuje rzeczywistego kuponu Superbet ani stawki.','muted tiny'));
+ }
  function choose(m){
-  state.selected=m;state.legs=[];$('detail').classList.remove('hide');document.querySelectorAll('[data-tab]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.tab==='analysis')));for(const tab of ['analysis','markets','builder'])$(tab).classList.toggle('hide',tab!=='analysis');$('fixture').textContent=m.home+' — '+m.away;
+  state.selected=m;state.legs=[];renderHub(m);$('detail').classList.remove('hide');document.querySelectorAll('[data-tab]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.tab==='analysis')));for(const tab of ['analysis','markets','builder'])$(tab).classList.toggle('hide',tab!=='analysis');$('fixture').textContent=m.home+' — '+m.away;
   $('context').textContent=fmt(m);
   const a=$('analysis');a.replaceChildren();
   if(!m.model){a.append(text('p','Za mało danych do analizy tego spotkania.','warning'));$('markets').replaceChildren();$('builder').replaceChildren();$('detail').scrollIntoView({block:'start'});return;}
@@ -49,8 +100,8 @@
     if(!/^[a-zA-Z0-9_-]+$/.test(l.id))throw Error('Niepoprawne ID ligi');
     const root='./data/'+l.id+'/';
     const [r,f]=await Promise.all([fetchFile(root+'results_2627.csv'),fetchFile(root+'fixtures_2627.csv')]);
-    const hist=C.parseCSV(r).filter(x=>C.validDate(x.date)&&x.home&&x.away&&C.n(x.ft_home)!==null&&C.n(x.ft_away)!==null).map(x=>({date:x.date,home:x.home,away:x.away,hs:C.n(x.ft_home),as:C.n(x.ft_away)})).filter(x=>x.hs>=0&&x.as>=0&&x.hs<=14&&x.as<=14).sort((a,b)=>a.date.localeCompare(b.date));
-    return C.parseCSV(f).filter(x=>C.validDate(x.date)&&x.home&&x.away&&x.home!==x.away).map(x=>({id:l.id+'|'+x.date+'|'+x.home+'|'+x.away,date:x.date,time:x.time||'',home:x.home,away:x.away,league:l.name,leagueId:l.id,model:C.analyze(x,hist)}));
+    const rawResults=C.parseCSV(r);const hist=rawResults.filter(x=>C.validDate(x.date)&&x.home&&x.away&&C.n(x.ft_home)!==null&&C.n(x.ft_away)!==null).map(x=>({date:x.date,home:x.home,away:x.away,hs:C.n(x.ft_home),as:C.n(x.ft_away)})).filter(x=>x.hs>=0&&x.as>=0&&x.hs<=14&&x.as<=14).sort((a,b)=>a.date.localeCompare(b.date));
+    const htHistory=rawResults.filter(x=>C.validDate(x.date)&&C.n(x.ht_home)!==null&&C.n(x.ht_away)!==null&&C.n(x.ft_home)!==null&&C.n(x.ft_away)!==null&&x.date<today()).map(x=>({hh:C.n(x.ht_home),ha:C.n(x.ht_away),hs:C.n(x.ft_home),as:C.n(x.ft_away)})).filter(x=>x.hh>=0&&x.ha>=0&&x.hh<=x.hs&&x.ha<=x.as&&x.hs<=14&&x.as<=14);return C.parseCSV(f).filter(x=>C.validDate(x.date)&&x.home&&x.away&&x.home!==x.away).map(x=>({id:l.id+'|'+x.date+'|'+x.home+'|'+x.away,date:x.date,time:x.time||'',home:x.home,away:x.away,league:l.name,leagueId:l.id,htHistory,model:C.analyze(x,hist)}));
    }));
    const now=today();const seen=new Set();
    state.matches=results.filter(x=>x.status==='fulfilled').flatMap(x=>x.value).filter(m=>{if(seen.has(m.id))return false;seen.add(m.id);return C.daysBetween(m.date,now)>=0&&C.daysBetween(m.date,now)<=14&&W.eligible(m,new Date(),age);}).sort((a,b)=>W.sortKey(a).localeCompare(W.sortKey(b)));
