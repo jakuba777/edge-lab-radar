@@ -37,10 +37,11 @@ MAX_JSON_BYTES=1_000_000
 KINDS={"forecast-":"prospective.json","coupons-":"coupons.json","halftime-":"ht07_future.json"}
 MARKETS=("o15","o25","u35","btts")
 HTMARKETS=("2/1","1/2")
-COUPON_MARKETS={"hg","ag","o15","o25","u35","btts","h2","a2","oneX","x2","home","away"}
+COUPON_MARKETS={"hg","ag","o15","o25","o35","u25","u35","btts","bttsNo","h2","a2","oneX","x2","x","home","away"}
 LABELS={
  "o15":"Powyżej 1,5 gola","o25":"Powyżej 2,5 gola",
- "u35":"Poniżej 3,5 gola","btts":"Obie strzelą",
+ "u35":"Poniżej 3,5 gola","u25":"Poniżej 2,5 gola","o35":"Powyżej 3,5 gola",
+ "btts":"Obie strzelą","bttsNo":"Obie nie strzelą","x":"Remis",
  "hg":"Gol gospodarzy","ag":"Gol gości",
  "h2":"Gospodarze 2+ gole","a2":"Goście 2+ gole",
  "oneX":"1X","x2":"X2","home":"Wygrana gospodarzy","away":"Wygrana gości",
@@ -72,8 +73,10 @@ def result_key(league,date,home,away):
 def actual_score(score,market):
     hg,ag,hh,ha=score
     cases={
-        "o15":hg+ag>=2,"o25":hg+ag>=3,"u35":hg+ag<=3,
-        "btts":hg>0 and ag>0,"hg":hg>0,"ag":ag>0,
+        "o15":hg+ag>=2,"o25":hg+ag>=3,"o35":hg+ag>=4,
+        "u25":hg+ag<=2,"u35":hg+ag<=3,
+        "btts":hg>0 and ag>0,"bttsNo":hg==0 or ag==0,
+        "x":hg==ag,"hg":hg>0,"ag":ag>0,
         "h2":hg>=2,"a2":ag>=2,
         "oneX":hg>=ag,"x2":ag>=hg,"home":hg>ag,"away":ag>hg
     }
