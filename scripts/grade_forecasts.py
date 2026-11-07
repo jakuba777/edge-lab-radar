@@ -265,7 +265,19 @@ def grade(forecasts,halftimes,coupons,scores,today):
     display=lambda rows:([x for x in rows if x["state"]!="pending"][:75]+
                          sorted((x for x in rows if x["state"]=="pending"),
                                 key=lambda x:(x["date"],-x.get("p",0)))[:30])
+    # Daily aggregates cover the entire retained archive, not only UI preview rows.
+    # This prevents a busy day from hiding older days in 7-day comparisons.
+    daily={}
+    for category,rows in (("main",main),("coupons",ticket_rows),("single",single_rows),("ht",hlist)):
+        grouped=defaultdict(list)
+        for row in rows:
+            if row.get("date"):grouped[row["date"]].append(row)
+        daily[category]={day:summarize(items) for day,items in sorted(grouped.items(),reverse=True)}
+    # Full retained history, bounded to keep the static site reasonably sized.
+    # Day/week totals always use the untruncated daily aggregates above.
+    history_limit=1800
     return {
+        "daily":daily,
         "summary":{
             "main":summarize(main),
             "market_probabilities":{m:summarize(markets[m]) for m in MARKETS},
@@ -275,10 +287,10 @@ def grade(forecasts,halftimes,coupons,scores,today):
             "coupon_dependency":dependencies
         },
         "entries":{
-            "main":display(main),
-            "halftime_research":display(hlist),
-            "simulated_coupons":display(ticket_rows),
-            "single_research":display(single_rows)
+            "main":main[:history_limit],
+            "halftime_research":hlist[:history_limit],
+            "simulated_coupons":ticket_rows[:history_limit],
+            "single_research":single_rows[:history_limit]
         },
         "counts":{"forecast_matches":len(forecasts),"halftime_matches":len(halftimes),
                   "simulated_coupons":len(ticket_rows),"single_research":len(single_rows)}
