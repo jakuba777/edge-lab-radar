@@ -57,7 +57,7 @@ function generate(){
  result.matches_eligible=matches.length;
  const seen=new Set();
  for(const profile of ['selective','balanced','contrarian']){
-  for(const count of [2,3,4]){
+  for(const count of [4,5]){
    for(const c of core.createCoupons(matches,profile,count,3)){
     const record=packCoupon(c);if(!seen.has(record.id)){seen.add(record.id);result.candidates.push(record);}
    }
@@ -68,13 +68,20 @@ function generate(){
  const days=[...new Set(matches.map(m=>m.date))].sort().slice(0,8);
  for(const day of days){
   const daily=core.forSelectedDay(matches,day);
-  for(const [count,minThreshold] of [[2,5],[3,8],[4,8],[5,10]]){
+  for(const [count,minThreshold] of [[4,8],[5,10]]){
    for(const c of core.createCoupons(daily,'high_odds',count,2,{minThreshold})){
     // A daily coupon must not silently contain a leg from a different day.
     if(c.legs.some(leg=>leg.match.date!==day))continue;
     const record=packCoupon(c);
     if(!seen.has(record.id)){seen.add(record.id);result.candidates.push(record);}
    }
+  }
+ }
+ // Cross-day virtual scenarios, preserving unique matches and no fabricated quotes.
+ for(const count of [4,5]){
+  for(const c of core.createCoupons(matches,'high_odds',count,4,{minThreshold:count===4?8:10})){
+   if(new Set(c.legs.map(l=>l.match.date)).size<2)continue;
+   const record=packCoupon(c);if(!seen.has(record.id)){seen.add(record.id);result.candidates.push(record);}
   }
  }
  // Prospective single-event research is archived separately by grade_forecasts.py.
