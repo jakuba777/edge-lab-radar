@@ -72,7 +72,7 @@ async function sync(){
    const p='./data/'+l.id+'/';
    const [rh,fh]=await Promise.all([fetchText(p+'results_2627.csv'),fetchText(p+'fixtures_2627.csv')]);
    const r=validateCSV(rh,'results').filter(x=>isDate(x.date)&&x.home&&x.away&&val(x.ft_home)!==null&&val(x.ft_away)!==null)
-    .map(x=>({date:x.date,home:x.home,away:x.away,hs:val(x.ft_home),as:val(x.ft_away),league:l.name}));
+    .map(x=>({date:x.date,home:x.home,away:x.away,hs:val(x.ft_home),as:val(x.ft_away),hh:val(x.ht_home),ha:val(x.ht_away),time:x.time||'',league:l.name,leagueId:l.id}));
    const f=validateCSV(fh,'fixtures').filter(x=>isDate(x.date)&&x.home&&x.away)
     .map(x=>({date:x.date,home:x.home,away:x.away,time:x.time||'',league:l.name,leagueId:l.id}));
    return{l,results:r,fixtures:f};
@@ -81,6 +81,8 @@ async function sync(){
   if(!ok.length)throw Error('Nie udało się pobrać żadnej ligi. Otwórz stronę po publikacji przez HTTPS; plik lokalny bez katalogu data nie zadziała.');
   S.meta=meta;S.leagues=ok.map(x=>x.l);S.results=ok.flatMap(x=>x.results);S.fixtures=ok.flatMap(x=>x.fixtures);
   // Each league is modeled against its own league's history, never pooled between leagues.
+  const resultIds=new Set(S.results.map(r=>[r.leagueId,r.date,r.home,r.away].join(':')));
+  S.fixtures=S.fixtures.filter(f=>!resultIds.has([f.leagueId,f.date,f.home,f.away].join(':')));
   S.modeled=S.fixtures.map((f,i)=>({id:`${f.leagueId}:${f.date}:${f.home}:${f.away}`,f,m:model(f,S.results.filter(r=>r.league===f.league))}));
   S.loaded=true;
   const ageHours=(Date.now()-new Date(meta.retrieved_at_utc).getTime())/3600000;
@@ -133,6 +135,23 @@ function renderAll(stale=false){
  const avail=S.modeled.filter(x=>x.m.ok&&isUpcoming(x.f)&&dateGap(x.f.date,today())<=14).sort(byKickoff);
  builder.innerHTML='<option value="">Wybierz mecz</option>'+avail.map(x=>`<option value="${safe(x.id)}">${safe(x.f.date)} · ${safe(x.f.home)} – ${safe(x.f.away)}</option>`).join('');if(avail.some(x=>x.id===old))builder.value=old;
  renderMatches();
+ renderOverview();
+}
+function renderOverview(){
+ const root=$('overview');if(!root)return;
+ const now=today(), age=(Date.now()-Date.parse(S.meta.retrieved_at_utc))/3600000;
+ const status=f=>window.EDGEWINDOW.status(f,new Date(),age);
+ const groups=[['Dzisiaj · godzina źródłowa',S.modeled.filter(x=>x.f.date===now&&isUpcoming(x.f))],['Dzisiaj · status niepotwierdzony',S.modeled.filter(x=>x.f.date===now&&!isUpcoming(x.f))],['Kolejne dni',S.modeled.filter(x=>x.f.date>now&&dateGap(x.f.date,now)<=14)]];
+ root.innerHTML=groups.map(([label,items])=>'<details class="panel" open><summary>'+safe(label)+' ('+items.length+')</summary>'+items.sort((a,b)=>kickoffKey(a.f).localeCompare(kickoffKey(b.f))||(b.m.score||0)-(a.m.score||0)).map(x=>card(x)).join('')+'</details>').join('');
+ const done=S.results.filter(r=>dateGap(now,r.date)>=0&&dateGap(now,r.date)<=7).sort((a,b)=>b.date.localeCompare(a.date)||kickoffKey(b).localeCompare(kickoffKey(a)));
+ root.innerHTML+='<details class="panel"><summary>Rozegrane · wyniki źródłowe ('+done.length+')</summary>'+done.map(r=>'<div class="data-row"><span>'+safe(r.date+' · '+r.home+' – '+r.away)+'</span><strong>'+safe(r.hs+':'+r.as)+'</strong></div>').join('')+'</details>';
+}
+async function renderScoreboard(){
+ const root=$('overview-score');if(!root)return;
+ try{const d=await fetchJSON('./data/track_record.json');if(d.status!=='ready'||!d.summary?.main)throw Error('Brak gotowego raportu');
+ const fields=[['Główne prognozy',d.summary.main],['Kupony wirtualne',d.summary.simulated_coupons],['Pojedyncze',d.summary.single_research]];
+ root.innerHTML=fields.filter(x=>x[1]).map(([name,v])=>'<div class="data-row"><span>'+safe(name)+' · '+safe(v.pending??0)+' oczekuje</span><strong>'+safe(v.hit)+'/'+safe(v.scored)+' · '+(v.scored?pct(v.hit/v.scored):'—')+'</strong></div>').join('')+'<p class="caption">Brier główny: '+safe(d.summary.main.brier??'—')+' · granica rozliczenia: '+safe(d.settle_only_dates_before_warsaw??'brak daty')+' · wyniki raportu źródłowego, bez niezależnej weryfikacji.</p>';
+ }catch(e){root.textContent='Raport skuteczności niedostępny: '+e.message;}
 }
 function renderMatches(){
  if(!S.loaded)return;
@@ -144,13 +163,16 @@ function renderMatches(){
 function openDetail(id){
  const x=S.modeled.find(z=>z.id===id);if(!x)return;
  const f=x.f,m=x.m;
- const history=S.results.filter(r=>r.league===f.league&&r.date<f.date&&(r.home===f.home||r.away===f.away)).slice(-16);
+ const history=S.results.filter(r=>r.league===f.league&&r.date<f.date&&[r.home,r.away].some(t=>t===f.home||t===f.away)).sort((a,b)=>a.date.localeCompare(b.date)).slice(-16);
  let out=`<p class="kicker">${safe(f.league)} · ${safe(f.date)}</p><h2>${safe(f.home)} – ${safe(f.away)}</h2><p class="caption">Źródło: open-matchday · sezon 2026/27</p>`;
  if(m.ok){out+=`<div class="detail-stats"><div>Gole gospodarzy (λ)<strong>${num(m.lambdaH)}</strong></div><div>Gole gości (λ)<strong>${num(m.lambdaA)}</strong></div></div>`;
- out+=marketDefs.slice(0,6).map(z=>`<div class="data-row"><span>${safe(z.label)}</span><span>${pct(m.probs[z.id])}</span></div>`).join('');
+ out+=[['Wygrana gospodarzy',(h,a)=>h>a],['Remis',(h,a)=>h===a],['Wygrana gości',(h,a)=>a>h]].map(([label,fn])=>'<div class="data-row"><span>'+label+'</span><span>'+pct(probability(m.grid,fn))+'</span></div>').join('');
+ out+=marketDefs.map(z=>`<div class="data-row"><span>${safe(z.label)}</span><span>${pct(m.probs[z.id])}</span></div>`).join('');
  out+=`<p class="caption">Model Poissona, N=${m.nH}/${m.nA}, brak kalibracji. Wahania kursów, składów i motywacji nie są uwzględniane.</p>`;
  }else out+=`<p class="alert compact">${safe(m.reason)} Nie pokazujemy fikcyjnych prawdopodobieństw.</p>`;
  out+=`<div class="separator" style="margin-top:15px"></div><p class="kicker" style="margin-top:12px">HISTORYCZNE WYNIKI (OSTATNIE DOSTĘPNE)</p>`;
+ const validHT=history.filter(r=>Number.isInteger(r.hh)&&Number.isInteger(r.ha)&&r.hh>=0&&r.ha>=0&&r.hh<=r.hs&&r.ha<=r.as);
+ if(validHT.length){const n=validHT.length;out+='<p class="caption">Historia obu drużyn (nie prognoza): gol w 1. połowie '+validHT.filter(r=>r.hh+r.ha>0).length+'/'+n+'; 1/2 '+validHT.filter(r=>r.hh>r.ha&&r.hs<r.as).length+'/'+n+'; 2/1 '+validHT.filter(r=>r.hh<r.ha&&r.hs>r.as).length+'/'+n+'.</p>';}
  out+=history.length?history.slice(-8).reverse().map(r=>`<div class="data-row"><span>${safe(r.date)} · ${safe(r.home)} – ${safe(r.away)}</span><span>${r.hs}:${r.as}</span></div>`).join(''):'<p class="caption">Brak wcześniejszych meczów w źródle.</p>';
  $('detail-body').innerHTML=out;
  const dia=$('detail-dialog');if(typeof dia.showModal==='function')dia.showModal();else dia.setAttribute('open','');
@@ -191,7 +213,8 @@ if(typeof document!=='undefined')document.addEventListener('DOMContentLoaded',()
  $('builder-match').addEventListener('change',()=>{$('builder-result').textContent='Wybierz 2–3 zdarzenia, potem przeanalizuj.';S.selectedBuilder=null;});
  $('analyze-builder').addEventListener('click',analyzeBuilder);
  $('odds').addEventListener('input',showQuote);
- sync();
+ sync();renderScoreboard();
+ $('refresh').addEventListener('click',renderScoreboard);
 });
 // Expose *only* pure functions in test runner (Node); not on window in a browser.
 if(typeof module!=='undefined'&&module.exports){module.exports={parseCSV,isDate,poiss,makeGrid,probability,model,marketDefs,safe,dateGap};}
