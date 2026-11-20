@@ -167,7 +167,7 @@ def read_coupon_forecasts(meta,body):
     items=[]
     for raw in body.get("candidates",[])[:100]:
         legs=raw.get("legs")
-        if not isinstance(legs,list) or not 1<=len(legs)<=4:continue
+        if not isinstance(legs,list) or not 1<=len(legs)<=5:continue
         if (len(legs)==1)!=(raw.get("profile")=="single"):continue
         data=[]
         for leg in legs:
