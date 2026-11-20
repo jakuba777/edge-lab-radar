@@ -167,7 +167,7 @@
   return selected;
  }
  function buildMultis(matches,profile,count,max=5,options={}){
-  if(!Number.isInteger(count)||count<2||count>4)return [];
+  if(!Number.isInteger(count)||count<2||count>5)return [];
   const pool=[];
   for(const match of matches)pool.push(...candidatesFor(match,profile));
   pool.sort((a,b)=>b.score-a.score||a.match.date.localeCompare(b.match.date));
