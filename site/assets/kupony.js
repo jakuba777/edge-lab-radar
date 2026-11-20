@@ -172,7 +172,7 @@
    root.innerHTML='<div class="coupon-nothing">Pozostałe dzisiaj: '+remaining.length+' spotkań, ale brak modelu nawet przy obniżonej próbie 4/4. Nie zgadujemy prawdopodobieństw.</div>';
    return;
   }
-  root.innerHTML=researched.slice(0,14).map(m=>{
+  root.innerHTML=researched.slice(0,50).map(m=>{
    const model=m.exploratoryModel;
    const status=model.exploratory?'MAŁA PRÓBA · TEST':'STANDARDOWA PRÓBA · TEST';
    const type='ŹRÓDŁOWA GODZINA · WYMAGA POTWIERDZENIA';
@@ -231,7 +231,7 @@
   const min=raw[0],max=raw[1];
   const chosenDay=$('price-day').value;
   const eligible=scannerFixtures().filter(m=>chosenDay==='all'||m.date===chosenDay);
-  state.priceEntries=P.discover(eligible,C.MARKETS,{min,max,limit:12});
+  state.priceEntries=P.discover(eligible,C.MARKETS,{min,max,limit:50});
   $('price-lab-day').textContent=chosenDay==='all'?'Najbliższe 14 dni':chosenDay||'Brak dnia';
   $('price-lab-count').textContent=state.priceEntries.length+' alternatyw modelowych';
   if(!state.priceEntries.length){
