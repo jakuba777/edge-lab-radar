@@ -160,6 +160,29 @@ function renderMatches(){
  $('matches-count').textContent=`Znaleziono ${items.length} spotkań; godziny z danych źródłowych mogą być przesunięte.`;
  $('all-matches').innerHTML=items.length?items.slice(0,70).map(x=>card(x)).join(''):'<div class="panel empty">Brak meczów spełniających filtry.</div>';
 }
+function halfResearch(f){
+ const rows=S.results.filter(r=>r.league===f.league&&r.date<f.date&&Number.isInteger(r.hh)&&Number.isInteger(r.ha)&&r.hh>=0&&r.ha>=0&&r.hh<=r.hs&&r.ha<=r.as).sort((a,b)=>a.date.localeCompare(b.date));
+ const h=rows.filter(r=>r.home===f.home).slice(-10),a=rows.filter(r=>r.away===f.away).slice(-10);
+ const defs=[['Gol w 1. połowie',r=>r.hh+r.ha>0],['Minimum 2 gole w 1. połowie',r=>r.hh+r.ha>=2],['Gospodarze strzelą w 1. połowie',r=>r.hh>0],['Goście strzelą w 1. połowie',r=>r.ha>0],['1 do przerwy',r=>r.hh>r.ha],['X do przerwy',r=>r.hh===r.ha],['2 do przerwy',r=>r.hh<r.ha],['Gol w 2. połowie',r=>r.hs+r.as>r.hh+r.ha],['1/2',r=>r.hh>r.ha&&r.hs<r.as],['2/1',r=>r.hh<r.ha&&r.hs>r.as],['1/2 lub 2/1',r=>(r.hh>r.ha&&r.hs<r.as)||(r.hh<r.ha&&r.hs>r.as)]];
+ const count=(xs,fn)=>xs.filter(fn).length;
+ const fmt=(xs,fn)=>xs.length?count(xs,fn)+'/'+xs.length+' ('+pct(count(xs,fn)/xs.length)+')':'—';
+ let out='<h3>Połowy i łamaki · historia</h3><p class="caption">G: ostatnie mecze gospodarzy u siebie; A: gości na wyjeździe; L: liga. Tylko kompletne wyniki HT/FT sprzed meczu. To częstości, nie skalibrowane prognozy.</p>';
+ for(const [label,fn] of defs)out+='<div class="data-row"><span>'+safe(label)+'<small class="caption"> · G '+fmt(h,fn)+' · A '+fmt(a,fn)+'</small></span><strong>L '+fmt(rows,fn)+'</strong></div>';
+ return out;
+}
+function matchEvidence(f,m){
+ const past=S.results.filter(r=>r.league===f.league&&r.date<f.date).sort((a,b)=>a.date.localeCompare(b.date));
+ let out='<h3>Obserwacje analityczne</h3>';
+ for(const team of [f.home,f.away]){
+ const rows=past.filter(r=>r.home===team||r.away===team).slice(-5);
+ if(!rows.length)continue;
+ const goals=rows.map(r=>r.home===team?r.hs:r.as),against=rows.map(r=>r.home===team?r.as:r.hs);
+ const wins=goals.filter((g,i)=>g>against[i]).length,draws=goals.filter((g,i)=>g===against[i]).length;
+ out+='<p>'+safe(team)+': '+wins+' W / '+draws+' R / '+(rows.length-wins-draws)+' P; gol w '+goals.filter(g=>g>0).length+'/'+rows.length+'; stracony gol w '+against.filter(g=>g>0).length+'/'+rows.length+'.</p>';
+ }
+ out+='<p class="caption">Kontrola wartości: bez aktualnego kursu i potwierdzonej kalibracji nie ma podstaw do wskazania zyskownego typu. Małe próby i rozbieżności modelu z historią wymagają ostrożności.</p>';
+ return out;
+}
 function openDetail(id){
  const x=S.modeled.find(z=>z.id===id);if(!x)return;
  const f=x.f,m=x.m;
@@ -167,9 +190,11 @@ function openDetail(id){
  let out=`<p class="kicker">${safe(f.league)} · ${safe(f.date)}</p><h2>${safe(f.home)} – ${safe(f.away)}</h2><p class="caption">Źródło: open-matchday · sezon 2026/27</p>`;
  if(m.ok){out+=`<div class="detail-stats"><div>Gole gospodarzy (λ)<strong>${num(m.lambdaH)}</strong></div><div>Gole gości (λ)<strong>${num(m.lambdaA)}</strong></div></div>`;
  out+=[['Wygrana gospodarzy',(h,a)=>h>a],['Remis',(h,a)=>h===a],['Wygrana gości',(h,a)=>a>h]].map(([label,fn])=>'<div class="data-row"><span>'+label+'</span><span>'+pct(probability(m.grid,fn))+'</span></div>').join('');
- out+=marketDefs.map(z=>`<div class="data-row"><span>${safe(z.label)}</span><span>${pct(m.probs[z.id])}</span></div>`).join('');
+ out+='<h3>Gole · cały mecz</h3>';
+ out+=marketDefs.filter(z=>z.id!=='x').map(z=>`<div class="data-row"><span>${safe(z.label)}</span><span>${pct(m.probs[z.id])}</span></div>`).join('');
  out+=`<p class="caption">Model Poissona, N=${m.nH}/${m.nA}, brak kalibracji. Wahania kursów, składów i motywacji nie są uwzględniane.</p>`;
  }else out+=`<p class="alert compact">${safe(m.reason)} Nie pokazujemy fikcyjnych prawdopodobieństw.</p>`;
+ out+=halfResearch(f)+matchEvidence(f,m);
  out+=`<div class="separator" style="margin-top:15px"></div><p class="kicker" style="margin-top:12px">HISTORYCZNE WYNIKI (OSTATNIE DOSTĘPNE)</p>`;
  const validHT=history.filter(r=>Number.isInteger(r.hh)&&Number.isInteger(r.ha)&&r.hh>=0&&r.ha>=0&&r.hh<=r.hs&&r.ha<=r.as);
  if(validHT.length){const n=validHT.length;out+='<p class="caption">Historia obu drużyn (nie prognoza): gol w 1. połowie '+validHT.filter(r=>r.hh+r.ha>0).length+'/'+n+'; 1/2 '+validHT.filter(r=>r.hh>r.ha&&r.hs<r.as).length+'/'+n+'; 2/1 '+validHT.filter(r=>r.hh<r.ha&&r.hs>r.as).length+'/'+n+'.</p>';}
