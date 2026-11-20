@@ -110,12 +110,12 @@ function isUpcoming(f){
 }
 function byKickoff(a,b){return kickoffKey(a.f).localeCompare(kickoffKey(b.f))||(b.score||0)-(a.score||0);}
 function topCandidates(){
- const from=S.modeled.filter(x=>x.m.ok&&isUpcoming(x.f)&&dateGap(x.f.date,today())<=14);
+ const from=S.modeled.filter(x=>x.m.ok&&isUpcoming(x.f)&&dateGap(x.f.date,today())>=0&&dateGap(x.f.date,today())<7);
  return from.map(x=>{
   const interested=['o15','o25','u35','btts'];
-  const best=interested.map(id=>({id,p:x.m.probs[id]})).sort((a,b)=>Math.abs(b.p-.5)-Math.abs(a.p-.5))[0];
+  const best=interested.map(id=>({id,p:x.m.probs[id]})).sort((a,b)=>b.p-a.p)[0];
   return{...x,market:best,score:x.m.score};
- }).sort(byKickoff).slice(0,16);
+ }).sort((a,b)=>a.f.date.localeCompare(b.f.date)||b.score-a.score).filter((x,i,all)=>all.slice(0,i).filter(y=>y.f.date===x.f.date).length<50).sort(byKickoff);
 }
 function card(x,detailed=false){
  const f=x.f,m=x.m,caption=m.ok?`Próba ${m.nH} dom / ${m.nA} wyjazd · model eksperymentalny`:`Próba ${m.nH}/4 dom · ${m.nA}/4 wyjazd`;
@@ -126,7 +126,7 @@ function renderAll(stale=false){
  const all=S.modeled.filter(x=>isUpcoming(x.f)&&dateGap(x.f.date,today())<=14).sort(byKickoff);
  S.candidates=stale?[]:topCandidates();
  $('candidates').innerHTML=S.candidates.length?S.candidates.map(x=>card(x)).join(''):'<div class="panel empty">Dziś brak modeli z wystarczającą historią lub źródła są nieaktualne. Nie wymuszamy typów.</div>';
- $('count-picks').textContent=`${S.candidates.length} analiz`;
+ $('count-picks').textContent=`${S.candidates.filter(x=>x.f.date===today()).length}/50 dziś · ${S.candidates.length} w 7 dni`;
  const picked=new Set(S.candidates.map(x=>x.id));
  const more=all.filter(x=>!picked.has(x.id)).slice(0,30);
  $('more-matches').innerHTML=more.length?more.map(x=>card(x)).join(''):'<div class="panel empty">Brak kolejnych meczów w tym okresie.</div>';
