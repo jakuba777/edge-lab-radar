@@ -20,8 +20,11 @@ const server=http.createServer((req,res)=>{
  const executable=['google-chrome','chromium','chromium-browser'].find(x=>spawnSync('which',[x]).status===0);
  assert.ok(executable,'Chrome/Chromium required');
  dir=fs.mkdtempSync(path.join(os.tmpdir(),'edge-ux-'));
- chrome=spawn(executable,['--headless','--no-sandbox','--disable-dev-shm-usage','--disable-gpu','--remote-debugging-port=0','--user-data-dir='+dir,'about:blank'],{stdio:'ignore'});
- for(let i=0;i<100&&!fs.existsSync(path.join(dir,'DevToolsActivePort'));i++)await delay(100);
+ let chromeError='';
+ chrome=spawn(executable,['--headless=new','--no-sandbox','--disable-dev-shm-usage','--disable-gpu','--no-first-run','--no-default-browser-check','--remote-debugging-port=0','--user-data-dir='+dir,'about:blank'],{stdio:['ignore','ignore','pipe']});
+ chrome.stderr.on('data',d=>{chromeError=(chromeError+d.toString()).slice(-4000);});
+ for(let i=0;i<300&&!fs.existsSync(path.join(dir,'DevToolsActivePort'))&&chrome.exitCode===null;i++)await delay(100);
+ assert.ok(fs.existsSync(path.join(dir,'DevToolsActivePort')),'Chrome did not start: '+chromeError);
  const port=fs.readFileSync(path.join(dir,'DevToolsActivePort'),'utf8').split('\n')[0];
  const targets=await (await fetch('http://127.0.0.1:'+port+'/json/list')).json();
  ws=new WebSocket(targets.find(t=>t.type==='page').webSocketDebuggerUrl);
