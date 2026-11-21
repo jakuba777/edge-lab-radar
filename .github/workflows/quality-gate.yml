@@ -7,6 +7,8 @@ on:
       - 'site/assets/coupon-core.js'
       - 'site/assets/results-dashboard.js'
       - 'site/assets/calibration-audit.js'
+      - 'site/assets/ux-v3.css'
+      - 'site/**/*.html'
       - 'site/assets/app.js'
       - 'site/assets/daily-research.js'
       - 'site/analiza.html'
@@ -40,3 +42,6 @@ jobs:
         run: node --test tests/*.test.cjs tests/test_*.cjs
       - name: Check coupon browser code syntax
         run: node --check site/assets/coupon-core.js && node --check site/assets/results-dashboard.js
+
+      - name: Chromium mobile layout and contrast smoke test
+        run: node tests/ux-browser.cjs

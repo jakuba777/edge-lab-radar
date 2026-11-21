@@ -147,7 +147,7 @@ function renderOverview(){
  const now=today(), age=(Date.now()-Date.parse(S.meta.retrieved_at_utc))/3600000;
  const status=f=>window.EDGEWINDOW.status(f,new Date(),age);
  const groups=[['Dzisiaj · godzina źródłowa',S.modeled.filter(x=>x.f.date===now&&isUpcoming(x.f))],['Dzisiaj · status niepotwierdzony',S.modeled.filter(x=>x.f.date===now&&!isUpcoming(x.f))],['Kolejne dni',S.modeled.filter(x=>x.f.date>now&&dateGap(x.f.date,now)<=14)]];
- root.innerHTML=groups.map(([label,items])=>'<details class="panel" open><summary>'+safe(label)+' ('+items.length+')</summary>'+items.sort((a,b)=>kickoffKey(a.f).localeCompare(kickoffKey(b.f))||(b.m.score||0)-(a.m.score||0)).map(x=>card(x)).join('')+'</details>').join('');
+ root.innerHTML=groups.map(([label,items])=>'<details class="panel"'+(label==='Dzisiaj · godzina źródłowa'?' open':'')+'><summary>'+safe(label)+' ('+items.length+')</summary>'+items.sort((a,b)=>kickoffKey(a.f).localeCompare(kickoffKey(b.f))||(b.m.score||0)-(a.m.score||0)).map(x=>card(x)).join('')+'</details>').join('');
  const done=S.results.filter(r=>dateGap(now,r.date)>=0&&dateGap(now,r.date)<=7).sort((a,b)=>b.date.localeCompare(a.date)||kickoffKey(b).localeCompare(kickoffKey(a)));
  root.innerHTML+='<details class="panel"><summary>Rozegrane · wyniki źródłowe ('+done.length+')</summary>'+done.map(r=>'<div class="data-row"><span>'+safe(r.date+' · '+r.home+' – '+r.away)+'</span><strong>'+safe(r.hs+':'+r.as)+'</strong></div>').join('')+'</details>';
 }
@@ -229,7 +229,7 @@ if(typeof document!=='undefined')document.addEventListener('DOMContentLoaded',()
  $('subdate').textContent=new Intl.DateTimeFormat('pl-PL',{timeZone:'Europe/Warsaw',weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date());
  $('from-date').value=today();
  document.querySelectorAll('[data-screen]').forEach(b=>b.addEventListener('click',()=>{
-  document.querySelectorAll('[data-screen]').forEach(q=>q.classList.toggle('is-active',q===b));
+  document.querySelectorAll('[data-screen]').forEach(q=>{q.classList.toggle('is-active',q===b);q.setAttribute('aria-pressed',String(q===b));});
   document.querySelectorAll('.screen').forEach(q=>q.classList.toggle('is-active',q.id==='screen-'+b.dataset.screen));
   window.scrollTo({top:0,behavior:'instant'});
  }));

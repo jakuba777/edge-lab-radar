@@ -28,7 +28,8 @@ for(const [page,legacy] of [
  const html=fs.readFileSync('site/'+page,'utf8');
  assert.match(html,/assets\/contrast-v21\.css\?v=(21|22)/,page+' missing new contrast stylesheet');
  const styles=[...html.matchAll(/<link[^>]*rel="stylesheet"[^>]*>/g)].map(x=>x[0]);
- assert.ok(styles.at(-1).includes('contrast-v21.css'),page+' contrast stylesheet must load last');
+ assert.ok(styles.at(-1).includes('ux-v3.css'),page+' unified UX stylesheet must load last');
+ assert.ok(styles.at(-2).includes('contrast-v21.css'),page+' legacy contrast must precede unified UX');
  assert.ok(html.includes('assets/'+legacy),page+' lost legacy CSS');
  assert.ok(html.indexOf('assets/'+legacy)<html.indexOf('assets/contrast-v21.css'),page+' legacy CSS after contrast');
  assert.ok(html.indexOf('assets/editorial.css')<html.indexOf('assets/contrast-v21.css'),page+' editorial must precede contrast');
