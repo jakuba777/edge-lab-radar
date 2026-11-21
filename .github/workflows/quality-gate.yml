@@ -35,7 +35,7 @@ jobs:
         with:
           python-version: '3.11'
       - name: Validate market coverage and settlement
-        run: python -m unittest discover -s tests -p 'test_settlement_markets.py' -v
+        run: python -m unittest discover -s tests -v
       - name: Check grader syntax
         run: python -m py_compile scripts/grade_forecasts.py
       - name: Run coupon model regression tests

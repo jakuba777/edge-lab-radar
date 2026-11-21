@@ -99,3 +99,6 @@ body.edge-v3.standalone-lab{max-width:960px;padding:20px 16px calc(90px + env(sa
 @media(max-width:420px){.edge-v3 .cardhead,.edge-v3 .coupon-evening-head,.edge-v3 .price-lab-item-top{flex-wrap:wrap}.edge-v3 .two-fields,.edge-v3 .track-controls{grid-template-columns:1fr}.edge-v3 .coupon-control-bottom{flex-wrap:wrap}.edge-v3 .coupon-control-bottom .action{width:100%}.edge-v3 .track-table .track-line{grid-template-columns:minmax(0,1.3fr) repeat(3,minmax(0,.8fr))!important;font-size:12px!important;gap:4px!important}.edge-v3 .track-dash-result-head{flex-direction:column}.edge-v3 .coupon-evening-probs strong{font-size:16px!important}}
 @media(max-width:340px){.edge-v3 :is(.market-grid,.coupon-profiles,.hub-market-grid,.row){grid-template-columns:1fr}.edge-v3 .metrics{gap:4px}.edge-v3 .metrics span{font-size:11px}}
 @media(prefers-reduced-motion:reduce){.edge-v3 *{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* Older standalone pages did not inherit the shared box model. */
+body.edge-v3,body.edge-v3 *,body.edge-v3 *::before,body.edge-v3 *::after{box-sizing:border-box}

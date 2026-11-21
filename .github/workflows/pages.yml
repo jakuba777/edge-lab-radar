@@ -78,7 +78,7 @@ jobs:
           if-no-files-found: error
       - name: Rozlicz zapisane prognozy i symulowane kupony
         continue-on-error: true
-        timeout-minutes: 3
+        timeout-minutes: 12
         env:
           GH_TOKEN: ${{ github.token }}
         run: python scripts/grade_forecasts.py
