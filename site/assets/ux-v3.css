@@ -1,0 +1,101 @@
+/* EDGE LAB 3 — unified, mobile-first research interface.
+   Loaded after legacy styles. Important declarations in a named layer supersede
+   older unlayered important declarations without altering the data/model code. */
+@layer edgeUX {
+body.edge-v3 {
+ color-scheme:light;--bg:#f3f6fa;--card:#ffffff;--card2:#edf2f7;--line:#dce3eb;
+ --text:#142236;--muted:#46576c;--teal:#116454;--amber:#86530f;--danger:#9b352b;
+ --surface:#edf2f7;--edge-ink:#142236;--edge-secondary:#46576c;--edge-forest:#116454;
+ background:var(--bg)!important;color:var(--text)!important;
+ font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif!important;
+}
+html:has(body.edge-v3){background:#f3f6fa!important;color-scheme:light!important;scroll-padding-bottom:100px}
+body.edge-v3 :is(h1,h2,h3,h4){color:var(--text)!important;line-height:1.25!important;letter-spacing:-.025em}
+body.edge-v3 :is(.shell,.lab){width:min(100%,960px)!important;max-width:960px!important;padding:calc(18px + env(safe-area-inset-top)) clamp(13px,3vw,28px) calc(104px + env(safe-area-inset-bottom))!important;margin:0 auto}
+body.edge-v3 :is(.panel,.pane,.match-card,.coupon-evening-card,.coupon-card,.coupon-profile,.coupon-day-picker,.coupon-high-controls,.coupon-research-link,.coupon-ticket,.track-entry,.track-stat,.scenario-card,.cmp-match,.verified-card,.verified-guide,.verified-sources,.market-match,.track-dash-card){background:#ffffff!important;color:var(--text)!important;border:1px solid var(--line)!important;border-radius:14px!important;box-shadow:0 1px 3px #14223609!important;min-width:0}
+body.edge-v3 :is(.coupon-leg,.coupon-metric,.coupon-evening-probs>div,.track-leg,.detail-stats>div,.metrics>div,.live-metrics>div,.live-replay-stats>div,.sc-leg,.sc-metrics>div,.market-option,.coupon-leg-rationale,.coupon-model-odds,.coupon-day-empty,.coupon-nothing,.track-dependence,.market-output,.market-source,.hub-metric,.hub-ht,.cmp-match .values>div,.price-lab-metrics>div,.track-dash-day,.track-dash-result){background:#edf2f7!important;color:var(--text)!important;border-color:#d5e0ea!important;border-radius:10px!important;min-width:0}
+body.edge-v3 :is(.price-lab,.source-panel,.live-status,.track-top,.coupon-status,.coupon-daily-audit,.coupon-evening-lab){background:#fff!important;color:var(--text)!important}
+body.edge-v3 :is(.caption,.subtitle,.hint,.muted:not(.chip),.card-foot,.minor,.sub,.coupon-truth,.coupon-explain,.coupon-course-result,.coupon-footer,.track-legend,.track-foot,.track-history-group,.track-daily-label,.track-empty,.small-result,.live-foot,.live-mark,.lab-footer,.verified-meta,.meta,.sc-foot,.sc-feedback,.audit-header,.cmp-grid:first-child){color:var(--muted)!important;background:transparent!important}
+body.edge-v3 :is(.panel,.pane,.coupon-card,.coupon-evening-card,.coupon-profile,.coupon-research-link,.track-entry,.track-stat,.live-replay,.scenario-card,.cmp-match,.market-output,.verified-card) :is(p,small,label,summary,.teams,.market,.score,.coupon-evening-head,.coupon-evening-probs span,.coupon-evening-probs small,.coupon-evening-copy,.coupon-cardhead,.coupon-leg-rationale,.coupon-pill){color:var(--text)!important}
+body.edge-v3 :is(.panel,.pane,.coupon-card,.coupon-profile,.coupon-research-link,.coupon-evening-card,.track-entry,.track-stat,.track-leg,.live-replay,.scenario-card) :is(small,.caption,.muted,.minor,.sub,.coupon-truth,.coupon-course-result,.coupon-evening-meta,.coupon-evening-note){color:var(--muted)!important;background:transparent!important}
+body.edge-v3 :is(.coupon-profile,.coupon-card,.coupon-leg,.coupon-evening-card,.coupon-evening-probs,.coupon-research-link,.coupon-metric,.track-entry,.track-stat,.track-leg,.live-metrics,.live-replay-stats,.sc-metrics,.hub-metric) strong{color:var(--text)!important}
+body.edge-v3 :is(.eyebrow,.kicker,.cardleague,.lead .prob,.coupon-leg .prob,.coupon-metric strong.light,.coupon-evening-probs strong,.coupon-leg .market,.hub-market strong,.metrics strong,.detail-stats strong,.sc-leg .p,.cmp-stat b,.cmp-match .values strong,.track-daily-hit,.track-state.hit,.track-dash-state.hit,.track-stat strong.good,.cmp-grid .good,.delta.positive,.good:not(.chip),.verified-market){color:#116454!important}
+body.edge-v3 :is(.track-state.miss,.track-dash-state.miss,.track-daily-miss,.bad,.delta.negative,.cmp-grid .bad,.danger,.error,.market-error){color:#9b352b!important}
+body.edge-v3 :is(.track-state.pending,.track-dash-state.pending){color:#80540d!important}
+body.edge-v3 :is(.chip,.track-state,.coupon-pill,.version,.coupon-edition,.track-version,.live-version,.live-label,.verified-tier,.ht-chip){background:#edf2f7!important;color:#34465b!important;border:1px solid #d7e0e9!important;white-space:normal!important;line-height:1.35!important}
+body.edge-v3 :is(.chip.good,.track-state.hit,.ht-chip.good,.verified-tier.tier-A){background:#e3f3ec!important;color:#116454!important;border-color:#b9dfcc!important}
+body.edge-v3 :is(.chip.warn,.track-state.pending,.verified-tier.tier-B){background:#fff0d5!important;color:#80540d!important;border-color:#ead1a2!important}
+body.edge-v3 :is(.track-state.miss,.verified-tier.tier-C){background:#fce9e5!important;color:#9b352b!important;border-color:#edc4bb!important}
+body.edge-v3 :is(.alert,.warning,.coupon-warning,.track-note,.live-alert,.sc-notice,.verified-warning,.cmp-alert,.track-daily-warning,.coupon-overlap,.live-rating){background:#fff4df!important;color:#75450c!important;border-color:#dfc28a!important}
+body.edge-v3 :is(.alert,.warning,.coupon-warning,.track-note,.live-alert,.sc-notice,.verified-warning,.cmp-alert,.track-daily-warning,.coupon-overlap,.live-rating) :is(p,span,small,strong,a){color:#75450c!important}
+body.edge-v3 :is(.success,.live-rating.positive,.live-outcome,.cmp-alert.ok,.track-daily-insight,.verified-date-state){background:#e7f4ed!important;color:#145a46!important;border-color:#c0dfd0!important}
+body.edge-v3 :is(.error-box,.verified-error){background:#fce9e5!important;color:#9b352b!important;border-color:#e4b5aa!important}
+body.edge-v3 :is(.field,input:not([type=checkbox]):not([type=radio]),select,textarea){background:#fff!important;color:#142236!important;border:1px solid #8597aa!important;border-radius:9px!important;min-height:46px!important;font-size:16px!important;max-width:100%;min-width:0}
+body.edge-v3 :is(input,textarea)::placeholder{color:#576b80!important;opacity:1}
+body.edge-v3 :is(input[type=checkbox],input[type=radio]){accent-color:#116454;flex:none;width:19px;height:19px}
+body.edge-v3 :is(.action,.close-button,.hub-selection button,.live-reveal,#manual-save,.standalone-lab button,.coupon-refresh){background:#116454!important;color:white!important;border:1px solid #116454!important;min-height:44px;border-radius:10px!important;font-weight:750!important}
+body.edge-v3 :is(.market button,.chips button,.hub-market,.coupon-evening-copy,.market-copy,.live-minute,.bet-actions button,.verified-filters button){background:#fff!important;color:#116454!important;border:1px solid #8eb5aa!important;min-height:44px}
+body.edge-v3 :is(.coupon-profile.is-selected,.hub-market[aria-pressed=true],.live-minute.is-active){background:#e2f2eb!important;color:#104d40!important;border:2px solid #116454!important}
+body.edge-v3 :is(.tabs button[aria-pressed=true],.chips button[aria-pressed=true],.verified-filters button[aria-pressed=true]){background:#116454!important;color:white!important}
+body.edge-v3 :is(.tabs,.quicknav){background:#edf2f7!important;border-color:#dce3eb!important}
+body.edge-v3 :is(.tabs button[aria-pressed=false],.tabs button,.quicknav a){color:#30475b}
+body.edge-v3 :is(.action,.close-button,.hub-selection button,.live-reveal,.coupon-refresh):disabled{opacity:.55!important;cursor:not-allowed}
+body.edge-v3 a{color:#116454;text-underline-offset:3px}
+body.edge-v3 :is(.panel,.pane,.coupon-card,.track-entry,.coupon-research-link) a{color:#116454!important}
+body.edge-v3 :is(a,button,select,input,textarea,summary):focus-visible{outline:3px solid #1664b4!important;outline-offset:3px!important}
+body.edge-v3 :is(.edge-feature,.verified-banner,.today-focus,.tools-disclosure){background:#fff!important;color:var(--text)!important;border:1px solid var(--line)!important;border-radius:14px!important}
+body.edge-v3 .today-focus{padding:16px!important}
+body.edge-v3 .edge-audit-grid article,body.edge-v3 .edge-check{background:#fff!important;color:var(--text)!important;border-color:var(--line)!important}
+body.edge-v3 .edge-audit-grid article :is(strong,p),body.edge-v3 .edge-check li{color:var(--text)!important}
+body.edge-v3 .lab .match{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(70px,auto);gap:4px 8px;align-items:start;background:#fff!important;border:1px solid var(--line)!important;border-radius:10px!important;margin:8px 0!important;padding:12px!important;min-height:70px!important;color:var(--text)!important}
+body.edge-v3 .lab .match-teams{grid-column:1;grid-row:1;padding:0!important;min-width:0;overflow-wrap:anywhere}
+body.edge-v3 .lab .match small{grid-column:1;grid-row:2;padding:0!important;margin:0!important;color:var(--muted)!important}
+body.edge-v3 .lab .match-state{position:static!important;grid-column:2;grid-row:1 / span 2;max-width:98px!important;font-size:11px!important;line-height:1.3!important;white-space:normal!important;align-self:center;color:#75450c!important;background:#fff0d5!important}
+body.edge-v3 .lab .match-state.ready{color:#116454!important;background:#e3f3ec!important}
+body.edge-v3 .lab .fixture-pane label{display:block!important}
+body.edge-v3 .lab .fixture-pane select{display:block;width:100%!important;margin:0 0 8px!important}
+body.edge-v3 .hub-market-grid{max-height:none!important;overflow:visible!important}
+body.edge-v3 .hub-selection{position:static!important;bottom:auto!important;background:#edf2f7!important;color:#142236!important;box-shadow:none!important;border:1px solid #d5e0ea!important}
+body.edge-v3 .hub-selection strong{color:#142236!important}
+body.edge-v3 .hub-selection button{background:#116454!important;color:#fff!important}
+body.edge-v3 .editorial-nav{position:fixed!important;bottom:0!important;left:0!important;right:0!important;transform:none!important;width:100%!important;max-width:none!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:4px!important;padding:8px max(10px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left))!important;background:#fff!important;border:0!important;border-top:1px solid #dce3eb!important;border-radius:0!important;z-index:100!important;box-shadow:0 -4px 20px #1422360a!important;backdrop-filter:none!important}
+body.edge-v3 .editorial-nav a{min-height:48px!important;display:flex!important;justify-content:center;align-items:center;color:#46576c!important;font-size:13px!important;font-weight:700!important;padding:8px 4px!important;text-align:center;white-space:normal;border-radius:9px!important}
+body.edge-v3 .editorial-nav a[aria-current=page]{background:#e3f3ec!important;color:#104d40!important;box-shadow:inset 0 -3px #116454}
+body.edge-v3 .tabbar{position:static!important;bottom:auto!important;left:auto!important;right:auto!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:5px!important;background:#fff!important;border:1px solid var(--line)!important;padding:6px!important;margin:12px 0 18px!important;max-width:none!important;width:100%!important;border-radius:12px!important;overflow:visible!important;box-shadow:none!important}
+body.edge-v3 .tabbar button{width:100%!important;max-width:none!important;min-height:44px!important;font-size:13px!important;padding:6px 3px!important;color:#46576c!important;border-radius:8px!important}
+body.edge-v3 .tabbar button span{font-size:12px!important;margin:0!important}
+body.edge-v3 .tabbar button.is-active{background:#e3f3ec!important;color:#104d40!important}
+body.edge-v3 dialog#detail-dialog{background:#fff!important;color:#142236!important;border-color:var(--line)!important;max-height:calc(100dvh - 36px)!important;width:min(calc(100vw - 24px),650px)!important}
+body.edge-v3 #detail-dialog #detail-body :is(p,small,span,strong,h2,h3){color:var(--text)}
+body.edge-v3 #detail-dialog .close-button{position:static!important;margin:12px 18px 18px!important}
+body.edge-v3 .standalone-lab button,body.edge-v3.standalone-lab button{background:#116454!important;color:#fff!important}
+}
+body.edge-v3{margin:0;overflow-wrap:break-word}
+body.edge-v3.standalone-lab{max-width:960px;padding:20px 16px calc(90px + env(safe-area-inset-bottom));margin:auto}
+.edge-v3 :is(h1,h2,h3){margin-block:5px 8px}
+.edge-v3 h1{font-size:clamp(28px,5vw,38px)}
+.edge-v3 h2{font-size:clamp(20px,3vw,25px)}
+.edge-v3 h3{font-size:17px}
+.edge-v3 :is(.caption,.hint,.subtitle,.card-foot,.minor,.track-legend){font-size:13px;line-height:1.5}
+.edge-v3 .section-head{margin-top:24px}
+.edge-v3 :is(.between,.cardhead,.lead,.coupon-cardhead,.coupon-evening-head,.track-entry-top,.live-replay-head,.hub-head,.price-lab-item-top){gap:10px;min-width:0}
+.edge-v3 :is(.between,.cardhead,.lead,.coupon-cardhead,.coupon-evening-head,.track-entry-top,.live-replay-head,.hub-head,.price-lab-item-top)>*{min-width:0;overflow-wrap:anywhere}
+.edge-v3 :is(.prob,.score,.coupon-leg .prob,.track-state){flex-shrink:0;font-variant-numeric:tabular-nums}
+.edge-v3 :is(.metrics,.coupon-metrics,.track-stats,.two-fields,.market-grid,.track-controls,.hub-top,.hub-market-grid,.price-lab-metrics,.live-metrics,.sc-metrics,.row){grid-template-columns:repeat(2,minmax(0,1fr))}
+.edge-v3 .metrics{grid-template-columns:repeat(3,minmax(0,1fr))}
+.edge-v3 :is(.metrics,.coupon-metrics,.track-stats,.two-fields,.market-grid,.track-controls,.hub-top,.hub-market-grid,.price-lab-metrics,.live-metrics,.sc-metrics,.row)>*{min-width:0}
+.edge-v3 .coupon-leg{align-items:start}
+.edge-v3 :is(.coupon-profile,.coupon-leg,.coupon-evening-card,.track-entry,.match-card){overflow-wrap:anywhere}
+.edge-v3 :is(.coupon-evening-probs,.verified-stats){grid-template-columns:repeat(3,minmax(0,1fr))}
+.edge-v3 .track-table .track-line{grid-template-columns:minmax(0,1.4fr) repeat(3,minmax(0,.8fr));gap:6px}
+.edge-v3 .track-table .track-line>*{min-width:0;overflow-wrap:anywhere}
+.edge-v3 .track-dash-days{grid-template-columns:repeat(auto-fit,minmax(min(225px,100%),1fr))}
+.edge-v3 :is(summary,button,a.action){min-height:44px}
+.edge-v3 summary{cursor:pointer;padding-block:10px}
+.edge-v3 .edge-skip{position:absolute;left:10px;top:-120px;z-index:150;background:#fff;padding:12px;border:2px solid #1664b4;border-radius:8px}
+.edge-v3 .edge-skip:focus{top:10px}
+.edge-v3 :is(.screen,.panel,.pane){scroll-margin-top:16px}
+@media(min-width:760px){.edge-v3 #candidates,.edge-v3 #more-matches,.edge-v3 #all-matches{grid-template-columns:repeat(2,minmax(0,1fr))}.edge-v3 .editorial-nav a{max-width:240px;width:100%;justify-self:center}}
+@media(max-width:420px){.edge-v3 .cardhead,.edge-v3 .coupon-evening-head,.edge-v3 .price-lab-item-top{flex-wrap:wrap}.edge-v3 .two-fields,.edge-v3 .track-controls{grid-template-columns:1fr}.edge-v3 .coupon-control-bottom{flex-wrap:wrap}.edge-v3 .coupon-control-bottom .action{width:100%}.edge-v3 .track-table .track-line{grid-template-columns:minmax(0,1.3fr) repeat(3,minmax(0,.8fr))!important;font-size:12px!important;gap:4px!important}.edge-v3 .track-dash-result-head{flex-direction:column}.edge-v3 .coupon-evening-probs strong{font-size:16px!important}}
+@media(max-width:340px){.edge-v3 :is(.market-grid,.coupon-profiles,.hub-market-grid,.row){grid-template-columns:1fr}.edge-v3 .metrics{gap:4px}.edge-v3 .metrics span{font-size:11px}}
+@media(prefers-reduced-motion:reduce){.edge-v3 *{animation:none!important;transition:none!important;scroll-behavior:auto!important}}

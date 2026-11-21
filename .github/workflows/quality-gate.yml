@@ -7,6 +7,8 @@ on:
       - 'site/assets/coupon-core.js'
       - 'site/assets/results-dashboard.js'
       - 'site/assets/calibration-audit.js'
+      - 'site/assets/ux-v3.css'
+      - 'site/**/*.html'
       - 'site/assets/app.js'
       - 'site/assets/daily-research.js'
       - 'site/analiza.html'

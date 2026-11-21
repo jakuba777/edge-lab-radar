@@ -21,21 +21,21 @@
 <script src="./assets/time-window.js" defer></script>
 <script src="./assets/app.js" defer></script>
 <script src="./assets/daily-research.js" defer></script>
-</head>
-<body>
-<div class="shell">
-<header class="top"><div><div class="eyebrow"><span class="radar-dot"></span> EDGE LAB / RESEARCH</div><h1>Dzisiaj</h1><p class="subtitle" id="subdate">Rzeczywiste wyniki. Eksperymentalne modele.</p></div><span class="version">2.0 / EDITORIAL</span></header>
+<link rel="stylesheet" href="./assets/ux-v3.css?v=3"/></head>
+<body class="edge-v3"><a class="edge-skip" href="#edge-main">Przejdź do treści</a>
+<div class="shell" id="edge-main">
+<header class="top"><div><div class="eyebrow"><span class="radar-dot"></span> EDGE LAB / RESEARCH</div><h1>Dzisiaj</h1><p class="subtitle" id="subdate">Rzeczywiste wyniki. Eksperymentalne modele.</p></div><span class="version">3.0 / RESEARCH</span></header><nav class="tabbar" aria-label="Widoki dzienne"><button type="button" class="is-active" data-screen="today" aria-pressed="true"><span>Dziś</span></button><button type="button" data-screen="matches" aria-pressed="false"><span>Mecze</span></button><button type="button" data-screen="builder" aria-pressed="false"><span>Builder</span></button><button type="button" data-screen="info" aria-pressed="false"><span>Metoda</span></button></nav>
 <div class="alert" role="note"><strong>Weryfikacja historyczna:</strong> w 4537 sprawdzonych meczach główna selekcja radaru nie pokonała prostej metody bazowej. <a href="./weryfikacja.html">Zobacz raport</a>.</div>
 <div class="alert" role="note"><strong>Tryb analityczny</strong> — bez automatycznych zakładów. Statystyka nie gwarantuje zysku. Wysoki kurs to nie dowód przewagi.</div>
 <section class="screen is-active" id="screen-today">
-<section class="panel space"><h2>Skuteczność · raport źródłowy</h2><div id="overview-score" aria-live="polite">Wczytywanie raportu…</div><a href="./skutecznosc.html">Szczegółowe rozliczenia</a></section><section class="space"><h2>Terminarz i rozegrane</h2><p class="caption">Nie mamy wiarygodnego LIVE. Mecz po godzinie startu pozostaje niepotwierdzony do otrzymania wyniku.</p><div id="overview"></div></section><div class="today-focus"><div class="kicker">TWÓJ PUNKT STARTOWY</div><h2>Najpierw mecze. Potem liczby.</h2><p>Sprawdź terminarz, wybierz spotkanie i zobacz rynki z oszacowaniem modelu.</p><a class="action" href="./analiza.html">Przeglądaj mecze →</a></div>
+<div class="today-focus"><div class="kicker">TWÓJ PUNKT STARTOWY</div><h2>Najpierw mecze. Potem liczby.</h2><p>Sprawdź terminarz, wybierz spotkanie i zobacz rynki z oszacowaniem modelu.</p><a class="action" href="./analiza.html">Przeglądaj mecze →</a></div>
 <aside class="verified-banner" id="daily-research" aria-label="Dzisiejsza selekcja badawcza"><div><strong>Dzisiejsze analizy</strong><p>Sprawdzanie listy dla aktualnej daty…</p></div></aside>
 <div class="panel source-panel">
   <div class="between top-gap"><div><div class="kicker">STATUS ŹRÓDŁA</div><strong id="status-title">Oczekiwanie na dane</strong><p id="last-update" class="caption">Dane z własnej kopii HTTPS, aktualizowane przez GitHub Actions.</p></div><button type="button" id="refresh" class="action">↻ Odśwież</button></div>
   <div class="metrics"><div><span>Ligi</span><strong id="metric-leagues">—</strong></div><div><span>Mecze</span><strong id="metric-matches">—</strong></div><div><span>Modele</span><strong id="metric-models">—</strong></div></div>
   <div id="source-error" role="alert" class="error-box hidden"></div>
  </div>
- <details class="tools-disclosure"><summary>Pozostałe narzędzia i badania <span>Rozwiń</span></summary><div class="tools-links"><a href="./skutecznosc.html">Historia skuteczności</a><a href="./moje-zaklady.html">Moje zakłady · import Superbet</a><a href="./kupony.html">Symulacje kuponów</a><a href="./rynek.html">Model kontra kurs</a><a href="./multi-market-lab.html">Multi-Market Lab</a><a href="./live.html">LIVE LAB — odtwarzanie</a><a href="./modele.html">Porównanie modeli</a><a href="./scenariusze.html">Scenariusze</a></div></details>
+ <section class="panel space"><h2>Skuteczność · raport źródłowy</h2><div id="overview-score" aria-live="polite">Wczytywanie raportu…</div><a href="./skutecznosc.html">Szczegółowe rozliczenia</a></section><section class="space"><h2>Terminarz i rozegrane</h2><p class="caption">Nie mamy wiarygodnego LIVE. Mecz po godzinie startu pozostaje niepotwierdzony do otrzymania wyniku.</p><div id="overview"></div></section><details class="tools-disclosure"><summary>Pozostałe narzędzia i badania <span>Rozwiń</span></summary><div class="tools-links"><a href="./skutecznosc.html">Historia skuteczności</a><a href="./moje-zaklady.html">Moje zakłady · import Superbet</a><a href="./kupony.html">Symulacje kuponów</a><a href="./rynek.html">Model kontra kurs</a><a href="./multi-market-lab.html">Multi-Market Lab</a><a href="./live.html">LIVE LAB — odtwarzanie</a><a href="./modele.html">Porównanie modeli</a><a href="./scenariusze.html">Scenariusze</a><a href="./jutro.html">Archiwum analiz</a><a href="./lamaki.html">HT/FT i łamaki</a><a href="./value-lab.html">Laboratorium VALUE</a></div></details>
 <div class="between section-head"><div><div class="kicker">SELEKCJA DO PRZEGLĄDU</div><h2>Mecze do analizy</h2></div><span class="chip muted" id="count-picks">0 analiz</span></div>
  <p class="hint">Do 50 różnych spotkań każdego dnia, przez 7 dni. Selekcja według jakości danych, kolejność godzinowa; <strong>nie</strong> lista typów z potwierdzoną przewagą.</p>
  <div id="candidates" class="vstack"><div class="panel empty">Wczytywanie źródeł…</div></div>
@@ -65,14 +65,6 @@
  <p class="caption">Niekomercyjny projekt eksperymentalny. 18+. Zakłady mogą prowadzić do utraty pieniędzy.</p>
 </section>
 </div>
-<nav class="tabbar" aria-label="Główne ekrany">
-<button type="button" class="is-active" data-screen="today" aria-label="Dzisiaj">⌖<span>Dziś</span></button>
-<button type="button" data-screen="matches" aria-label="Wyszukiwarka meczów">▦<span>Mecze</span></button>
-<button type="button" data-screen="builder" aria-label="Analiza buildera">◈<span>Builder</span></button>
-<button type="button" data-screen="info" aria-label="O metodzie">ⓘ<span>Metoda</span></button>
-<a class="nav-tickets" href="./kupony.html" aria-label="Kupony eksperymentalne">▤<span>Kupony</span></a>
-<a class="nav-live" href="./live.html" aria-label="LIVE LAB replay — nie jest transmisją na żywo">◷<span>LIVE LAB</span></a>
-<a class="nav-track" href="./skutecznosc.html" aria-label="Wyniki skuteczności prognoz">✓<span>Wyniki</span></a>
-</nav>
+
 <dialog id="detail-dialog" aria-label="Szczegóły analizy"><div id="detail-body"></div><button type="button" class="close-button" id="close-detail">Zamknij</button></dialog>
-<nav class="editorial-nav" aria-label="Nawigacja EDGE LAB"><a href="./" aria-current="page">Dzisiaj</a><a href="./analiza.html">Analizy</a><a href="./jutro.html">Jutro</a><a href="./kupony.html">Kupony</a><a href="./skutecznosc.html">Wyniki</a><a href="./moje-zaklady.html">Moje zakłady</a></nav></body></html>
+<nav class="editorial-nav" aria-label="Nawigacja EDGE LAB"><a href="./" aria-current="page">Dzisiaj</a><a href="./analiza.html">Analizy</a><a href="./kupony.html">Kupony</a><a href="./skutecznosc.html">Wyniki</a></nav></body></html>
