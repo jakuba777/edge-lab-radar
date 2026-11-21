@@ -34,11 +34,13 @@ const server=http.createServer((req,res)=>{
  const send=(method,params={})=>new Promise((resolve,reject)=>{const n=++id;pending.set(n,{resolve,reject});ws.send(JSON.stringify({id:n,method,params}));});
  await send('Page.enable');
  const evaluate=async expression=>{const r=await send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(JSON.stringify(r.exceptionDetails));return r.result.value;};
+ const failures=[];
  const paths=fs.readdirSync(root).filter(p=>p.endsWith('.html')).sort();
  assert.equal(paths.length,16,'full page coverage');
  for(const width of [320,390,768]){
  await send('Emulation.setDeviceMetricsOverride',{width,height:844,deviceScaleFactor:1,mobile:true});
  for(const page of paths){
+ try{
   await send('Page.navigate',{url:base+'/'+page});
   for(let i=0;i<100;i++){try{if(await evaluate("document.readyState==='complete'&&location.pathname.endsWith('/"+page+"')"))break;}catch{} await delay(40);}
   const a=await evaluate(`(()=>{const n=document.querySelector('.editorial-nav'),r=n.getBoundingClientRect(),links=[...n.querySelectorAll('a')].map(x=>x.getBoundingClientRect());return {theme:getComputedStyle(document.body).backgroundColor,links:links.length,rows:new Set(links.map(x=>Math.round(x.top))).size,navBottom:r.bottom,viewport:innerHeight,overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,touch:Math.min(...links.map(x=>x.height))}})()`);
@@ -57,7 +59,9 @@ const server=http.createServer((req,res)=>{
    assert.deepEqual(colors,['rgb(255, 255, 255)','rgb(20, 34, 54)','rgb(17, 100, 84)']);
   }
   console.log('PASS',width,page);
+ }catch(err){failures.push(width+' '+page+': '+err.message);console.error('FAIL',width,page,err.message);}
  }
  }
+ assert.equal(failures.length,0,failures.join('\n'));
  }finally{if(ws)ws.close();if(chrome)chrome.kill();server.close();if(dir){await delay(200);try{fs.rmSync(dir,{force:true,recursive:true});}catch{}}}
 })().catch(e=>{console.error(e);process.exitCode=1;});
