@@ -111,7 +111,7 @@ async function sync(){
 function kickoffKey(f){const m=String(f.time||'').trim().match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/);const n=m&&+m[1]<24&&+m[2]<60?+m[1]*60+(+m[2]):1440;return f.date+' '+String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0');}
 function isUpcoming(f){
  const age=S.meta?.retrieved_at_utc?(Date.now()-Date.parse(S.meta.retrieved_at_utc))/3600000:Infinity;
- return !!window.EDGEWINDOW&&window.EDGEWINDOW.eligible(f,new Date(),age);
+ return Number.isFinite(age)&&age>=0&&age<=48&&!!window.EDGEWINDOW&&window.EDGEWINDOW.eligible(f,new Date(),age);
 }
 function byKickoff(a,b){return kickoffKey(a.f).localeCompare(kickoffKey(b.f))||(b.score||0)-(a.score||0);}
 function topCandidates(){
@@ -211,7 +211,7 @@ function checkedMarkets(){return [...document.querySelectorAll('#builder-markets
 function analyzeBuilder(){
  const match=S.loaded?S.modeled.find(x=>x.id===$('builder-match').value&&x.m.ok&&isUpcoming(x.f)):null,legs=checkedMarkets();
  S.selectedBuilder=null;
- if(!match){$('builder-result').textContent='Wybierz spotkanie z dostateczną historią.';return;}
+ if(!match){$('quote-result').textContent='';$('builder-result').textContent='Wybierz spotkanie z dostateczną historią.';return;}
  if(legs.length<2||legs.length>3){$('builder-result').textContent='Wybierz 2 lub 3 zdarzenia.';return;}
  const p=probability(match.m.grid,(h,a)=>legs.every(l=>l.hit(h,a)));
  const naive=legs.reduce((r,l)=>r*match.m.probs[l.id],1);
