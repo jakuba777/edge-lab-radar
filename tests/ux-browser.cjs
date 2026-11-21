@@ -4,8 +4,9 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('n
 const delay=ms=>new Promise(r=>setTimeout(r,ms));
 const root=path.resolve('site');
 const server=http.createServer((req,res)=>{
- const url=new URL(req.url,'http://localhost'),p=path.join(root,url.pathname==='/'?'index.html':url.pathname);
- if(!p.startsWith(root+path.sep)){res.writeHead(403).end();return;}
+ const url=new URL(req.url,'http://localhost');let p=path.join(root,url.pathname==='/'?'index.html':url.pathname);
+ if(/^\/src\/(value-engine-v2|dual-engine|multi-market|market-labels)\.js$/.test(url.pathname))p=path.join(path.dirname(root),url.pathname);
+ if(!p.startsWith(root+path.sep)&&!p.startsWith(path.join(path.dirname(root),'src')+path.sep)){res.writeHead(403).end();return;}
  fs.readFile(p,(err,data)=>{if(err){res.writeHead(404).end();return;}
  const mime={'.html':'text/html; charset=utf-8','.css':'text/css','.js':'application/javascript','.json':'application/json','.csv':'text/csv','.svg':'image/svg+xml'}[path.extname(p)]||'application/octet-stream';
  res.writeHead(200,{'Content-Type':mime});res.end(data);
@@ -30,7 +31,8 @@ const server=http.createServer((req,res)=>{
  const send=(method,params={})=>new Promise((resolve,reject)=>{const n=++id;pending.set(n,{resolve,reject});ws.send(JSON.stringify({id:n,method,params}));});
  await send('Page.enable');
  const evaluate=async expression=>{const r=await send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(JSON.stringify(r.exceptionDetails));return r.result.value;};
- const paths=['index.html','analiza.html','kupony.html','skutecznosc.html','live.html','value-lab.html'];
+ const paths=fs.readdirSync(root).filter(p=>p.endsWith('.html')).sort();
+ assert.equal(paths.length,16,'full page coverage');
  for(const width of [320,390,768]){
  await send('Emulation.setDeviceMetricsOverride',{width,height:844,deviceScaleFactor:1,mobile:true});
  for(const page of paths){
