@@ -21,6 +21,7 @@ import urllib.parse
 import urllib.request
 import zipfile
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor
 from zoneinfo import ZoneInfo
 
 ROOT=pathlib.Path(__file__).resolve().parents[1]
@@ -358,21 +359,42 @@ def earliest_per_key(data,key_fn):
         if key not in chosen:chosen[key]=x
     return list(chosen.values())
 
+def write_report(result):
+    DEST.parent.mkdir(parents=True,exist_ok=True)
+    temp=DEST.with_suffix('.tmp')
+    temp.write_text(json.dumps(result,indent=2,ensure_ascii=False),encoding='utf-8')
+    temp.replace(DEST)
+
 def main():
     now=dt.datetime.now(dt.timezone.utc)
+    # Never present a stale or partial report as ready if this run fails.
+    write_report({"schema":1,"status":"unavailable","updated_utc":now.isoformat(timespec="seconds"),"reason":"archive_refresh_incomplete"})
     token=os.environ.get("GH_TOKEN","").strip()
     if not token:raise SystemExit("GH_TOKEN missing: cannot verify immutable archived forecasts")
     all_artifacts=fetch_artifacts(token,now)
     raw_forecasts=[];raw_ht=[];raw_coupons=[];faults=[]
-    for meta,kind in all_artifacts:
+    # I/O-bound downloads; small fixed pool preserves bounded concurrency.
+    # Results are processed in original chronological order.
+    def retrieve(item):
+        meta,kind=item
         try:
             obj=artifact_get(meta["id"],token,kind)
-            if kind=="prospective.json":raw_forecasts.extend(read_historical_forecasts(meta,obj))
-            elif kind=="ht07_future.json":raw_ht.extend(read_halftime_forecasts(meta,obj))
-            elif kind=="coupons.json":raw_coupons.extend(read_coupon_forecasts(meta,obj))
+            if kind=="prospective.json":return kind,read_historical_forecasts(meta,obj),None
+            if kind=="ht07_future.json":return kind,read_halftime_forecasts(meta,obj),None
+            if kind=="coupons.json":return kind,read_coupon_forecasts(meta,obj),None
+            raise ValueError("Unknown archive type")
         except (OSError,ValueError,KeyError,TypeError,zipfile.BadZipFile,
                 urllib.error.URLError,json.JSONDecodeError) as exc:
-            faults.append({"artifact_id":meta["id"],"type":kind,"error":str(exc)[:110]})
+            return kind,[],{"artifact_id":meta["id"],"type":kind,"error":str(exc)[:110]}
+    buckets={"prospective.json":raw_forecasts,"ht07_future.json":raw_ht,"coupons.json":raw_coupons}
+    print("ARCHIVES queued",len(all_artifacts),flush=True)
+    with ThreadPoolExecutor(max_workers=6) as pool:
+        for kind,rows,error in pool.map(retrieve,all_artifacts):
+            if error:faults.append(error)
+            else:buckets[kind].extend(rows)
+    if not all_artifacts or faults:
+        write_report({"schema":1,"status":"unavailable","updated_utc":now.isoformat(timespec="seconds"),"reason":"archive_refresh_incomplete","artifacts_checked":len(all_artifacts),"artifact_errors":len(faults),"errors_sample":faults[:6]})
+        raise SystemExit("Incomplete archives; refusing ready tracking result")
     forecasts=earliest_per_key(raw_forecasts,lambda x:x["key"])
     halftime=earliest_per_key(raw_ht,lambda x:x["key"])
     coupons=earliest_per_key(raw_coupons,lambda x:x["id"])
@@ -389,18 +411,12 @@ def main():
         "source_window_days":LOOKBACK_DAYS,
         "limitation":"Only forecasts found in available GitHub Actions artifacts; artifacts expire. No bet placement, no odds, no monetary P/L. Coupon simulations are not evidence of purchased tickets. All snapshots of same match are dependent."
     })
-    DEST.parent.mkdir(parents=True,exist_ok=True)
-    DEST.write_text(json.dumps(result,indent=2,ensure_ascii=False),encoding="utf-8")
+    write_report(result)
     print("TRACK RECORD "+json.dumps({
         "artifacts":len(all_artifacts),"errors":len(faults),
         "forecasts":len(forecasts),"ht_forecasts":len(halftime),
         "coupon_snapshots":len(coupons),"single_research":result["counts"]["single_research"],"main":result["summary"]["main"],
         "tickets":result["summary"]["simulated_coupons"],
         "conflicts":conflicts},ensure_ascii=False))
-    # Fail closed if GitHub API returns none despite forecasts being expected.
-    if not all_artifacts:
-        raise SystemExit("No historical artifacts found; refusing empty tracking result")
-    if len(faults)>max(4,len(all_artifacts)//4):
-        raise SystemExit("Too many unreadable archives; refusing incomplete tracking result")
 
 if __name__=="__main__":main()

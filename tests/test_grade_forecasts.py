@@ -131,4 +131,21 @@ class GradeTests(unittest.TestCase):
         self.assertIn("node scripts/snapshot_coupons.js",workflow)
         self.assertIn("retention-days: 45",workflow)
 
+    def test_no_archives_never_publishes_ready(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            dest=pathlib.Path(tmp)/"track.json"
+            dest.write_text(json.dumps({"status":"ready"}))
+            with patch.object(G,"DEST",dest),patch.dict(G.os.environ,{"GH_TOKEN":"test"}),patch.object(G,"fetch_artifacts",return_value=[]):
+                with self.assertRaises(SystemExit):G.main()
+            self.assertEqual(json.loads(dest.read_text())["status"],"unavailable")
+
+    def test_failed_archive_never_publishes_ready(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            dest=pathlib.Path(tmp)/"track.json"
+            with patch.object(G,"DEST",dest),patch.dict(G.os.environ,{"GH_TOKEN":"test"}),patch.object(G,"fetch_artifacts",return_value=[({"id":1},"prospective.json")]),patch.object(G,"artifact_get",side_effect=OSError("network error")):
+                with self.assertRaises(SystemExit):G.main()
+            report=json.loads(dest.read_text())
+            self.assertEqual(report["status"],"unavailable")
+            self.assertEqual(report["artifact_errors"],1)
+
 if __name__=="__main__":unittest.main()

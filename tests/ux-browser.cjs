@@ -4,8 +4,9 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('n
 const delay=ms=>new Promise(r=>setTimeout(r,ms));
 const root=path.resolve('site');
 const server=http.createServer((req,res)=>{
- const url=new URL(req.url,'http://localhost'),p=path.join(root,url.pathname==='/'?'index.html':url.pathname);
- if(!p.startsWith(root+path.sep)){res.writeHead(403).end();return;}
+ const url=new URL(req.url,'http://localhost');let p=path.join(root,url.pathname==='/'?'index.html':url.pathname);
+ if(/^\/src\/(value-engine-v2|dual-engine|multi-market|market-labels)\.js$/.test(url.pathname))p=path.join(path.dirname(root),url.pathname);
+ if(!p.startsWith(root+path.sep)&&!p.startsWith(path.join(path.dirname(root),'src')+path.sep)){res.writeHead(403).end();return;}
  fs.readFile(p,(err,data)=>{if(err){res.writeHead(404).end();return;}
  const mime={'.html':'text/html; charset=utf-8','.css':'text/css','.js':'application/javascript','.json':'application/json','.csv':'text/csv','.svg':'image/svg+xml'}[path.extname(p)]||'application/octet-stream';
  res.writeHead(200,{'Content-Type':mime});res.end(data);
@@ -19,8 +20,11 @@ const server=http.createServer((req,res)=>{
  const executable=['google-chrome','chromium','chromium-browser'].find(x=>spawnSync('which',[x]).status===0);
  assert.ok(executable,'Chrome/Chromium required');
  dir=fs.mkdtempSync(path.join(os.tmpdir(),'edge-ux-'));
- chrome=spawn(executable,['--headless','--no-sandbox','--disable-dev-shm-usage','--disable-gpu','--remote-debugging-port=0','--user-data-dir='+dir,'about:blank'],{stdio:'ignore'});
- for(let i=0;i<100&&!fs.existsSync(path.join(dir,'DevToolsActivePort'));i++)await delay(100);
+ let chromeError='';
+ chrome=spawn(executable,['--headless=new','--no-sandbox','--disable-dev-shm-usage','--disable-gpu','--no-first-run','--no-default-browser-check','--remote-debugging-port=0','--user-data-dir='+dir,'about:blank'],{stdio:['ignore','ignore','pipe']});
+ chrome.stderr.on('data',d=>{chromeError=(chromeError+d.toString()).slice(-4000);});
+ for(let i=0;i<300&&!fs.existsSync(path.join(dir,'DevToolsActivePort'))&&chrome.exitCode===null;i++)await delay(100);
+ assert.ok(fs.existsSync(path.join(dir,'DevToolsActivePort')),'Chrome did not start: '+chromeError);
  const port=fs.readFileSync(path.join(dir,'DevToolsActivePort'),'utf8').split('\n')[0];
  const targets=await (await fetch('http://127.0.0.1:'+port+'/json/list')).json();
  ws=new WebSocket(targets.find(t=>t.type==='page').webSocketDebuggerUrl);
@@ -30,10 +34,13 @@ const server=http.createServer((req,res)=>{
  const send=(method,params={})=>new Promise((resolve,reject)=>{const n=++id;pending.set(n,{resolve,reject});ws.send(JSON.stringify({id:n,method,params}));});
  await send('Page.enable');
  const evaluate=async expression=>{const r=await send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(JSON.stringify(r.exceptionDetails));return r.result.value;};
- const paths=['index.html','analiza.html','kupony.html','skutecznosc.html','live.html','value-lab.html'];
+ const failures=[];
+ const paths=fs.readdirSync(root).filter(p=>p.endsWith('.html')).sort();
+ assert.equal(paths.length,16,'full page coverage');
  for(const width of [320,390,768]){
  await send('Emulation.setDeviceMetricsOverride',{width,height:844,deviceScaleFactor:1,mobile:true});
  for(const page of paths){
+ try{
   await send('Page.navigate',{url:base+'/'+page});
   for(let i=0;i<100;i++){try{if(await evaluate("document.readyState==='complete'&&location.pathname.endsWith('/"+page+"')"))break;}catch{} await delay(40);}
   const a=await evaluate(`(()=>{const n=document.querySelector('.editorial-nav'),r=n.getBoundingClientRect(),links=[...n.querySelectorAll('a')].map(x=>x.getBoundingClientRect());return {theme:getComputedStyle(document.body).backgroundColor,links:links.length,rows:new Set(links.map(x=>Math.round(x.top))).size,navBottom:r.bottom,viewport:innerHeight,overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,touch:Math.min(...links.map(x=>x.height))}})()`);
@@ -52,7 +59,9 @@ const server=http.createServer((req,res)=>{
    assert.deepEqual(colors,['rgb(255, 255, 255)','rgb(20, 34, 54)','rgb(17, 100, 84)']);
   }
   console.log('PASS',width,page);
+ }catch(err){failures.push(width+' '+page+': '+err.message);console.error('FAIL',width,page,err.message);}
  }
  }
+ assert.equal(failures.length,0,failures.join('\n'));
  }finally{if(ws)ws.close();if(chrome)chrome.kill();server.close();if(dir){await delay(200);try{fs.rmSync(dir,{force:true,recursive:true});}catch{}}}
 })().catch(e=>{console.error(e);process.exitCode=1;});
