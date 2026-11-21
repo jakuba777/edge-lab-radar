@@ -65,6 +65,8 @@
  async function main(){
   try{const response=await fetch('./data/track_record.json',{cache:'no-store'});if(!response.ok)throw Error('Raport niedostępny (HTTP '+response.status+').');
    const data=await response.json();if(data.status!=='ready'||!data.daily)throw Error('Raport wymaga ponownego wygenerowania z nową strukturą statystyk dziennych.');
+   const age=Date.now()-Date.parse(data.updated_utc);
+   if(!Number.isFinite(age)||age<0||age>48*3600000)throw Error('Raport nieaktualny lub nieprawidłowy czas aktualizacji.');
    init(data);
   }catch(err){$('dash-summary').textContent=String(err.message||err);$('dash-days').textContent='Nie pokazujemy szacowanych wyników bez danych.';$('dash-results').textContent='';}
  }

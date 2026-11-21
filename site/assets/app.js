@@ -2,7 +2,7 @@
 const S={meta:null,leagues:[],results:[],fixtures:[],modeled:[],candidates:[],loaded:false,selectedBuilder:null};
 const $=id=>document.getElementById(id);
 const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const dateOf=d=>new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Warsaw',year:'numeric',month:'2-digit',day:'2-digit'}).format(d);
+const dateOf=d=>new Intl.DateTimeFormat('sv-SE',{timeZone:'Europe/Warsaw',year:'numeric',month:'2-digit',day:'2-digit'}).format(d);
 const today=()=>dateOf(new Date());
 const epoch=d=>Date.parse(d+'T00:00:00Z');
 const dateGap=(a,b)=>(epoch(a)-epoch(b))/86400000;
@@ -43,7 +43,7 @@ function probability(grid,fn){return grid.reduce((sum,g)=>sum+(fn(g.h,g.a)?g.p:0
 function sum(xs,fn){return xs.reduce((s,x)=>s+fn(x),0);}
 function avg(xs,fn){return xs.length?sum(xs,fn)/xs.length:0;}
 function model(f,hist){
- const prior=hist.filter(r=>r.date<f.date);
+ const prior=hist.filter(r=>r.date<f.date).sort((a,b)=>a.date.localeCompare(b.date));
  const hm=prior.filter(r=>r.home===f.home).slice(-10);
  const aw=prior.filter(r=>r.away===f.away).slice(-10);
  if(hm.length<4||aw.length<4)return{ok:false,nH:hm.length,nA:aw.length,reason:'Za mało zakończonych meczów dom/wyjazd (minimum 4 na stronę).'};
@@ -86,7 +86,7 @@ async function sync(){
   S.modeled=S.fixtures.map((f,i)=>({id:`${f.leagueId}:${f.date}:${f.home}:${f.away}`,f,m:model(f,S.results.filter(r=>r.league===f.league))}));
   S.loaded=true;
   const ageHours=(Date.now()-new Date(meta.retrieved_at_utc).getTime())/3600000;
-  const stale=ageHours>48;
+  const stale=!Number.isFinite(ageHours)||ageHours<0||ageHours>48;
   const errors=fetches.filter(x=>x.status==='rejected').length;
   $('status-title').textContent=stale?'Dane nieaktualne — sprawdź synchronizację':'Dane sportowe załadowane';
   $('last-update').textContent=`Pobrano ${new Date(meta.retrieved_at_utc).toLocaleString('pl-PL',{timeZone:'Europe/Warsaw'})} · ${ok.length} lig · ${errors?errors+' błędów źródeł · ':''}${stale?'ponad 48 h temu':'dane nie są LIVE'}`;
@@ -95,8 +95,13 @@ async function sync(){
   $('metric-models').textContent=S.modeled.filter(x=>x.m.ok&&isUpcoming(x.f)&&dateGap(x.f.date,today())<=14).length;
   if(errors||stale){$('source-error').classList.remove('hidden');$('source-error').textContent=errors?`${errors} źródeł nie zadziałało. Wyniki mogą być niepełne.`:'Aktualizacja źródła jest opóźniona; nie używaj do decyzji na dziś.';}
   renderAll(stale);
+  const day=today(),fixturesToday=S.fixtures.filter(f=>f.date===day),modeledToday=S.modeled.filter(x=>x.f.date===day&&x.m.ok);
+  document.dispatchEvent(new CustomEvent('edge:coverage',{detail:{day,stale,ageHours,leagues:ok.length,declaredLeagues:meta.leagues.length,errors,fixtures:fixturesToday.length,modeled:modeledToday.length,remaining:fixturesToday.filter(isUpcoming).length,settled:S.results.filter(r=>r.date===day).length}}));
  }catch(e){
-  S.loaded=false;$('status-title').textContent='Brak danych — aktualizacja nieudana';$('source-error').classList.remove('hidden');$('source-error').textContent=String(e?.message||e);
+  S.loaded=false;S.candidates=[];S.selectedBuilder=null;S.meta=null;S.fixtures=[];S.results=[];S.modeled=[];
+  $('builder-match').replaceChildren();$('builder-result').textContent='Brak aktualnych danych.';$('quote-result').textContent='';
+  document.dispatchEvent(new CustomEvent('edge:coverage',{detail:{day:today(),error:true}}));
+  $('status-title').textContent='Brak danych — aktualizacja nieudana';$('source-error').classList.remove('hidden');$('source-error').textContent=String(e?.message||e);
   $('metric-leagues').textContent='0';$('metric-matches').textContent='0';$('metric-models').textContent='0';
   $('candidates').innerHTML='<div class="panel empty">Brak wiarygodnych analiz. Najpierw potrzebne są dane źródłowe.</div>';
   $('more-matches').innerHTML='<div class="panel empty">Nie pobrano terminarza.</div>';
@@ -106,7 +111,7 @@ async function sync(){
 function kickoffKey(f){const m=String(f.time||'').trim().match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/);const n=m&&+m[1]<24&&+m[2]<60?+m[1]*60+(+m[2]):1440;return f.date+' '+String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0');}
 function isUpcoming(f){
  const age=S.meta?.retrieved_at_utc?(Date.now()-Date.parse(S.meta.retrieved_at_utc))/3600000:Infinity;
- return !!window.EDGEWINDOW&&window.EDGEWINDOW.eligible(f,new Date(),age);
+ return Number.isFinite(age)&&age>=0&&age<=48&&!!window.EDGEWINDOW&&window.EDGEWINDOW.eligible(f,new Date(),age);
 }
 function byKickoff(a,b){return kickoffKey(a.f).localeCompare(kickoffKey(b.f))||(b.score||0)-(a.score||0);}
 function topCandidates(){
@@ -132,7 +137,7 @@ function renderAll(stale=false){
  $('more-matches').innerHTML=more.length?more.map(x=>card(x)).join(''):'<div class="panel empty">Brak kolejnych meczów w tym okresie.</div>';
  const sel=$('league'),prev=sel.value;sel.innerHTML='<option value="all">Wszystkie dostępne</option>'+S.leagues.map(l=>`<option value="${safe(l.name)}">${safe(l.name)}</option>`).join('');if([...sel.options].some(x=>x.value===prev))sel.value=prev;
  const builder=$('builder-match'),old=builder.value;
- const avail=S.modeled.filter(x=>x.m.ok&&isUpcoming(x.f)&&dateGap(x.f.date,today())<=14).sort(byKickoff);
+ const avail=stale?[]:S.modeled.filter(x=>x.m.ok&&isUpcoming(x.f)&&dateGap(x.f.date,today())<=14).sort(byKickoff);
  builder.innerHTML='<option value="">Wybierz mecz</option>'+avail.map(x=>`<option value="${safe(x.id)}">${safe(x.f.date)} · ${safe(x.f.home)} – ${safe(x.f.away)}</option>`).join('');if(avail.some(x=>x.id===old))builder.value=old;
  renderMatches();
  renderOverview();
@@ -148,7 +153,7 @@ function renderOverview(){
 }
 async function renderScoreboard(){
  const root=$('overview-score');if(!root)return;
- try{const d=await fetchJSON('./data/track_record.json');if(d.status!=='ready'||!d.summary?.main)throw Error('Brak gotowego raportu');
+ try{const d=await fetchJSON('./data/track_record.json');if(d.status!=='ready'||!d.summary?.main||!Number.isFinite(Date.parse(d.updated_utc))||Date.now()-Date.parse(d.updated_utc)<0||Date.now()-Date.parse(d.updated_utc)>48*3600000)throw Error('Brak gotowego raportu');
  const fields=[['Główne prognozy',d.summary.main],['Kupony wirtualne',d.summary.simulated_coupons],['Pojedyncze',d.summary.single_research]];
  root.innerHTML=fields.filter(x=>x[1]).map(([name,v])=>'<div class="data-row"><span>'+safe(name)+' · '+safe(v.pending??0)+' oczekuje</span><strong>'+safe(v.hit)+'/'+safe(v.scored)+' · '+(v.scored?pct(v.hit/v.scored):'—')+'</strong></div>').join('')+'<p class="caption">Brier główny: '+safe(d.summary.main.brier??'—')+' · granica rozliczenia: '+safe(d.settle_only_dates_before_warsaw??'brak daty')+' · wyniki raportu źródłowego, bez niezależnej weryfikacji.</p>';
  }catch(e){root.textContent='Raport skuteczności niedostępny: '+e.message;}
@@ -204,9 +209,9 @@ function openDetail(id){
 }
 function checkedMarkets(){return [...document.querySelectorAll('#builder-markets input:checked')].map(t=>marketDefs.find(m=>m.id===t.value)).filter(Boolean)}
 function analyzeBuilder(){
- const match=S.modeled.find(x=>x.id===$('builder-match').value&&x.m.ok),legs=checkedMarkets();
+ const match=S.loaded?S.modeled.find(x=>x.id===$('builder-match').value&&x.m.ok&&isUpcoming(x.f)):null,legs=checkedMarkets();
  S.selectedBuilder=null;
- if(!match){$('builder-result').textContent='Wybierz spotkanie z dostateczną historią.';return;}
+ if(!match){$('quote-result').textContent='';$('builder-result').textContent='Wybierz spotkanie z dostateczną historią.';return;}
  if(legs.length<2||legs.length>3){$('builder-result').textContent='Wybierz 2 lub 3 zdarzenia.';return;}
  const p=probability(match.m.grid,(h,a)=>legs.every(l=>l.hit(h,a)));
  const naive=legs.reduce((r,l)=>r*match.m.probs[l.id],1);
