@@ -1,0 +1,5 @@
+const {test}=require("node:test");const assert=require("node:assert/strict");const {audit}=require("../site/assets/research-audit-v3.js");
+const row={id:"a",lowerProbability:.4,upperProbability:.6,predictedAt:"2026-11-21T10:38:00Z",startsAt:"2026-11-21T14:00:00Z",status:"final",won:true,resultSources:["source"]};
+test("Brier separately and baseline",()=>{const r=audit([row]);assert.equal(r.n,1);assert.ok(Math.abs(r.brierLower-.36)<1e-9);assert.ok(Math.abs(r.brierUpper-.16)<1e-9);assert.equal(r.brierBaseline,.25);});
+test("reject duplicates, lookahead and unconfirmed results",()=>{const r=audit([row,row,{...row,id:"b",predictedAt:row.startsAt},{...row,id:"c",status:"postponed"},{...row,id:"d",resultSources:[]}]);assert.equal(r.n,1);assert.deepEqual(r.excluded,{invalid:1,duplicate:1,unsettled:2});});
+test("empty data never produces a score",()=>assert.equal(audit([]).brierLower,null));
