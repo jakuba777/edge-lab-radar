@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="./assets/results-dashboard.css?v=1">
 <link rel="stylesheet" href="./assets/contrast-v21.css?v=21"/>
 <script src="./assets/calibration-audit.js" defer></script>
-<link rel="stylesheet" href="./assets/ux-v3.css?v=3"/></head><body class="edge-v3"><main class="shell track-shell">
+<link rel="stylesheet" href="./assets/ux-v3.css?v=3"/><script src="./assets/research-audit-v3.js" defer></script><script src="./assets/research-audit-ui.js" defer></script></head><body class="edge-v3"><main class="shell track-shell">
 <header class="track-header"><a href="./">‹ RADAR</a><span>EDGE LAB AI / HISTORIA</span><span class="track-version">0.9 LAB</span></header>
 <section class="track-hero"><div class="eyebrow">WYNIKI BEZ DOPISYWANIA TYPOW PO FAKCIE</div><h1>Wyniki analiz</h1>
 <p>Weryfikujemy wyłącznie wskazania zarchiwizowane przed dniem meczu. Zobacz trafienia, pomyłki i nierozstrzygnięte zdarzenia.</p></section>
@@ -43,7 +43,7 @@
  <div id="dash-results" class="vstack"></div>
 </section>
 <section class="panel space"><h2>Kalibracja i świeżość danych</h2><div id="calibration-audit" aria-live="polite">Wczytywanie audytu…</div></section>
-<div class="section-head"><div class="kicker">PRZEGLĄD OSTATNIEGO ROZLICZONEGO DNIA</div><h2>Co zadziałało, a co zawiodło?</h2></div>
+<section class="panel space" aria-labelledby="research-title"><h2 id="research-title">Audyt badawczy 3.0</h2><p>Importuj archiwalne prognozy JSON z potwierdzonymi wynikami. Bez nowych typów i bez rzeczywistych zakładów.</p><label for="research-file">Plik JSON z tablicą obserwacji</label><input class="field" id="research-file" type="file" accept=".json,application/json"><p class="caption">Pola: id, lowerProbability, upperProbability, predictedAt, startsAt, status, won, resultSources. Prawdopodobieństwa od 0 do 1.</p><div id="research-output" aria-live="polite">Brak zaimportowanych obserwacji.</div></section><div class="section-head"><div class="kicker">PRZEGLĄD OSTATNIEGO ROZLICZONEGO DNIA</div><h2>Co zadziałało, a co zawiodło?</h2></div>
 <section class="panel track-daily" id="track-daily" aria-live="polite"><p class="caption">Analizuję wyniki zapisane przed spotkaniami…</p></section>
 <p class="caption">To wyłącznie zarchiwizowane prognozy EDGE LAB, nie historia prywatnego kuponu Superbet. Wyniki pochodzą z kopii źródła sportowego.</p>
 <div class="section-head"><div class="kicker">01 / GŁÓWNE WSKAZANIA RADARU</div><h2>Prawdziwa skuteczność</h2></div>
