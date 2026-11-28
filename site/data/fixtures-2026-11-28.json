@@ -1,0 +1,203 @@
+{
+  "date": "2026-11-28",
+  "timezone": "Europe/Warsaw",
+  "kind": "fixture_research_only",
+  "sources": [
+    "https://www.livescore.mobi/football/2026-11-28/?tz=1",
+    "https://kickmetrics.io/en/soccer/matches/2026-11-28",
+    "https://www.skysports.com/football-scores-fixtures/2026-11-28",
+    "https://www.theguardian.com/football/fixtures/2026/Nov/28"
+  ],
+  "matches": [
+    {
+      "id": "2026-11-28|La Liga|Real Betis|Rayo Vallecano",
+      "time": "14:00",
+      "competition": "La Liga",
+      "home": "Real Betis",
+      "away": "Rayo Vallecano",
+      "status": "unverified_live_status",
+      "probabilities": null,
+      "result": null
+    },
+    {
+      "id": "2026-11-28|Serie A|Frosinone|Parma",
+      "time": "15:00",
+      "competition": "Serie A",
+      "home": "Frosinone",
+      "away": "Parma",
+      "status": "unverified_live_status",
+      "probabilities": null,
+      "result": null
+    },
+    {
+      "id": "2026-11-28|Bundesliga|Hamburger SV|Bayern Munich",
+      "time": "15:30",
+      "competition": "Bundesliga",
+      "home": "Hamburger SV",
+      "away": "Bayern Munich",
+      "status": "unverified_live_status",
+      "probabilities": null,
+      "result": null
+    },
+    {
+      "id": "2026-11-28|Bundesliga|Mainz|Union Berlin",
+      "time": "15:30",
+      "competition": "Bundesliga",
+      "home": "Mainz",
+      "away": "Union Berlin",
+      "status": "unverified_live_status",
+      "probabilities": null,
+      "result": null
+    },
+    {
+      "id": "2026-11-28|Bundesliga|Köln|Elversberg",
+      "time": "15:30",
+      "competition": "Bundesliga",
+      "home": "Köln",
+      "away": "Elversberg",
+      "status": "unverified_live_status",
+      "probabilities": null,
+      "result": null
+    },
+    {
+      "id": "2026-11-28|Premier League|Leeds|Coventry",
+      "time": "16:00",
+      "competition": "Premier League",
+      "home": "Leeds",
+      "away": "Coventry",
+      "status": "unverified_live_status",
+      "probabilities": null,
+      "result": null
+    },
+    {
+      "id": "2026-11-28|Premier League|Manchester United|Brentford",
+      "time": "16:00",
+      "competition": "Premier League",
+      "home": "Manchester United",
+      "away": "Brentford",
+      "status": "unverified_live_status",
+      "probabilities": null,
+      "result": null
+    },
+    {
+      "id": "2026-11-28|Eliteserien|Bodø/Glimt|KFUM Oslo",
+      "time": "16:00",
+      "competition": "Eliteserien",
+      "home": "Bodø/Glimt",
+      "away": "KFUM Oslo",
+      "status": "unverified_live_status",
+      "probabilities": null,
+      "result": null
+    },
+    {
+      "id": "2026-11-28|Ligue 1|Angers|Lens",
+      "time": "17:15",
+      "competition": "Ligue 1",
+      "home": "Angers",
+      "away": "Lens",
+      "status": "unverified_live_status",
+      "probabilities": null,
+      "result": null
+    },
+    {
+      "id": "2026-11-28|Eliteserien|Rosenborg|Molde",
+      "time": "18:00",
+      "competition": "Eliteserien",
+      "home": "Rosenborg",
+      "away": "Molde",
+      "status": "unverified_live_status",
+      "probabilities": null,
+      "result": null
+    },
+    {
+      "id": "2026-11-28|Serie A|Torino|Lazio",
+      "time": "18:00",
+      "competition": "Serie A",
+      "home": "Torino",
+      "away": "Lazio",
+      "status": "unverified_live_status",
+      "probabilities": null,
+      "result": null
+    },
+    {
+      "id": "2026-11-28|Bundesliga|Stuttgart|Frankfurt",
+      "time": "18:30",
+      "competition": "Bundesliga",
+      "home": "Stuttgart",
+      "away": "Frankfurt",
+      "status": "unverified_live_status",
+      "probabilities": null,
+      "result": null
+    },
+    {
+      "id": "2026-11-28|Premier League|Ipswich|Aston Villa",
+      "time": "18:30",
+      "competition": "Premier League",
+      "home": "Ipswich",
+      "away": "Aston Villa",
+      "status": "unverified_live_status",
+      "probabilities": null,
+      "result": null
+    },
+    {
+      "id": "2026-11-28|La Liga|Elche|Atletico Madrid",
+      "time": "18:30",
+      "competition": "La Liga",
+      "home": "Elche",
+      "away": "Atletico Madrid",
+      "status": "unverified_live_status",
+      "probabilities": null,
+      "result": null
+    },
+    {
+      "id": "2026-11-28|Eredivisie|PSV|Go Ahead Eagles",
+      "time": "18:45",
+      "competition": "Eredivisie",
+      "home": "PSV",
+      "away": "Go Ahead Eagles",
+      "status": "unverified_live_status",
+      "probabilities": null,
+      "result": null
+    },
+    {
+      "id": "2026-11-28|Serie A|Inter|Genoa",
+      "time": "20:45",
+      "competition": "Serie A",
+      "home": "Inter",
+      "away": "Genoa",
+      "status": "unverified_live_status",
+      "probabilities": null,
+      "result": null
+    },
+    {
+      "id": "2026-11-28|Ligue 1|PSG|Lorient",
+      "time": "20:45",
+      "competition": "Ligue 1",
+      "home": "PSG",
+      "away": "Lorient",
+      "status": "unverified_live_status",
+      "probabilities": null,
+      "result": null
+    },
+    {
+      "id": "2026-11-28|Ligue 1|Nice|Troyes",
+      "time": "20:45",
+      "competition": "Ligue 1",
+      "home": "Nice",
+      "away": "Troyes",
+      "status": "unverified_live_status",
+      "probabilities": null,
+      "result": null
+    },
+    {
+      "id": "2026-11-28|La Liga|Real Madrid|Alaves",
+      "time": "21:00",
+      "competition": "La Liga",
+      "home": "Real Madrid",
+      "away": "Alaves",
+      "status": "unverified_live_status",
+      "probabilities": null,
+      "result": null
+    }
+  ]
+}
